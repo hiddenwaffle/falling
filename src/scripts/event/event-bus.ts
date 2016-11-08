@@ -1,7 +1,8 @@
 export enum EventType {
     CellChangeEventType,
     ActiveShapeStartedType,
-    ActiveShapeChangedEventType
+    ActiveShapeChangedEventType,
+    PlayerMovementEventType
 }
 
 export abstract class AbstractEvent {

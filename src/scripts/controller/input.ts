@@ -1,12 +1,13 @@
 /// <reference path='../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
-const enum Key {
+export const enum Key {
     Left,
     Up,
     Down,
     Right,
     Space,
-    Pause
+    Pause,
+    Other
 }
 
 const enum State {
@@ -70,26 +71,26 @@ class Input {
             // Directionals --------------------------------------------------
             case 65: // 'a'
             case 37: // left
-                console.log('a or left'); // TODO: setState()
+                this.setState(Key.Left, state);
                 event.preventDefault();
                 break;
             case 87: // 'w'
             case 38: // up
-                console.log('w or up'); // TODO: setState()
+                this.setState(Key.Up, state);
                 // event.preventDefault() - commented for if the user wants to cmd+w or ctrl+w
                 break;
             case 68: // 'd'
             case 39: // right
-                console.log('d or right'); // TODO: setState()
+                this.setState(Key.Right, state);
                 event.preventDefault();
                 break;
             case 83: // 's'
             case 40: // down
-                console.log('s or down'); // TODO: setState()
+                this.setState(Key.Down, state);
                 event.preventDefault();
                 break;
             case 32: // space
-                console.log('space'); // TODO: setState()
+                this.setState(Key.Space, state);
                 event.preventDefault();
                 break;
             
@@ -97,7 +98,7 @@ class Input {
             case 80: // 'p'
             case 27: // esc
             case 13: // enter key
-                console.log('pause'); // TODO: setState()
+                this.setState(Key.Pause, state);
                 event.preventDefault();
                 break;
             
@@ -125,7 +126,7 @@ class Input {
 
             // All other keys ------------------------------------------------
             default:
-                console.log('other'); // TODO: setState()
+                this.setState(Key.Other, state);
                 break;
         }
     }

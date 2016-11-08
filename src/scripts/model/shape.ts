@@ -22,13 +22,15 @@ export abstract class Shape {
         this.row++;
     }
 
-    rotateLeft() {
-        this.currentMatrixIndex -= 1; // TODO: Is that really "left"?
+    rotateCounterClockwise() {
+        // TODO: Try first before doing
+        this.currentMatrixIndex -= 1;
         this.ensureArrayBounds();
     }
 
-    rotateRight() {
-        this.currentMatrixIndex += 1; // TODO: Is that really "right"?
+    rotateClockwise() {
+        // TODO: Try first before doing
+        this.currentMatrixIndex += 1;
         this.ensureArrayBounds();
     }
 

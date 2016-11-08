@@ -43,10 +43,8 @@ class Switchboard {
                 continue; // Skip obstructed floors
             }
             let offsetPanelIdx = panelIdx + offset.x;
-            console.log('test: ' + offsetPanelIdx);
             lightingGrid.sendBrightLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
-        console.log('------------');
     }
 
     /**

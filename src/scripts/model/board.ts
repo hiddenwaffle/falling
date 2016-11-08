@@ -64,6 +64,10 @@ export class Board {
         this.startShape();
     }
 
+    rotateShapeClockwise() {
+        this.currentShape.rotateClockwise();
+    }
+
     private clear() {
         for (let row of this.matrix) {
             for (let cell of row) {
