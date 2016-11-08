@@ -9,7 +9,7 @@ import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 
 const MAX_ROWS = 22; // Top 2 rows are obstructed from view.
 const MAX_COLS = 10;
-const TEMP_DELAY_MS = 50;
+const TEMP_DELAY_MS = 250;
 
 export class Board {
     private currentShape: Shape;
@@ -125,7 +125,7 @@ export class Board {
     }
 
     private checkForGameWin() {
-        return true;
+        return false;
     }
 }
 export const board = new Board();
