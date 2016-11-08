@@ -38,10 +38,10 @@ class Switchboard {
         let color = this.convertColor(event.shape.color);
 
         for (let offset of event.shape.getOffsets()) {
-            let offsetFloorIdx = floorIdx + offset.y;
-            if (offsetFloorIdx >= FLOOR_COUNT) {
-                continue; // Skip obstructed floors
-            }
+            let offsetFloorIdx = floorIdx - offset.y;
+            // if (offsetFloorIdx >= FLOOR_COUNT) {
+                // continue; // Skip obstructed floors
+            // }
             let offsetPanelIdx = panelIdx + offset.x;
             lightingGrid.sendBrightLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
@@ -52,7 +52,9 @@ class Switchboard {
      * Account for the two floors that are obstructed from view. (?)
      */
     private convertRowToFloor(row: number) {
-        return FLOOR_COUNT - row;
+        let thing = (FLOOR_COUNT - row) + 1;
+        console.log('thing: ' + thing);
+        return thing;
     }
 
     private convertColor(color: Color): number {

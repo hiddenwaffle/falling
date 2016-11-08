@@ -20,6 +20,12 @@ class Model {
 
     private handlePlayerMovement(movement: PlayerMovement) {
         switch (movement) {
+            case PlayerMovement.Left:
+                board.moveShapeLeft();
+                break;
+            case PlayerMovement.Right:
+                board.moveShapeRight();
+                break;
             case PlayerMovement.RotateClockwise:
                 board.rotateShapeClockwise();
                 break;

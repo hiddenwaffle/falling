@@ -18,18 +18,24 @@ export abstract class Shape {
         this.col = SPAWN_COL;
     }
 
+    moveLeft() {
+        this.col--;
+    }
+
+    moveRight() {
+        this.col++;
+    }
+
     moveDown() {
         this.row++;
     }
 
     rotateCounterClockwise() {
-        // TODO: Try first before doing
         this.currentMatrixIndex -= 1;
         this.ensureArrayBounds();
     }
 
     rotateClockwise() {
-        // TODO: Try first before doing
         this.currentMatrixIndex += 1;
         this.ensureArrayBounds();
     }

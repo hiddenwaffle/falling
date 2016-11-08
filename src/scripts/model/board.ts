@@ -64,7 +64,18 @@ export class Board {
         this.startShape();
     }
 
+    moveShapeLeft() {
+        // TODO: Try first before doing
+        this.currentShape.moveLeft();
+    }
+
+    moveShapeRight() {
+        // TODO: Try first before doing
+        this.currentShape.moveRight();
+    }
+
     rotateShapeClockwise() {
+        // TODO: Try first before doing
         this.currentShape.rotateClockwise();
     }
 

@@ -3,6 +3,7 @@ export enum PlayerMovement {
     Left,
     Right,
     Down,
+    Drop,
     RotateClockwise,
     RotateCounterClockwise
 }
