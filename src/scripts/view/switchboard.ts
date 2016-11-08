@@ -57,26 +57,36 @@ class Switchboard {
     }
 
     private convertColor(color: Color): number {
+        let value: number;
         switch (color) {
-            case Color.Empty:
-                return 0x000000;
             case Color.Cyan:
-                return 0x00ffff;
+                value = 0x00ffff;
+                break;
             case Color.Yellow:
-                return 0xffff00;
+                value = 0xffff00;
+                break;
             case Color.Purple:
-                return 0x800080;
+                value = 0x800080;
+                break;
             case Color.Green:
-                return 0x008000;
+                value = 0x008000;
+                break;
             case Color.Red:
-                return 0xff0000;
+                value = 0xff0000;
+                break;
             case Color.Blue:
-                return 0x0000ff;
+                value = 0x0000ff;
+                break;
             case Color.Orange:
-                return 0xffa500;
+                value = 0xffa500;
+                break;
+            // Default or missing case is black.
+            case Color.Empty:
+            default:
+                value = 0x000000;
+                break;
         }
-        // Shouldn't get here
-        return 0x000000;
+        return value;
     }
 }
 export const switchboard = new Switchboard();
