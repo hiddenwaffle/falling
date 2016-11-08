@@ -4,12 +4,11 @@ import {Color} from '../domain/color';
 import {shapeFactory} from './shape-factory';
 import {eventBus} from '../event/event-bus';
 import {CellChangeEvent} from '../event/cell-change-event';
-import {ActiveShapeStartedEvent} from '../event/active-shape-started-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 
 const MAX_ROWS = 22; // Top 2 rows are obstructed from view.
 const MAX_COLS = 10;
-const TEMP_DELAY_MS = 250;
+const TEMP_DELAY_MS = 500;
 
 export class Board {
     private currentShape: Shape;
@@ -62,26 +61,31 @@ export class Board {
         this.clear();
         // TODO: Other stuff
         this.startShape();
+        // TODO: Fire active shape changed event here? Deprecate the active shape started event?
     }
 
     moveShapeLeft() {
         // TODO: Try first before doing
         this.currentShape.moveLeft();
+        this.fireActiveShapeChangedEvent();
     }
 
     moveShapeRight() {
         // TODO: Try first before doing
         this.currentShape.moveRight();
+        this.fireActiveShapeChangedEvent();
     }
 
     moveShapeDown() {
         // TODO: Try first before doing
         this.currentShape.moveDown();
+        this.fireActiveShapeChangedEvent();
     }
 
     rotateShapeClockwise() {
         // TODO: Try first before doing
         this.currentShape.rotateClockwise();
+        this.fireActiveShapeChangedEvent();
     }
 
     private clear() {
@@ -102,7 +106,7 @@ export class Board {
 
     private startShape() {
         this.currentShape = shapeFactory.nextShape();
-        eventBus.fire(new ActiveShapeStartedEvent(this.currentShape));
+        this.fireActiveShapeChangedEvent();
     }
 
     private tryGravity(): boolean {
@@ -137,7 +141,7 @@ export class Board {
 
     private doGravity() {
         this.currentShape.moveDown();
-        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape));
+        this.fireActiveShapeChangedEvent();
     }
 
     private checkForGameOver() {
@@ -146,6 +150,10 @@ export class Board {
 
     private checkForGameWin() {
         return false;
+    }
+
+    private fireActiveShapeChangedEvent() {
+        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape));
     }
 }
 export const board = new Board();

@@ -3,6 +3,8 @@ import {eventBus} from '../event/event-bus';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 
+// TODO: Here determine if player is holding down one of the arrow keys; if so, fire rapid events after (TBD) amount of time.
+
 class Controller {
 
     start() {

@@ -53,7 +53,6 @@ class Switchboard {
      */
     private convertRowToFloor(row: number) {
         let thing = (FLOOR_COUNT - row) + 1;
-        console.log('thing: ' + thing);
         return thing;
     }
 
