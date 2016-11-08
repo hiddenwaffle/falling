@@ -74,6 +74,11 @@ export class Board {
         this.currentShape.moveRight();
     }
 
+    moveShapeDown() {
+        // TODO: Try first before doing
+        this.currentShape.moveDown();
+    }
+
     rotateShapeClockwise() {
         // TODO: Try first before doing
         this.currentShape.rotateClockwise();

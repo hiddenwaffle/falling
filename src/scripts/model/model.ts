@@ -26,6 +26,9 @@ class Model {
             case PlayerMovement.Right:
                 board.moveShapeRight();
                 break;
+            case PlayerMovement.Down:
+                board.moveShapeDown();
+                break;
             case PlayerMovement.RotateClockwise:
                 board.rotateShapeClockwise();
                 break;
