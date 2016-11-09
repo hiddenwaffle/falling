@@ -96,9 +96,12 @@ export class Board {
     }
 
     rotateShapeClockwise() {
-        // TODO: Try first before doing
         this.currentShape.rotateClockwise();
-        this.fireActiveShapeChangedEvent();
+        if (this.collisionDetected()) {
+            this.currentShape.rotateCounterClockwise();
+        } else {
+            this.fireActiveShapeChangedEvent();
+        }
     }
 
     private clear() {
