@@ -1,6 +1,7 @@
 import {EventType, eventBus} from '../event/event-bus';
 import {CellChangeEvent} from '../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../event/active-shape-ended-event';
 import {lightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../domain/color';
 import {CellOffset} from '../domain/cell';
@@ -10,26 +11,19 @@ import {CellOffset} from '../domain/cell';
 class Switchboard {
     
     start() {
-        eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
-            this.handleCellChangeEvent(event);
-        });
-
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
             this.handleActiveShapeChangedEvent(event);
         });
 
+        eventBus.register(EventType.ActiveShapeEndedEventType, (event: ActiveShapeEndedEvent) => {
+            this.handleActiveShapeEndedEvent(event);
+        });
+        
+        eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
+            this.handleCellChangeEvent(event);
+        });
+
         lightingGrid.start();
-    }
-
-    private handleCellChangeEvent(event: CellChangeEvent) {
-        // let floorIdx = this.convertRowToFloor(event.cell.row);
-        // if (floorIdx >= FLOOR_COUNT) {
-        //     return; // Skip obstructed floors
-        // }
-
-        // let panelIdx = event.cell.col;
-        // let color = this.convertColor(event.cell.getColor());
-        // lightingGrid.switchRoomLight(floorIdx, panelIdx, color);
     }
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
@@ -45,6 +39,21 @@ class Switchboard {
             let offsetPanelIdx = panelIdx + offset.x;
             lightingGrid.sendBrightLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
+    }
+
+    private handleActiveShapeEndedEvent(event: ActiveShapeEndedEvent) {
+        // TODO: Maybe set some sort of animation in motion
+    }
+
+    private handleCellChangeEvent(event: CellChangeEvent) {
+        let floorIdx = this.convertRowToFloor(event.cell.row);
+        if (floorIdx >= FLOOR_COUNT) {
+            return; // Skip obstructed floors
+        }
+
+        let panelIdx = event.cell.col;
+        let color = this.convertColor(event.cell.getColor());
+        lightingGrid.switchRoomLight(floorIdx, panelIdx, color);
     }
 
     /**

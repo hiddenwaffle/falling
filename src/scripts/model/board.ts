@@ -5,6 +5,7 @@ import {shapeFactory} from './shape-factory';
 import {eventBus} from '../event/event-bus';
 import {CellChangeEvent} from '../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../event/active-shape-ended-event';
 
 const MAX_ROWS = 22; // Top 2 rows are obstructed from view.
 const MAX_COLS = 10;
@@ -42,8 +43,11 @@ export class Board {
         if (this.msTillGravityTick <= 0) {
             this.msTillGravityTick = TEMP_DELAY_MS;
             if (this.tryGravity()) {
-                this.doGravity();
+                this.moveShapeDown();
             } else {
+                this.fireActiveShapeEndedEvent();
+                this.convertShapeToCells();
+
                 if (this.checkForGameOver()) {
                     // TODO: Fire game lose event
                 } else {
@@ -139,21 +143,37 @@ export class Board {
         return canMoveDown;
     }
 
-    private doGravity() {
-        this.currentShape.moveDown();
-        this.fireActiveShapeChangedEvent();
+    private convertShapeToCells() {
+        for (let offset of this.currentShape.getOffsets()) {
+            let row = offset.y + this.currentShape.getRow();
+            let col = offset.x + this.currentShape.getCol();
+
+            if (row < 0 || row >= this.matrix.length) {
+                continue;
+            }
+
+            if (col < 0 || col >= this.matrix[row].length) {
+                continue;
+            }
+
+            this.changeCellColor(this.matrix[row][col], this.currentShape.color);
+        }
     }
 
-    private checkForGameOver() {
-        //
+    private checkForGameOver(): boolean {
+        return false; // TODO: Do it
     }
 
-    private checkForGameWin() {
-        return false;
+    private checkForGameWin(): boolean {
+        return false; // TODO: Do it
     }
 
     private fireActiveShapeChangedEvent() {
         eventBus.fire(new ActiveShapeChangedEvent(this.currentShape));
+    }
+
+    private fireActiveShapeEndedEvent() {
+        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape));
     }
 }
 export const board = new Board();

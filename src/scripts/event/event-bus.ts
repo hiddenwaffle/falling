@@ -1,7 +1,7 @@
 export enum EventType {
     CellChangeEventType,
-    ActiveShapeStartedType,
     ActiveShapeChangedEventType,
+    ActiveShapeEndedEventType,
     PlayerMovementEventType
 }
 
@@ -40,7 +40,7 @@ class EventBus {
         // TODO: Return a function that can be called to unregister the handler
     }
     
-    // TODO: unregister(). And remove delete the map key if zero handlers left for it.
+    // TODO: unregister(). And remove the map key if zero handlers left for it.
     
     // TODO: Prevent infinite fire()?
     fire(event:AbstractEvent) {
