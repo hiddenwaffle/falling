@@ -14,7 +14,7 @@ class World {
 
     start() {
         this.group.add(sky.group);
-        this.group.add(building.getGroup());
+        this.group.add(building.group);
         this.group.add(lightingGrid.getGroup());
 
         sky.start();
