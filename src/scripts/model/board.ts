@@ -206,6 +206,8 @@ export class Board {
 
     private handleAnyFilledLines() {
         let highestLineFilled = 0; // "highest" as in the highest in the array, which is the lowest visually to the player.
+
+        // Traverse backwards to prevent row index from becoming out of sync when removing rows.
         for (let rowIdx = this.matrix.length - 1; rowIdx >= 0; rowIdx--) {
             let row = this.matrix[rowIdx];
             let filled = true;
@@ -220,6 +222,7 @@ export class Board {
                     highestLineFilled = rowIdx;
                 }
                 this.removeAndCollapse(rowIdx);
+                rowIdx = rowIdx + 1; // This is a really, really shaky workaround. It prevents the next row from getting skipped over on next loop.
             }
         }
 
