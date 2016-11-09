@@ -26,6 +26,10 @@ export abstract class Shape {
         this.col++;
     }
 
+    moveUp() {
+        this.row--;
+    }
+
     moveDown() {
         this.row++;
     }

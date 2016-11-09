@@ -69,21 +69,30 @@ export class Board {
     }
 
     moveShapeLeft() {
-        // TODO: Try first before doing
         this.currentShape.moveLeft();
-        this.fireActiveShapeChangedEvent();
+        if (this.collisionDetected()) {
+            this.currentShape.moveRight();
+        } else {
+            this.fireActiveShapeChangedEvent();
+        }
     }
 
     moveShapeRight() {
-        // TODO: Try first before doing
         this.currentShape.moveRight();
-        this.fireActiveShapeChangedEvent();
+        if (this.collisionDetected()) {
+            this.currentShape.moveLeft();
+        } else {
+            this.fireActiveShapeChangedEvent();
+        }
     }
 
     moveShapeDown() {
-        // TODO: Try first before doing
         this.currentShape.moveDown();
-        this.fireActiveShapeChangedEvent();
+        if (this.collisionDetected()) {
+            this.currentShape.moveUp();
+        } else {
+            this.fireActiveShapeChangedEvent();
+        }
     }
 
     rotateShapeClockwise() {
@@ -116,31 +125,43 @@ export class Board {
     private tryGravity(): boolean {
         let canMoveDown = true;
 
+        this.currentShape.moveDown();
+        if (this.collisionDetected()) {
+            canMoveDown = false;
+        }
+        this.currentShape.moveUp();
+
+        return canMoveDown;
+    }
+
+    /**
+     * Intended for checking of the current position of the current
+     * shape has any overlap with existing cells that have color.
+     */
+    private collisionDetected(): boolean {
+        let collision = false;
+
         for (let offset of this.currentShape.getOffsets()) {
-            let sourceRow = offset.y + this.currentShape.getRow();
-            let sourceCol = offset.x + this.currentShape.getCol();
+            let row = offset.y + this.currentShape.getRow();
+            let col = offset.x + this.currentShape.getCol();
 
-            // Directly below the current position.
-            let destRow = sourceRow + 1;
-            let destCol = sourceCol;
-
-            if (destRow < 0 || destRow >= this.matrix.length) {
-                canMoveDown = false;
+            if (row < 0 || row >= this.matrix.length) {
+                collision = true;
                 break;
             }
 
-            if (destCol < 0 || destCol >= this.matrix[destRow].length) {
-                canMoveDown = false;
+            if (col < 0 || col >= this.matrix[row].length) {
+                collision = true;
                 break;
             }
 
-            if (this.matrix[destRow][destCol].getColor() !== Color.Empty) {
-                canMoveDown = false;
+            if (this.matrix[row][col].getColor() !== Color.Empty) {
+                collision = true;
                 break;
             }
         }
 
-        return canMoveDown;
+        return collision;
     }
 
     private convertShapeToCells() {
