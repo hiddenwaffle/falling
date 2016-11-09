@@ -95,6 +95,14 @@ export class Board {
         }
     }
 
+    moveShapeDownAllTheWay() {
+        do {
+            this.currentShape.moveDown();
+        } while (!this.collisionDetected());
+        this.currentShape.moveUp();
+        this.fireActiveShapeChangedEvent();
+    }
+
     rotateShapeClockwise() {
         this.currentShape.rotateClockwise();
         if (this.collisionDetected()) {
