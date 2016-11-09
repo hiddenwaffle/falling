@@ -20,7 +20,7 @@ class LightingGrid {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
                 let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.2); // TODO: clone() ?
-                let material = new THREE.MeshPhongMaterial();
+                let material = new THREE.MeshPhongMaterial({color: 0xf2e9d8});
                 let panel = new THREE.Mesh(geometry, material);
                 panel.position.set(panelIdx, floorIdx, 0);
                 this.panels[floorIdx][panelIdx] = panel;
@@ -29,7 +29,7 @@ class LightingGrid {
 
         this.pointLights = [];
         for (let count = 0; count < POINT_LIGHT_COUNT; count++) {
-            let pointLight = new THREE.PointLight(0xff00ff, 1.25, 1.75);
+            let pointLight = new THREE.PointLight(0xff00ff, 1.25, 1.25);
 // These two lines are for debugging:
 // let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
 // pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
