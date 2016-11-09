@@ -31,6 +31,7 @@ class Model {
                 break;
             case PlayerMovement.Drop:
                 board.moveShapeDownAllTheWay();
+                board.stepNow(); // prevent any other keystrokes till next tick
                 break;
             case PlayerMovement.RotateClockwise:
                 board.rotateShapeClockwise();

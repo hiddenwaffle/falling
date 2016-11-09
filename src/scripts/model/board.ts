@@ -35,28 +35,32 @@ export class Board {
         this.clear();
     }
 
-    /**
-     * This is a high level view of the main game loop.
-     */
     step(elapsed: number) {
         this.msTillGravityTick -= elapsed;
         if (this.msTillGravityTick <= 0) {
             this.msTillGravityTick = TEMP_DELAY_MS;
-            if (this.tryGravity()) {
-                this.moveShapeDown();
-            } else {
-                this.fireActiveShapeEndedEvent();
-                this.convertShapeToCells();
+            this.stepNow();
+        }
+    }
 
-                if (this.checkForGameOver()) {
-                    // TODO: Fire game lose event
+    /**
+     * This gives high level view of the main game loop.
+     */
+    stepNow() {
+        if (this.tryGravity()) {
+            this.moveShapeDown();
+        } else {
+            this.fireActiveShapeEndedEvent();
+            this.convertShapeToCells();
+
+            if (this.checkForGameOver()) {
+                // TODO: Fire game lose event
+            } else {
+                this.handleAnyFilledLines();
+                if (this.checkForGameWin()) {
+                    // TODO: Fire game win event
                 } else {
-                    this.handleAnyFilledLines();
-                    if (this.checkForGameWin()) {
-                        // TODO: Fire game win event
-                    } else {
-                        this.startShape();
-                    }
+                    this.startShape();
                 }
             }
         }
