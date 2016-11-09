@@ -2,13 +2,9 @@ import {Color} from './color';
 
 export class Cell {
     private color: Color;
-    readonly row: number;
-    readonly col: number;
 
-    constructor(row: number, col: number) {
+    constructor() {
         this.color = Color.Empty;
-        this.row = row;
-        this.col = col;
     }
 
     setColor(color: Color) {

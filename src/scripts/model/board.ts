@@ -24,7 +24,7 @@ export class Board {
         for (let rowIdx = 0; rowIdx < MAX_ROWS; rowIdx++) {
             this.matrix[rowIdx] = [];
             for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
-                this.matrix[rowIdx][colIdx] = new Cell(rowIdx, colIdx);
+                this.matrix[rowIdx][colIdx] = new Cell();
             }
         }
 
@@ -51,6 +51,7 @@ export class Board {
                 if (this.checkForGameOver()) {
                     // TODO: Fire game lose event
                 } else {
+                    this.handleAnyFilledLines();
                     if (this.checkForGameWin()) {
                         // TODO: Fire game win event
                     } else {
@@ -113,19 +114,21 @@ export class Board {
     }
 
     private clear() {
-        for (let row of this.matrix) {
-            for (let cell of row) {
-                this.changeCellColor(cell, Color.Empty);
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                let cell = row[colIdx];
+                this.changeCellColor(cell, rowIdx, colIdx, Color.Empty);
             }
         }
     }
 
     /**
-     * Helper method to change cell color and notify subscribers at the same time.
+     * Helper method to change a single cell color's and notify subscribers at the same time.
      */
-    private changeCellColor(cell: Cell, color: Color) {
+    private changeCellColor(cell: Cell, rowIdx: number, colIdx: number, color: Color) {
         cell.setColor(color);
-        eventBus.fire(new CellChangeEvent(cell));
+        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx));
     }
 
     private startShape() {
@@ -177,23 +180,65 @@ export class Board {
 
     private convertShapeToCells() {
         for (let offset of this.currentShape.getOffsets()) {
-            let row = offset.y + this.currentShape.getRow();
-            let col = offset.x + this.currentShape.getCol();
+            let rowIdx = offset.y + this.currentShape.getRow();
+            let colIdx = offset.x + this.currentShape.getCol();
 
-            if (row < 0 || row >= this.matrix.length) {
+            if (rowIdx < 0 || rowIdx >= this.matrix.length) {
                 continue;
             }
 
-            if (col < 0 || col >= this.matrix[row].length) {
+            if (colIdx < 0 || colIdx >= this.matrix[rowIdx].length) {
                 continue;
             }
 
-            this.changeCellColor(this.matrix[row][col], this.currentShape.color);
+            let cell = this.matrix[rowIdx][colIdx];
+            this.changeCellColor(cell, rowIdx, colIdx, this.currentShape.color);
         }
     }
 
     private checkForGameOver(): boolean {
         return false; // TODO: Do it
+    }
+
+    private handleAnyFilledLines() {
+        let highestLineFilled = 0; // "highest" as in the highest in the array, which is the lowest visually to the player.
+        for (let rowIdx = this.matrix.length - 1; rowIdx >= 0; rowIdx--) {
+            let row = this.matrix[rowIdx];
+            let filled = true;
+            for (let cell of row) {
+                if (cell.getColor() === Color.Empty) {
+                    filled = false;
+                    break;
+                }
+            }
+            if (filled) {
+                if (rowIdx > highestLineFilled) {
+                    highestLineFilled = rowIdx;
+                }
+                this.removeAndCollapse(rowIdx);
+            }
+        }
+
+        // Notify for all cells from 0 to the highestLineFilled, which could be 0 if no rows were filled.
+        for (let rowIdx = 0; rowIdx <= highestLineFilled; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                let cell = this.matrix[rowIdx][colIdx];
+                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx));
+            }
+        }
+    }
+
+    /**
+     * This removes the old row and puts a new row in its place at position 0, which is the highest visually to the player.
+     * Delegates cell notification to the calling method.
+     */
+    private removeAndCollapse(rowIdx: number) {
+        this.matrix.splice(rowIdx, 1);
+        this.matrix.splice(0, 0, []);
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            this.matrix[0][colIdx] = new Cell();
+        }
     }
 
     private checkForGameWin(): boolean {

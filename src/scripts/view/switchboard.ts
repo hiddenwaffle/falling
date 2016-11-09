@@ -46,12 +46,12 @@ class Switchboard {
     }
 
     private handleCellChangeEvent(event: CellChangeEvent) {
-        let floorIdx = this.convertRowToFloor(event.cell.row);
+        let floorIdx = this.convertRowToFloor(event.row);
         if (floorIdx >= FLOOR_COUNT) {
             return; // Skip obstructed floors
         }
 
-        let panelIdx = event.cell.col;
+        let panelIdx = event.col;
         let color = this.convertColor(event.cell.getColor());
         lightingGrid.switchRoomLight(floorIdx, panelIdx, color);
     }
