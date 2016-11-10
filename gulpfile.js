@@ -5,21 +5,23 @@ const source        = require('vinyl-source-stream');
 const buffer        = require('vinyl-buffer');
 const uglify        = require('gulp-uglify');
 const browserify    = require('browserify');
-const bsync         = require('browser-sync');
+const webserver     = require('gulp-webserver');
 const cached        = require('gulp-cached');
 
 gulp.task('clean', () => {
     return del(['dist']);
 });
 
-gulp.task('server', (done) => {
-    bsync({
-        open: false,
-        server: {
-            baseDir: ['dist']
-        }
-    });
-    done();
+gulp.task('server', () => {
+    gulp.src('dist')
+        .pipe(webserver());
+    // bsync({
+    //     open: false,
+    //     server: {
+    //         baseDir: ['dist']
+    //     }
+    // });
+    // done();
 });
 
 gulp.task('scripts', () => {
