@@ -38,9 +38,11 @@ class Sky {
         let ctx = canvas.getContext('2d');
         ctx.rect(0, 0, size, size);
         let gradient = ctx.createLinearGradient(0, 0, 0, size);
-        gradient.addColorStop(0.00, '#6ea0b8'); // light blue 99ddff
-        gradient.addColorStop(0.05, '#6ea0b8');
-        gradient.addColorStop(1.00, '#cf5300'); // burnt orange cf5300
+        gradient.addColorStop(0.00, '#000000');
+        gradient.addColorStop(0.40, '#131c45');
+        gradient.addColorStop(0.75, '#ff9544');
+        gradient.addColorStop(0.85, '#131c45');
+        gradient.addColorStop(1.00, '#131c45');
         ctx.fillStyle = gradient;
         ctx.fill();
         return canvas;
