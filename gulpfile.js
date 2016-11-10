@@ -15,13 +15,6 @@ gulp.task('clean', () => {
 gulp.task('server', () => {
     gulp.src('dist')
         .pipe(webserver());
-    // bsync({
-    //     open: false,
-    //     server: {
-    //         baseDir: ['dist']
-    //     }
-    // });
-    // done();
 });
 
 gulp.task('scripts', () => {
