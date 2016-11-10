@@ -6,5 +6,6 @@ export const enum Color {
     Green,
     Red,
     Blue,
-    Orange
+    Orange,
+    White
 }

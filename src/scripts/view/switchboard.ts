@@ -37,7 +37,7 @@ class Switchboard {
                 // continue; // Skip obstructed floors
             // }
             let offsetPanelIdx = panelIdx + offset.x;
-            lightingGrid.sendBrightLightTo(offsetFloorIdx, offsetPanelIdx, color);
+            lightingGrid.sendPointLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
     }
 
@@ -88,6 +88,9 @@ class Switchboard {
                 break;
             case Color.Orange:
                 value = 0xffa500;
+                break;
+            case Color.White:
+                value = 0xffffff;
                 break;
             // Default or missing case is black.
             case Color.Empty:

@@ -68,9 +68,8 @@ export class Board {
 
     beginNewGame() {
         this.clear();
-        // TODO: Other stuff
+        this.setRandomWhiteLights();
         this.startShape();
-        // TODO: Fire active shape changed event here? Deprecate the active shape started event?
     }
 
     moveShapeLeft() {
@@ -121,16 +120,24 @@ export class Board {
         for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
-                let cell = row[colIdx];
-                this.changeCellColor(cell, rowIdx, colIdx, Color.Empty);
+                this.changeCellColor(rowIdx, colIdx, Color.Empty);
             }
         }
+    }
+
+    private setRandomWhiteLights() {
+        // // http://stackoverflow.com/a/7228322
+        // function randomIntFromInterval(min: number, max: number) {
+        //     return Math.floor(Math.random()*(max - min + 1) + min);
+        // }
     }
 
     /**
      * Helper method to change a single cell color's and notify subscribers at the same time.
      */
-    private changeCellColor(cell: Cell, rowIdx: number, colIdx: number, color: Color) {
+    private changeCellColor(rowIdx: number, colIdx: number, color: Color) {
+        // TODO: Maybe bounds check here.
+        let cell = this.matrix[rowIdx][colIdx];
         cell.setColor(color);
         eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx));
     }
@@ -195,8 +202,7 @@ export class Board {
                 continue;
             }
 
-            let cell = this.matrix[rowIdx][colIdx];
-            this.changeCellColor(cell, rowIdx, colIdx, this.currentShape.color);
+            this.changeCellColor(rowIdx, colIdx, this.currentShape.color);
         }
     }
 

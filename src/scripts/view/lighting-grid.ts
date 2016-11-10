@@ -66,7 +66,7 @@ class LightingGrid {
         panel.material.emissive.setHex(color);
     }
 
-    sendBrightLightTo(floorIdx: number, panelIdx: number, color: number) {
+    sendPointLightTo(floorIdx: number, panelIdx: number, color: number) {
         let pointLight = this.getNextPointLight();
         pointLight.color.setHex(color);
         pointLight.position.set(panelIdx, floorIdx, 0.33);
