@@ -7,8 +7,8 @@ import {CellChangeEvent} from '../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 import {ActiveShapeEndedEvent} from '../event/active-shape-ended-event';
 
-const MAX_ROWS = 22; // Top 2 rows are obstructed from view.
-const MAX_COLS = 10;
+const MAX_ROWS = 19; // Top 2 rows are obstructed from view.
+const MAX_COLS = 9;
 const TEMP_DELAY_MS = 500;
 
 export class Board {

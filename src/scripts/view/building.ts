@@ -9,10 +9,10 @@ class Building {
     constructor() {
         this.group = new THREE.Object3D();
 
-        let geometry = new THREE.BoxGeometry(12, 25, 10);
+        let geometry = new THREE.BoxGeometry(11, 19, 10);
         let material = new THREE.MeshLambertMaterial({color: 0xffffff});
         this.slab = new THREE.Mesh(geometry, material);
-        this.slab.position.set(5, 10, -5.8);
+        this.slab.position.set(4.5, 8.5, -5.8);
     }
 
     start() {
