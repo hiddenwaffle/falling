@@ -1,4 +1,3 @@
-import {LawnSide} from '../../domain/lawn-side';
 import {Npc} from './npc';
 
 class NpcWrap {
