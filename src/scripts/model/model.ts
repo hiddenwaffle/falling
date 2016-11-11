@@ -1,4 +1,5 @@
 import {board} from './board';
+import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
@@ -11,11 +12,14 @@ class Model {
         });
 
         board.start();
+        npcManager.start();
+
         board.beginNewGame(); // TODO: Instead, start game when player hits a key first.
     }
 
     step(elapsed: number) {
         board.step(elapsed);
+        npcManager.step(elapsed);
     }
 
     private handlePlayerMovement(movement: PlayerMovement) {
