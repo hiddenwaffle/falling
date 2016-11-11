@@ -1,7 +1,10 @@
 export enum EventType {
-    CellChangeEventType,
     ActiveShapeChangedEventType,
     ActiveShapeEndedEventType,
+    CellChangeEventType,
+    NpcStartedEventType,
+    NpcMovementChangedEventType,
+    NpcStateChagedEventType,
     PlayerMovementEventType
 }
 

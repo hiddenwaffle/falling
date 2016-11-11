@@ -1,3 +1,6 @@
+import {EventType, eventBus} from '../../event/event-bus';
+import {NpcStartedEvent} from '../../event/npc-started-event';
+
 export const enum NpcState {
     Moving,
     Idle,
@@ -13,13 +16,13 @@ export class Npc {
     private timeInState: number;
 
     constructor() {
-        this.id = Math.random() * Number.MAX_SAFE_INTEGER;
+        this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
         this.state = NpcState.Idle;
         this.timeInState = 0;
     }
 
     start() {
-        //
+        eventBus.fire(new NpcStartedEvent(this.id));
     }
 
     /**

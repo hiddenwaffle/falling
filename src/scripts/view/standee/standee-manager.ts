@@ -1,33 +1,38 @@
 declare const THREE: any;
 
 import {Standee} from './standee';
+import {EventType, eventBus} from '../../event/event-bus';
+import {NpcStartedEvent} from '../../event/npc-started-event';
 
 class StandeeManager {
 
     readonly group: any;
 
-    private standees: Standee[];
+    private standees: Map<number, Standee>;
 
     constructor() {
         this.group = new THREE.Object3D();
 
-        this.standees = [];
+        this.standees = new Map<number, Standee>();
     }
 
     start() {
-        // this.tempThing(); // TODO: Temporary, remove this
+        eventBus.register(EventType.NpcStartedEventType, (event: NpcStartedEvent) => {
+            this.handleNpcStartedEvent(event);
+        });
     }
 
     step(elapsed: number) {
-        for (let standee of this.standees) {
+        this.standees.forEach((standee: Standee) => {
             standee.step(elapsed);
-        }
+        });
     }
 
-    // private tempThing() {
-    //     let standee = new Standee(123);
-    //     this.group.add(standee.sprite);
-    //     this.standees.push(standee);
-    // }
+    private handleNpcStartedEvent(event: NpcStartedEvent) {
+        let standee = new Standee(event.npcId);
+        this.group.add(standee.sprite);
+        this.standees.set(standee.npcId, standee);
+        standee.start();
+    }
 }
 export const standeeManager = new StandeeManager();
