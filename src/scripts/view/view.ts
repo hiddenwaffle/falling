@@ -32,7 +32,10 @@ class View {
         // TODO: Temporary for debugging?
         this.scene.add(new THREE.AmbientLight(0x404040));
 
-        this.camera.position.set(-2, 1, 18);
+        // These two lines set the camera near the "ideal" camera position.
+        // this.camera.position.set(-2, 1, 18);
+        // this.camera.lookAt(new THREE.Vector3(4, 7, 0));
+        this.camera.position.set(-2, 2, 25);
         this.camera.lookAt(new THREE.Vector3(4, 7, 0));
 
         this.renderer.setSize( window.innerWidth, window.innerHeight );

@@ -7,7 +7,7 @@ import {trackLawn} from './track-lawn';
 
 // Starting position counts used in initialization.
 const LAWN_NPCS = 10;
-const BUILDING_NPCS = 40;
+const BUILDING_NPCS = 100;
 const TOTAL_NPCS = LAWN_NPCS + BUILDING_NPCS;
 
 class NpcManager {
@@ -35,7 +35,7 @@ class NpcManager {
         let idx = 0;
         this.npcs.forEach((npc: Npc) => {
             if (idx >= 0 && idx < LAWN_NPCS) {
-                trackLawn.placeNpc(npc);
+                trackLawn.placeNpc(npc, true);
             } else if (idx >= LAWN_NPCS && idx < TOTAL_NPCS) {
                 trackBuilding.placeNpc(npc);
             }
@@ -51,6 +51,8 @@ class NpcManager {
         trackBuilding.step(elapsed);
         trackElevator.step(elapsed);
         trackLawn.step(elapsed);
+
+        // TODO: Maybe here check for NPCs that need to change tracks.
     }
 }
 export const npcManager = new NpcManager();
