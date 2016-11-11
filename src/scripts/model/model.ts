@@ -1,4 +1,4 @@
-import {board} from './board';
+import {board} from './board/board';
 import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
 import {PlayerMovement} from '../domain/player-movement';

@@ -1,13 +1,11 @@
-import {EventType, eventBus} from '../event/event-bus';
-import {CellChangeEvent} from '../event/cell-change-event';
-import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
-import {ActiveShapeEndedEvent} from '../event/active-shape-ended-event';
+import {EventType, eventBus} from '../../event/event-bus';
+import {CellChangeEvent} from '../../event/cell-change-event';
+import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {lightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
-import {Color} from '../domain/color';
-import {CellOffset} from '../domain/cell';
+import {Color} from '../../domain/color';
+import {CellOffset} from '../../domain/cell';
 
-// TODO: Maybe handles the glass and lights
-// TODO: Configure the lights to how the board says it should look
 class Switchboard {
     
     start() {

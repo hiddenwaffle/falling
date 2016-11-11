@@ -4,7 +4,8 @@ import {sky} from './sky';
 import {building} from './building';
 import {lightingGrid} from './lighting-grid';
 import {ground} from './ground';
-import {standeeManager} from './standee/standee-manager';
+
+import {switchboard} from './switchboard';
 
 class World {
     
@@ -17,15 +18,14 @@ class World {
     start() {
         this.group.add(sky.group);
         this.group.add(building.group);
-        this.group.add(lightingGrid.getGroup());
+        this.group.add(lightingGrid.group);
         this.group.add(ground.group);
-        this.group.add(standeeManager.group);
 
         sky.start();
         building.start();
         lightingGrid.start();
         ground.start();
-        standeeManager.start();
+        switchboard.start();
     }
 
     step(elapsed: number) {
@@ -33,7 +33,6 @@ class World {
         building.step(elapsed);
         lightingGrid.step(elapsed);
         ground.step(elapsed);
-        standeeManager.step(elapsed);
     }
 
     getGroup() {

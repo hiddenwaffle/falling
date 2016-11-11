@@ -1,5 +1,5 @@
 import {EventType, AbstractEvent} from './event-bus';
-import {Shape} from '../model/shape';
+import {Shape} from '../model/board/shape';
 
 export class ActiveShapeEndedEvent extends AbstractEvent {
 

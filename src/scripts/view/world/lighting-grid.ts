@@ -7,7 +7,8 @@ const POINT_LIGHT_COUNT = 4;
 
 class LightingGrid {
     
-    private group: any;
+    readonly group: any;
+    
     private panels: any[][];
     private pointLights: any[];
     private currentPointLightIdx: number;
@@ -70,10 +71,6 @@ class LightingGrid {
         let pointLight = this.getNextPointLight();
         pointLight.color.setHex(color);
         pointLight.position.set(panelIdx, floorIdx, 0.33);
-    }
-
-    getGroup(): any {
-        return this.group;
     }
 
     private getNextPointLight() {

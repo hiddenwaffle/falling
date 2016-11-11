@@ -1,7 +1,7 @@
 declare const THREE: any;
 
-import {switchboard} from './switchboard';
-import {world} from './world';
+import {world} from './world/world';
+import {standeeManager} from './standee/standee-manager';
 
 class View {
 
@@ -18,16 +18,19 @@ class View {
     start() {
         this.doStart();
         world.start();
-        switchboard.start();
+        standeeManager.start();
     }
 
     step(elapsed: number) {
         world.step(elapsed);
+        standeeManager.step(elapsed);
+
         this.renderer.render(this.scene, this.camera);
     }
 
     private doStart() {
         this.scene.add(world.getGroup());
+        this.scene.add(standeeManager.group);
 
         // TODO: Temporary for debugging?
         this.scene.add(new THREE.AmbientLight(0x404040));

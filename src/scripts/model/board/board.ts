@@ -1,11 +1,11 @@
 import {Shape} from './shape';
-import {Cell} from '../domain/cell';
-import {Color} from '../domain/color';
+import {Cell} from '../../domain/cell';
+import {Color} from '../../domain/color';
 import {shapeFactory} from './shape-factory';
-import {eventBus} from '../event/event-bus';
-import {CellChangeEvent} from '../event/cell-change-event';
-import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
-import {ActiveShapeEndedEvent} from '../event/active-shape-ended-event';
+import {eventBus} from '../../event/event-bus';
+import {CellChangeEvent} from '../../event/cell-change-event';
+import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view.
 const MAX_COLS = 9;

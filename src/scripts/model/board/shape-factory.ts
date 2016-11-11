@@ -1,5 +1,5 @@
 import {Shape} from './shape';
-import {Color} from '../domain/color';
+import {Color} from '../../domain/color';
 
 class ShapeI extends Shape {
     spawnColumn = 3;

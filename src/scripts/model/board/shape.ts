@@ -1,5 +1,5 @@
-import {CellOffset} from '../domain/cell';
-import {Color} from '../domain/color';
+import {CellOffset} from '../../domain/cell';
+import {Color} from '../../domain/color';
 
 const SPAWN_COL = 3; // Left side of matrix should correspond to this.
 
