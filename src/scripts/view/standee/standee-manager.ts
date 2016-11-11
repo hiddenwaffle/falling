@@ -15,7 +15,7 @@ class StandeeManager {
     }
 
     start() {
-        //
+        // this.tempThing(); // TODO: Temporary, remove this
     }
 
     step(elapsed: number) {
@@ -23,5 +23,11 @@ class StandeeManager {
             standee.step(elapsed);
         }
     }
+
+    // private tempThing() {
+    //     let standee = new Standee(123);
+    //     this.group.add(standee.sprite);
+    //     this.standees.push(standee);
+    // }
 }
 export const standeeManager = new StandeeManager();
