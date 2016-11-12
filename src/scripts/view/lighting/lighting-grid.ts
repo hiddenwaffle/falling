@@ -13,6 +13,8 @@ class LightingGrid {
     private pointLights: any[];
     private currentPointLightIdx: number;
 
+    private pulseDiff = 0;
+
     constructor() {
         this.group = new THREE.Object3D();
 
@@ -58,13 +60,23 @@ class LightingGrid {
         }
     }
 
+    private emissiveIntensity = 1.0;
+    private emissiveDiff = 0.01;
     step(elapsed: number) {
-        // for (let floor of this.cubes) {
-        //     for (let glass of floor) {
-        //         glass.rotation.x += 0.01;
-        //         glass.rotation.y += 0.01;
-        //     }
-        // }
+        // TODO: Use elapsed, and in something other than a linear equation.
+        this.emissiveIntensity += this.emissiveDiff;
+        if (this.emissiveIntensity <= 0.5) {
+            this.emissiveDiff = 0.01;
+        } else if (this.emissiveIntensity >= 1) {
+            this.emissiveDiff = -0.01;
+        }
+        
+        for (let floor of this.panels) {
+            for (let panel of floor) {
+                panel.material.emissiveIntensity = this.emissiveIntensity;
+                // console.log('val: ' + val);
+            }
+        }
     }
 
     switchRoomLight(floorIdx: number, panelIdx: number, color: number) {

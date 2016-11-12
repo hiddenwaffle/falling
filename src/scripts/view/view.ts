@@ -15,7 +15,6 @@ class View {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({antialias: true});
-        this.renderer.autoClear = false;
         // this.renderer.sortObjects = false; // FIXME: I'm not sure why I'm able to comment this out now...
     }
 
@@ -40,7 +39,6 @@ class View {
         //     obj.renderOrder = distance * -1;
         // }
 
-        this.renderer.clear();
         this.renderer.render(this.scene, this.camera);
     }
 
