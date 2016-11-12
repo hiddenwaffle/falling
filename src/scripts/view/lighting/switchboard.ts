@@ -24,6 +24,10 @@ class Switchboard {
         lightingGrid.start();
     }
 
+    step(elapsed: number) {
+        //
+    }
+
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
         let floorIdx = this.convertRowToFloor(event.shape.getRow());
         let panelIdx = event.shape.getCol();

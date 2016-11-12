@@ -15,12 +15,6 @@ class StandeeManager {
     constructor() {
         this.group = new THREE.Object3D();
 
-        // let geometry = new THREE.BoxGeometry(4, 3, 1);
-        // let material = new THREE.MeshBasicMaterial({color: 0x00aa33, transparent: true, opacity: 0.5});
-        // let cube = new THREE.Mesh(geometry, material);
-        // cube.position.set(1, 0, 5);
-        // this.group.add(cube);
-
         this.standees = new Map<number, Standee>();
     }
 
@@ -75,7 +69,11 @@ class StandeeManager {
         standee.moveTo(x, y, z);
 
         // TODO: Walk to either side of building, or to a point somewhere right of camera
-        standee.walkTo(0, 0.5, 0, 0.02);
+        if (z > 12) {
+            standee.walkTo(0, 0.5, 0, 0.02);
+        } else {
+            standee.walkTo(20, 0.5, 20, 0.02);
+        }
     }
 }
 export const standeeManager = new StandeeManager();
