@@ -35,7 +35,7 @@ class NpcManager {
         let idx = 0;
         this.npcs.forEach((npc: Npc) => {
             if (idx >= 0 && idx < LAWN_NPCS) {
-                trackLawn.placeNpc(npc, true);
+                trackLawn.placeNpc(npc);
             } else if (idx >= LAWN_NPCS && idx < TOTAL_NPCS) {
                 trackBuilding.placeNpc(npc);
             }

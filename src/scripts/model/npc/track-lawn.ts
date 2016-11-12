@@ -1,6 +1,9 @@
+import {eventBus, EventType} from '../../event/event-bus';
+import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {Npc} from './npc';
+import {Location} from '../../domain/location';
 
-class NpcWrap {
+class LawnCart {
 
     readonly npc: Npc;
 
@@ -23,10 +26,10 @@ class NpcWrap {
  */
 class TrackLawn {
 
-    private npcWraps: NpcWrap[];
+    private lawnCarts: LawnCart[];
 
     constructor() {
-        this.npcWraps = [];
+        this.lawnCarts = [];
     }
 
     start() {
@@ -34,19 +37,19 @@ class TrackLawn {
     }
 
     step(elapsed: number) {
-        for (let npcWrap of this.npcWraps) {
-            npcWrap.step(elapsed);
+        for (let lawnCart of this.lawnCarts) {
+            lawnCart.step(elapsed);
         };
     }
 
-    placeNpc(npc: Npc, random: boolean) {
-        if (random) {
-            // TODO: Random coordinates.
-        } else {
-            // TODO: Where front of building would be.
-        }
-        let npcWrap = new NpcWrap(npc); 
-        this.npcWraps.push(npcWrap);
+    placeNpc(npc: Npc) {
+        let lawnCart = new LawnCart(npc); 
+        this.lawnCarts.push(lawnCart);
+        eventBus.fire(new NpcPlacedEvent(npc.id, Location.Lawn));
+    }
+
+    placeNpcDoor(npc: Npc) {
+        // TODO: Like placeNpcRandom(), but at a specific coordinate.
     }
 }
 export const trackLawn = new TrackLawn();

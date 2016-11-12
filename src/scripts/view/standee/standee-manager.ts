@@ -1,8 +1,10 @@
 declare const THREE: any;
 
 import {Standee} from './standee';
+import {Location} from '../../domain/location';
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcStartedEvent} from '../../event/npc-started-event';
+import {NpcPlacedEvent} from '../../event/npc-placed-event';
 
 class StandeeManager {
 
@@ -20,6 +22,10 @@ class StandeeManager {
         eventBus.register(EventType.NpcStartedEventType, (event: NpcStartedEvent) => {
             this.handleNpcStartedEvent(event);
         });
+
+        eventBus.register(EventType.NpcPlacedEventType, (event: NpcPlacedEvent) => {
+            this.handleNpcPlacedEvent(event);
+        });
     }
 
     step(elapsed: number) {
@@ -30,9 +36,37 @@ class StandeeManager {
 
     private handleNpcStartedEvent(event: NpcStartedEvent) {
         let standee = new Standee(event.npcId);
+        standee.start();
         this.group.add(standee.sprite);
         this.standees.set(standee.npcId, standee);
-        standee.start();
+    }
+
+    private handleNpcPlacedEvent(event: NpcPlacedEvent) {
+        let standee = this.standees.get(event.npcId);
+        if (standee !== null && standee !== undefined) {
+            switch (event.location) {
+                case Location.Lawn:
+                    this.moveToLawn(standee);
+                    break;
+                case Location.Door:
+                    debugger;
+                case Location.Building:
+                    debugger;
+                    break;
+                case Location.Elevator:
+                    debugger;
+                    break;
+                default:
+                    console.error('Unknown location: ' + event.location);
+            }
+        }
+    }
+
+    private moveToLawn(standee: Standee) {
+        let x = (Math.random() * 20) - 5;
+        let y = 0.5;
+        let z = (Math.random() * 25);
+        standee.sprite.position.set(x, y, z);
     }
 }
 export const standeeManager = new StandeeManager();

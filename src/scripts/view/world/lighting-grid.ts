@@ -23,7 +23,12 @@ class LightingGrid {
                 let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.2); // TODO: clone() ?
                 let material = new THREE.MeshPhongMaterial({color: 0xf2e9d8});
                 let panel = new THREE.Mesh(geometry, material);
-                panel.position.set(panelIdx, floorIdx, 0);
+
+                let x = panelIdx;
+                let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
+                let z = 0;
+                panel.position.set(x, y, z);
+
                 this.panels[floorIdx][panelIdx] = panel;
             }
         }
@@ -70,7 +75,11 @@ class LightingGrid {
     sendPointLightTo(floorIdx: number, panelIdx: number, color: number) {
         let pointLight = this.getNextPointLight();
         pointLight.color.setHex(color);
-        pointLight.position.set(panelIdx, floorIdx, 0.33);
+
+        let x = panelIdx;
+        let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
+        let z = 0.33;
+        pointLight.position.set(x, y, z);
     }
 
     private getNextPointLight() {

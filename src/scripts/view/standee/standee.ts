@@ -13,19 +13,18 @@ export class Standee {
         let texture = textureLoader.load('crono.png');
         let material = new THREE.SpriteMaterial({map: texture});
         this.sprite = new THREE.Sprite(material);
-        this.sprite.position.set(-2, 0, 15);
-        // this.sprite.scale.set(1, 1.35, 1);
     }
 
     start() {
+        this.sprite.position.set(-200, -1.5, -200);
+        // this.sprite.scale.set(1, 1.35, 1);
+        // this.sprite.visible = false;
+
         // this.dx = (Math.random() * 0.05) - 0.025;
         // this.dy = (Math.random() * 0.05) - 0.025;
         // this.dz = (Math.random() * 0.05) - 0.025;
     }
 
-    /**
-     * Called by StandeeManager, not individual tracks.
-     */
     step(elapsed: number) {
         // let x = this.sprite.position.x += this.dx;
         // this.sprite.position.setX(x);
