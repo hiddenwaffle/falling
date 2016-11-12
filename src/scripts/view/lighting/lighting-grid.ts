@@ -21,7 +21,7 @@ class LightingGrid {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
                 let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.2); // TODO: clone() ?
-                let material = new THREE.MeshPhongMaterial({color: 0xf2e9d8, opacity: 0.9, transparent: true});
+                let material = new THREE.MeshPhongMaterial({color: 0xf2e9d8});
                 let panel = new THREE.Mesh(geometry, material);
 
                 let x = panelIdx;

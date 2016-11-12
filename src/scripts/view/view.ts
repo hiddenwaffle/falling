@@ -7,14 +7,12 @@ import {standeeManager} from './standee/standee-manager';
 
 class View {
 
-    private sceneMain: any;
-    private sceneLighting: any;
+    private scene: any;
     private camera: any;
     private renderer: any;
 
     constructor() {
-        this.sceneMain = new THREE.Scene();
-        this.sceneLighting = new THREE.Scene();
+        this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.autoClear = false;
@@ -43,18 +41,16 @@ class View {
         // }
 
         this.renderer.clear();
-        this.renderer.render(this.sceneMain, this.camera);
-        this.renderer.render(this.sceneLighting, this.camera);
+        this.renderer.render(this.scene, this.camera);
     }
 
     private doStart() {
-        this.sceneMain.add(world.group);
-        this.sceneMain.add(standeeManager.group);
-        this.sceneLighting.add(lightingGrid.group);
+        this.scene.add(world.group);
+        this.scene.add(standeeManager.group);
+        this.scene.add(lightingGrid.group);
 
         // TODO: Temporary for debugging?
-        this.sceneMain.add(new THREE.AmbientLight(0x404040));
-        this.sceneLighting.add(new THREE.AmbientLight(0x404040));
+        this.scene.add(new THREE.AmbientLight(0x404040));
 
         this.camera.position.set(-3, 1.5, 20);
         this.camera.lookAt(new THREE.Vector3(4, 9, 0));
