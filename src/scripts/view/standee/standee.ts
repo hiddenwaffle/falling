@@ -15,7 +15,7 @@ export class Standee {
         // TODO: Delete this temporary code
         let textureLoader = new THREE.TextureLoader();
         let texture = textureLoader.load('crono.png');
-        let material = new THREE.SpriteMaterial({map: texture, depthWrite: false});
+        let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
         this.sprite = new THREE.Sprite(material);
     }
 
@@ -34,8 +34,6 @@ export class Standee {
         let y = this.sprite.position.y += this.dy;
         let z = this.sprite.position.z += this.dz;
         this.sprite.position.set(x, y, z);
-
-        
     }
 
     /**
