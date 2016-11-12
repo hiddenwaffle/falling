@@ -13,7 +13,7 @@ class View {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({antialias: true});
-        // this.renderer.sortObjects = false;
+        // this.renderer.sortObjects = false; // FIXME: I'm not sure why I'm able to comment this out now...
     }
 
     start() {
@@ -26,7 +26,7 @@ class View {
         world.step(elapsed);
         standeeManager.step(elapsed);
 
-        // NOTE: I'm not really sure why it is sorting these correctly without this:
+        // FIXME: I'm not really sure why it is sorting these correctly without this:
         // for (let obj of standeeManager.group.children) {
         //     let distance = this.camera.position.distanceTo(obj.position);
         //     obj.renderOrder = distance * -1;

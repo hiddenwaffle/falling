@@ -15,7 +15,7 @@ class StandeeManager {
     constructor() {
         this.group = new THREE.Object3D();
 
-        // let geometry = new THREE.BoxGeometry(2, 3, 1);
+        // let geometry = new THREE.BoxGeometry(4, 3, 1);
         // let material = new THREE.MeshBasicMaterial({color: 0x00aa33, transparent: true, opacity: 0.5});
         // let cube = new THREE.Mesh(geometry, material);
         // cube.position.set(1, 0, 5);
