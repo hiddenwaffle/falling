@@ -65,8 +65,11 @@ class StandeeManager {
     private moveToLawn(standee: Standee) {
         let x = (Math.random() * 20) - 5;
         let y = 0.5;
-        let z = (Math.random() * 25);
-        standee.sprite.position.set(x, y, z);
+        let z = (Math.random() * 20) + 5;
+        standee.moveTo(x, y, z);
+
+        // TODO: Walk to either side of building, or to a point somewhere right of camera
+        standee.walkTo(0, 0.5, 0, 0.02);
     }
 }
 export const standeeManager = new StandeeManager();
