@@ -29,7 +29,7 @@ class View {
     }
 
     private doStart() {
-        this.scene.add(world.getGroup());
+        this.scene.add(world.group);
         this.scene.add(standeeManager.group);
 
         // TODO: Temporary for debugging?

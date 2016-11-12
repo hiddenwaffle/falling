@@ -54,7 +54,7 @@ export class Standee {
         this.dx = vec.x;
         this.dy = vec.y;
         this.dz = vec.z;
-        
+
         // TODO: How to calculate ttl from this?
     }
 }

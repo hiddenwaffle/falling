@@ -9,7 +9,7 @@ import {switchboard} from './switchboard';
 
 class World {
     
-    private group: any;
+    readonly group: any;
 
     constructor() {
         this.group = new THREE.Object3D();
@@ -33,10 +33,6 @@ class World {
         building.step(elapsed);
         lightingGrid.step(elapsed);
         ground.step(elapsed);
-    }
-
-    getGroup() {
-        return this.group;
     }
 }
 export const world = new World();
