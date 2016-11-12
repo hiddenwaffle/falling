@@ -15,7 +15,7 @@ export class Standee {
         // TODO: Delete this temporary code
         let textureLoader = new THREE.TextureLoader();
         let texture = textureLoader.load('crono.png');
-        let material = new THREE.SpriteMaterial({map: texture});
+        let material = new THREE.SpriteMaterial({map: texture, depthWrite: false});
         this.sprite = new THREE.Sprite(material);
     }
 
@@ -34,6 +34,8 @@ export class Standee {
         let y = this.sprite.position.y += this.dy;
         let z = this.sprite.position.z += this.dz;
         this.sprite.position.set(x, y, z);
+
+        
     }
 
     /**
@@ -50,11 +52,8 @@ export class Standee {
         let dest = new THREE.Vector3(x, y, z);
         let vec = dest.sub(this.sprite.position);
         vec = vec.normalize();
-        vec.multiplyScalar(speed);
-        this.dx = vec.x;
-        this.dy = vec.y;
-        this.dz = vec.z;
-
-        // TODO: How to calculate ttl from this?
+        this.dx = vec.x * speed;
+        this.dy = vec.y * speed;
+        this.dz = vec.z * speed;
     }
 }
