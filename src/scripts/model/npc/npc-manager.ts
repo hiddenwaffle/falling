@@ -23,11 +23,6 @@ class NpcManager {
         this.npcs.forEach((npc: Npc) => {
             npc.start();
         });
-
-        // Set NPCs into starting positions.
-        this.npcs.forEach((npc: Npc) => {
-            eventBus.fire(new NpcPlacedEvent(npc.id, npc.getState()));
-        });
     }
 
     step(elapsed: number) {

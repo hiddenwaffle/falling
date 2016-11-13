@@ -4,7 +4,6 @@ export enum EventType {
     CellChangeEventType,
     NpcMovementChangedEventType,
     NpcPlacedEventType,
-    NpcStartedEventType,
     NpcStateChagedEventType,
     PlayerMovementEventType
 }

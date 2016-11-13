@@ -1,5 +1,5 @@
 import {EventType, eventBus} from '../../event/event-bus';
-import {NpcStartedEvent} from '../../event/npc-started-event';
+import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcState} from '../../domain/npc-state';
 
 export class Npc {
@@ -14,7 +14,8 @@ export class Npc {
     }
 
     start() {
-        eventBus.fire(new NpcStartedEvent(this.id));
+        // TODO: Set its coordinates?
+        eventBus.fire(new NpcPlacedEvent(this.id, this.state));
     }
 
     /**
