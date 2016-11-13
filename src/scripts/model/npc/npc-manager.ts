@@ -1,7 +1,8 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
-import {trackLawn} from './track-lawn';
+import {eventBus, EventType} from '../../event/event-bus';
+import {NpcPlacedEvent} from '../../event/npc-placed-event';
 
 // Starting position counts used in initialization.
 const TOTAL_NPCS = 20;
@@ -23,11 +24,9 @@ class NpcManager {
             npc.start();
         });
 
-        trackLawn.start();
-
         // Set NPCs into starting positions.
         this.npcs.forEach((npc: Npc) => {
-            trackLawn.placeNpc(npc);
+            eventBus.fire(new NpcPlacedEvent(npc.id, npc.getState()));
         });
     }
 
@@ -35,10 +34,6 @@ class NpcManager {
         this.npcs.forEach((npc: Npc) => {
             npc.step(elapsed);
         });
-
-        trackLawn.step(elapsed);
-
-        // TODO: Maybe here check for NPCs that need to change tracks.
     }
 }
 export const npcManager = new NpcManager();
