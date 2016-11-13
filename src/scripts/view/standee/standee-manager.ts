@@ -54,7 +54,7 @@ class StandeeManager {
         if (standee != null) {
             let x = event.x;
             let z = event.y;
-            standee.walkTo(x, z, 5000);
+            standee.walkTo(x, z, 1);
         }
     }
 }

@@ -47,11 +47,17 @@ export class Standee {
 
     /**
      * Set standee in motion towards given position.
+     * Speed dimension is 1 unit/sec.
      */
-    walkTo(x: number, z: number, ttl: number) {
+    walkTo(x: number, z: number, speed: number) {
         this.walkOrigin = this.sprite.position.clone();
         this.walkVector = new THREE.Vector3(x, Y_COORD, z).sub(this.walkOrigin);
+
+        // Calculate how long it would take, given the speed requested.
+        let distance = this.walkVector.length();
+        let ttl = (distance / speed) * 1000;
         this.walkTtl = ttl;
+
         this.walkTime = 0;
     }
 
