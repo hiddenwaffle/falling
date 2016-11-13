@@ -1,14 +1,6 @@
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcStartedEvent} from '../../event/npc-started-event';
-
-export const enum NpcState {
-    Moving,
-    Idle,
-    Alarmed,
-    Watching,
-    Cheering
-    // TODO: Socializing? Might take too much time to implement.
-}
+import {NpcState} from '../../domain/npc-state';
 
 export class Npc {
     readonly id: number;

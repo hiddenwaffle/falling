@@ -5,9 +5,10 @@ export class Standee {
     readonly sprite: any;
     readonly npcId: number;
 
-    private dx: number;
-    private dy: number;
-    private dz: number;
+    private walkOrigin: any;    // Where the walk started.
+    private walkVector: any;    // Where the walk ends, relative to where it started.
+    private walkTtl: number;    // How many ms it should take to get from start to end.
+    private walkTime: number;   // How many ms has passed since it started moving.
 
     constructor(npcId: number) {
         this.npcId = npcId;
@@ -17,23 +18,18 @@ export class Standee {
         let texture = textureLoader.load('crono.png');
         let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
         this.sprite = new THREE.Sprite(material);
+
+        this.walkOrigin = new THREE.Vector3();
+        this.walkVector = new THREE.Vector3();
+        this.stopWalk(); // Rest of walk-related initialization is in its own method.
     }
 
     start() {
         this.sprite.position.set(-200, -1.5, -200);
-        // this.sprite.scale.set(1, 1.35, 1);
-        // this.sprite.visible = false;
-
-        // this.dx = (Math.random() * 0.05) - 0.025;
-        // this.dy = (Math.random() * 0.05) - 0.025;
-        // this.dz = (Math.random() * 0.05) - 0.025;
     }
 
     step(elapsed: number) {
-        let x = this.sprite.position.x += this.dx;
-        let y = this.sprite.position.y += this.dy;
-        let z = this.sprite.position.z += this.dz;
-        this.sprite.position.set(x, y, z);
+        this.stepWalk(elapsed);
     }
 
     /**
@@ -46,12 +42,38 @@ export class Standee {
     /**
      * Set standee in motion towards given position.
      */
-    walkTo(x: number, y: number, z: number, speed: number) {
-        let dest = new THREE.Vector3(x, y, z);
-        let vec = dest.sub(this.sprite.position);
-        vec = vec.normalize();
-        this.dx = vec.x * speed;
-        this.dy = vec.y * speed;
-        this.dz = vec.z * speed;
+    walkTo(x: number, y: number, z: number, ttl: number) {
+        this.walkOrigin = this.sprite.position.clone();
+        this.walkVector = new THREE.Vector3(x, y, z).sub(this.walkOrigin);
+        this.walkTtl = ttl;
+        this.walkTime = 0;
+    }
+
+    private stepWalk(elapsed: number) {
+        if (this.walkTtl > 0) {
+            this.walkTime += elapsed;
+
+            let walkFinished = false;
+            if (this.walkTime >= this.walkTtl) {
+                this.walkTime = this.walkTtl;
+                walkFinished = true;
+            }
+
+            let pctDone = this.walkTime / this.walkTtl;
+            let delta = this.walkVector.clone().multiplyScalar(pctDone);
+            let newPosition = this.walkOrigin.clone().add(delta);
+            this.sprite.position.copy(newPosition);
+
+            if (walkFinished) {
+                this.stopWalk();
+            }
+        }
+    }
+
+    private stopWalk() {
+        this.walkOrigin.set(0, 0, 0);
+        this.walkVector.set(0, 0, 0);
+        this.walkTtl = 0;
+        this.walkTime = 0;
     }
 }

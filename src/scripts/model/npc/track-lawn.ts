@@ -1,7 +1,6 @@
 import {eventBus, EventType} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {Npc} from './npc';
-import {Location} from '../../domain/location';
 
 class LawnCart {
 
@@ -45,7 +44,7 @@ class TrackLawn {
     placeNpc(npc: Npc) {
         let lawnCart = new LawnCart(npc); 
         this.lawnCarts.push(lawnCart);
-        eventBus.fire(new NpcPlacedEvent(npc.id, Location.Lawn));
+        eventBus.fire(new NpcPlacedEvent(npc.id, npc.getState()));
     }
 
     placeNpcDoor(npc: Npc) {

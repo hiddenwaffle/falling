@@ -1,15 +1,15 @@
 import {EventType, AbstractEvent} from './event-bus';
-import {Location} from '../domain/location';
+import {NpcState} from '../domain/npc-state';
 
 export class NpcPlacedEvent extends AbstractEvent {
 
     readonly npcId: number;
-    readonly location: Location;
+    readonly state: NpcState;
 
-    constructor(npcId: number, location: Location) {
+    constructor(npcId: number, state: NpcState) {
         super();
         this.npcId = npcId;
-        this.location = location;
+        this.state = state;
     }
 
     getType() {

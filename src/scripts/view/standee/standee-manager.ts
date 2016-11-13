@@ -1,7 +1,6 @@
 declare const THREE: any;
 
 import {Standee} from './standee';
-import {Location} from '../../domain/location';
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcStartedEvent} from '../../event/npc-started-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
@@ -43,22 +42,8 @@ class StandeeManager {
 
     private handleNpcPlacedEvent(event: NpcPlacedEvent) {
         let standee = this.standees.get(event.npcId);
-        if (standee !== null && standee !== undefined) {
-            switch (event.location) {
-                case Location.Lawn:
-                    this.moveToLawn(standee);
-                    break;
-                case Location.Door:
-                    debugger;
-                case Location.Building:
-                    debugger;
-                    break;
-                case Location.Elevator:
-                    debugger;
-                    break;
-                default:
-                    console.error('Unknown location: ' + event.location);
-            }
+        if (standee != null) {
+            this.moveToLawn(standee);
         }
     }
 
@@ -70,9 +55,9 @@ class StandeeManager {
 
         // TODO: Walk to either side of building, or to a point somewhere right of camera
         if (z > 12) {
-            standee.walkTo(0, 0.5, 0, 0.02);
+            standee.walkTo(0, 0.5, 0, 5000);
         } else {
-            standee.walkTo(20, 0.5, 20, 0.02);
+            standee.walkTo(20, 0.5, 20, 5000);
         }
     }
 }

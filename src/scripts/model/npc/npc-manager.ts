@@ -1,8 +1,6 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
-import {trackBuilding} from './track-building';
-import {trackElevator} from './track-elevator';
 import {trackLawn} from './track-lawn';
 
 // Starting position counts used in initialization.
@@ -25,8 +23,6 @@ class NpcManager {
             npc.start();
         });
 
-        trackBuilding.start();
-        trackElevator.start();
         trackLawn.start();
 
         // Set NPCs into starting positions.
@@ -40,8 +36,6 @@ class NpcManager {
             npc.step(elapsed);
         });
 
-        trackBuilding.step(elapsed);
-        trackElevator.step(elapsed);
         trackLawn.step(elapsed);
 
         // TODO: Maybe here check for NPCs that need to change tracks.
