@@ -38,22 +38,24 @@ class StandeeManager {
         standee.start();
         this.group.add(standee.sprite);
         this.standees.set(standee.npcId, standee);
-        this.moveToInitialPosition(standee);
+
+        // TODO: Convert event.x,y to world x,z and multiply by scaling
+        let x = (Math.random() * 20) - 5;
+        let z = (Math.random() * 20) + 5;
+
+        this.moveToInitialPosition(standee, x, z);
     }
 
-    private moveToInitialPosition(standee: Standee) {
-        // TODO: Use event.x, event.y to calculate
-        let x = (Math.random() * 20) - 5;
-        let y = 0.5;
-        let z = (Math.random() * 20) + 5;
-        standee.moveTo(x, y, z);
+    private moveToInitialPosition(standee: Standee, x: number, z: number) {
+        // TODO: Use event.x, event.y with scaling to determine destination
+        standee.moveTo(x,z);
     }
 
     private handleNpcMovementChangedEvent(event: NpcMovementChangedEvent) {
         let standee = this.standees.get(event.npcId);
         if (standee != null) {
             // TODO: Use event.x, event.y to calculate
-            standee.walkTo(0, 0.5, 0, 5000);
+            standee.walkTo(0, 0, 5000);
         }
     }
 }

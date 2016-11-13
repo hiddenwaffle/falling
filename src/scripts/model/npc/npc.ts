@@ -5,22 +5,31 @@ import {NpcState} from '../../domain/npc-state';
 
 export class Npc {
     readonly id: number;
+
     private state: NpcState;
     private timeInState: number;
 
+    private x: number;
+    private y: number;
+
     constructor() {
         this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+
         this.state = NpcState.Idle;
         this.timeInState = 0;
+
+        this.x = 0;
+        this.y = 0;
     }
 
     start() {
-        // TODO: Set its coordinates?
-        let x = 0;
-        let y = 0;
-        eventBus.fire(new NpcPlacedEvent(this.id, this.state));
+        // TODO: Set its coordinates.
+        eventBus.fire(new NpcPlacedEvent(this.id, this.state, this.x, this.y));
+
         // TODO: Move this elsewhere:
-        eventBus.fire(new NpcMovementChangedEvent(this.id, x, y));
+        let xdest = 0;
+        let ydest = 0;
+        eventBus.fire(new NpcMovementChangedEvent(this.id, xdest, ydest));
     }
 
     /**

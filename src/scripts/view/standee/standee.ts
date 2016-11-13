@@ -1,5 +1,7 @@
 declare const THREE: any;
 
+const Y_COORD = 0.5;
+
 export class Standee {
 
     readonly sprite: any;
@@ -25,7 +27,7 @@ export class Standee {
     }
 
     start() {
-        this.sprite.position.set(-200, -1.5, -200);
+        this.sprite.position.set(-200, Y_COORD, -200);
     }
 
     step(elapsed: number) {
@@ -35,16 +37,16 @@ export class Standee {
     /**
      * Immediately set standee on given position.
      */
-    moveTo(x: number, y: number, z: number) {
-        this.sprite.position.set(x, y, z);
+    moveTo(x: number, z: number) {
+        this.sprite.position.set(x, Y_COORD, z);
     }
 
     /**
      * Set standee in motion towards given position.
      */
-    walkTo(x: number, y: number, z: number, ttl: number) {
+    walkTo(x: number, z: number, ttl: number) {
         this.walkOrigin = this.sprite.position.clone();
-        this.walkVector = new THREE.Vector3(x, y, z).sub(this.walkOrigin);
+        this.walkVector = new THREE.Vector3(x, Y_COORD, z).sub(this.walkOrigin);
         this.walkTtl = ttl;
         this.walkTime = 0;
     }
@@ -71,8 +73,6 @@ export class Standee {
     }
 
     private stopWalk() {
-        this.walkOrigin.set(0, 0, 0);
-        this.walkVector.set(0, 0, 0);
         this.walkTtl = 0;
         this.walkTime = 0;
     }
