@@ -1,5 +1,8 @@
 declare const THREE: any;
 
+import {EventType, eventBus} from '../../event/event-bus';
+import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
+
 const Y_COORD = 0.5;
 
 export class Standee {
@@ -23,7 +26,8 @@ export class Standee {
 
         this.walkOrigin = new THREE.Vector3();
         this.walkVector = new THREE.Vector3();
-        this.stopWalk(); // Rest of walk-related initialization is in its own method.
+        this.walkTtl = 0;
+        this.walkTime = 0;
     }
 
     start() {
@@ -75,5 +79,11 @@ export class Standee {
     private stopWalk() {
         this.walkTtl = 0;
         this.walkTime = 0;
+
+        eventBus.fire(new StandeeMovementEndedEvent(
+            this.npcId,
+            this.sprite.position.x,
+            this.sprite.position.z)
+        );
     }
 }

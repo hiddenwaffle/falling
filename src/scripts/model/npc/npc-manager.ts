@@ -1,7 +1,9 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
+import {NpcState} from '../../domain/npc-state';
 import {eventBus, EventType} from '../../event/event-bus';
+import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 
 // Starting position counts used in initialization.
@@ -20,8 +22,23 @@ class NpcManager {
     }
 
     start() {
+        eventBus.register(EventType.StandeeMovementEndedEventType, (event: StandeeMovementEndedEvent) => {
+            this.handleStandeeMovementEndedEvent(event);
+        });
+
         this.npcs.forEach((npc: Npc) => {
-            npc.start();
+            {
+                let x = (Math.random() * 20) - 5;
+                let y = (Math.random() * 20) + 5;
+                npc.start(x, y);
+            }
+
+            // TODO: Move this elsewhere:
+            {
+                let x = (Math.random() * 20) - 5;
+                let y = (Math.random() * 20) + 5;
+                npc.beginWalkingTo(x, y);
+            }
         });
     }
 
@@ -29,6 +46,15 @@ class NpcManager {
         this.npcs.forEach((npc: Npc) => {
             npc.step(elapsed);
         });
+    }
+
+    private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
+        let npc = this.npcs.get(event.npcId);
+        if (npc != null) {
+            let x = event.x;
+            let y = event.z;
+            npc.updatePosition(x, y);
+        }
     }
 }
 export const npcManager = new NpcManager();

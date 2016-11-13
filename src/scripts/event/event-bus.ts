@@ -5,7 +5,8 @@ export enum EventType {
     NpcMovementChangedEventType,
     NpcPlacedEventType,
     NpcStateChagedEventType,
-    PlayerMovementEventType
+    PlayerMovementEventType,
+    StandeeMovementEndedEventType
 }
 
 export abstract class AbstractEvent {
