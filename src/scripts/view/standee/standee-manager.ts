@@ -3,6 +3,7 @@ declare const THREE: any;
 import {Standee} from './standee';
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
+import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 
 class StandeeManager {
 
@@ -19,6 +20,10 @@ class StandeeManager {
     start() {
         eventBus.register(EventType.NpcPlacedEventType, (event: NpcPlacedEvent) => {
             this.handleNpcPlacedEvent(event);
+        });
+
+        eventBus.register(EventType.NpcMovementChangedEventType, (event: NpcMovementChangedEvent) => {
+            this.handleNpcMovementChangedEvent(event);
         });
     }
 
@@ -37,16 +42,18 @@ class StandeeManager {
     }
 
     private moveToInitialPosition(standee: Standee) {
+        // TODO: Use event.x, event.y to calculate
         let x = (Math.random() * 20) - 5;
         let y = 0.5;
         let z = (Math.random() * 20) + 5;
         standee.moveTo(x, y, z);
+    }
 
-        // TODO: Walk to either side of building, or to a point somewhere right of camera
-        if (z > 12) {
+    private handleNpcMovementChangedEvent(event: NpcMovementChangedEvent) {
+        let standee = this.standees.get(event.npcId);
+        if (standee != null) {
+            // TODO: Use event.x, event.y to calculate
             standee.walkTo(0, 0.5, 0, 5000);
-        } else {
-            standee.walkTo(20, 0.5, 20, 5000);
         }
     }
 }
