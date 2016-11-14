@@ -68,9 +68,9 @@ class LightingGrid {
     private emissiveIntensity = 1.0;
     private emissiveDiff = 0.01;
     step(elapsed: number) {
-        // TODO: Use elapsed, and in something other than a linear equation.
+        // TODO: Something other than a linear equation.
         this.emissiveIntensity += this.emissiveDiff;
-        if (this.emissiveIntensity <= 0.5) {
+        if (this.emissiveIntensity <= 0.33) {
             this.emissiveDiff = 0.01;
         } else if (this.emissiveIntensity >= 1) {
             this.emissiveDiff = -0.01;
