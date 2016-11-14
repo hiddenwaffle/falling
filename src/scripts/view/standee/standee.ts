@@ -19,6 +19,7 @@ export class Standee {
         // TODO: Delete this temporary code
         let textureLoader = new THREE.TextureLoader();
         let texture = textureLoader.load('crono.png');
+        // TODO: Could set nearest neighbor on texture here, but undecided.
         let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
         this.sprite = new THREE.Sprite(material);
 
