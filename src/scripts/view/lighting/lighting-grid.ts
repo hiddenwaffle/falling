@@ -1,8 +1,9 @@
 declare const THREE: any;
 
-// TODO: Only the 3rd floor from the top and below are visible, so 20 rows by 10 panels.
+// TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
-export const PANEL_COUNT_PER_FLOOR = 9;
+export const PANEL_COUNT_PER_FLOOR = 10;
+
 const POINT_LIGHT_COUNT = 4;
 
 class LightingGrid {
