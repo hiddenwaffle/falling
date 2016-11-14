@@ -1,6 +1,7 @@
 import {model} from './model/model';
 import {view} from './view/view';
 import {controller} from './controller/controller';
+import {GameStateType, gameState} from './game-state';
 
 let lastStep = Date.now();
 
@@ -9,9 +10,13 @@ let lastStep = Date.now();
  * controller and view receive (any) start events from model.start().
  */
 (function main() {
+    gameState.setCurrent(GameStateType.Initializing);
+
     controller.start();
     view.start();
     model.start();
+    
+    gameState.setCurrent(GameStateType.Started);
 
     let step = () => {
         requestAnimationFrame(step);

@@ -11,6 +11,12 @@ class View {
     private camera: any;
     private renderer: any;
 
+    private sprite: any;
+    private texture: any;
+    private row: number;
+    private col: number;
+    private ttl: number;
+
     constructor() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -38,6 +44,36 @@ class View {
         //     let distance = this.camera.position.distanceTo(obj.position);
         //     obj.renderOrder = distance * -1;
         // }
+        
+        this.ttl -= elapsed;
+        if (this.ttl <= 0) {
+            this.ttl = 500;
+
+            this.col++;
+            if (this.col >= 3) { // 3 images + 2 blank padding
+                this.col = 0;
+                this.row++;
+                if (this.row >= 5) { // 5 images + 2 blank padding
+                    this.row = 0;
+                }
+            }
+
+            // Using percentages:
+            // let x = 0 + (this.col / 5);       // Adjust for spritesheet, 5 columns from left.
+            // let y = 1 - ((this.row + 1) / 7); // Adjust for spritesheet, 7 rows from bottom.
+            // this.texture.offset.set(x, y);
+
+            // Using pixels:
+            let x = 48 * this.col;
+            let y = 512 - ((this.row + 1) * 72);
+            let xpct = x / 256;
+            let ypct = y / 512;
+            this.texture.offset.set(xpct, ypct);
+        }
+
+        // let x = 1/5;
+        // let y = 1 - (5/7);
+        // this.texture.offset.set(x, y);
 
         this.renderer.render(this.scene, this.camera);
     }
@@ -61,6 +97,21 @@ class View {
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
         });
+
+        let textureLoader = new THREE.TextureLoader();
+        this.texture = textureLoader.load('fall-student.png');
+        this.texture.repeat.set(48/256, 72/512); 
+        // this.texture.offset.set(0 + 0/5, 1 - 1/7);
+
+        let material = new THREE.SpriteMaterial({map: this.texture}); // FIXME: Why isn't depthWrite = true needed anymore?
+        this.sprite = new THREE.Sprite(material);
+        this.sprite.scale.set(5, 7, 1); // Adjusted for spritesheet rows = 7, cols = 5.
+        this.sprite.position.set(5, 6.75, 3);
+        this.scene.add(this.sprite);
+
+        this.row = 0;
+        this.col = 0;
+        this.ttl = 100;
     }
 }
 export const view = new View();

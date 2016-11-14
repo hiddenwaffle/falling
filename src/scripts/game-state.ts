@@ -5,7 +5,7 @@ export const enum GameStateType {
     Initializing,
 
     /**
-     * This is after initial objects start() and likely where the game is waiting on player input.
+     * This is after initial objects start() and likely where the game is waiting on the player's first input.
      */
     Started,
 
@@ -21,5 +21,18 @@ export const enum GameStateType {
 }
 
 class GameState {
-    //
+    private current: GameStateType;
+
+    constructor() {
+        this.current = GameStateType.Initializing; // Default state.
+    }
+
+    getCurrent(): GameStateType {
+        return this.current;
+    }
+
+    setCurrent(current: GameStateType) {
+        this.current = current;
+    }
 }
+export const gameState = new GameState();
