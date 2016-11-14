@@ -50,7 +50,9 @@ class LightingGrid {
     }
 
     start() {
-        // TODO: Scaling here
+        // Transform to fit against building.
+        this.group.position.set(1.9, 3.8, -1.55);
+        this.group.scale.set(0.7, 1.0, 1);
 
         for (let floor of this.panels) {
             for (let panel of floor) {

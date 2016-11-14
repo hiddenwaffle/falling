@@ -34,6 +34,9 @@ export class Standee {
 
     step(elapsed: number) {
         this.stepWalk(elapsed);
+
+        // TODO: Change lighting for when close to streetlamps
+        this.sprite.material.color.set(0xaaaaaa);
     }
 
     /**
