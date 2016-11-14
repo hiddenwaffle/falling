@@ -1,10 +1,15 @@
 declare const THREE: any;
 
+const START_Z_ANGLE = -(Math.PI / 30);
+const END_Z_ANGLE   =   Math.PI / 30;
+const ROTATION_SPEED = 0.0001;
+
 class Sky {
 
     readonly group: any;
 
     private dome: any;
+    private rdz: number;
 
     constructor() {
         this.group = new THREE.Object3D();
@@ -17,14 +22,21 @@ class Sky {
         this.dome.material.side = THREE.BackSide;
         this.dome.position.set(10, 10, 0);
         this.group.add(this.dome);
+
+        this.rdz = -ROTATION_SPEED;
     }
 
     start() {
-        //
+        this.dome.rotation.set(0, 0, START_Z_ANGLE);
     }
 
     step(elapsed: number) {
-        //
+        this.dome.rotation.set(0, 0, this.dome.rotation.z + this.rdz);
+        if (this.dome.rotation.z >= END_Z_ANGLE) {
+            this.rdz = -ROTATION_SPEED;
+        } else if (this.dome.rotation.z <= START_Z_ANGLE) {
+            this.rdz = ROTATION_SPEED;
+        }
     }
 
     /**
