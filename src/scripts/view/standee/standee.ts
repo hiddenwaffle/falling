@@ -3,8 +3,6 @@ declare const THREE: any;
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 
-const Y_COORD = 0.5;
-
 export class Standee {
 
     readonly sprite: any;
@@ -31,7 +29,7 @@ export class Standee {
     }
 
     start() {
-        this.sprite.position.set(-200, Y_COORD, -200);
+        this.sprite.position.set(-200, 0, -200);
     }
 
     step(elapsed: number) {
@@ -42,7 +40,7 @@ export class Standee {
      * Immediately set standee on given position.
      */
     moveTo(x: number, z: number) {
-        this.sprite.position.set(x, Y_COORD, z);
+        this.sprite.position.set(x, 0, z);
     }
 
     /**
@@ -51,7 +49,7 @@ export class Standee {
      */
     walkTo(x: number, z: number, speed: number) {
         this.walkOrigin = this.sprite.position.clone();
-        this.walkVector = new THREE.Vector3(x, Y_COORD, z).sub(this.walkOrigin);
+        this.walkVector = new THREE.Vector3(x, 0, z).sub(this.walkOrigin);
 
         // Calculate how long it would take, given the speed requested.
         let distance = this.walkVector.length();

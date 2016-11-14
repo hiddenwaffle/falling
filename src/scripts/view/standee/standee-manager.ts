@@ -5,6 +5,8 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 
+const Y_OFFSET = 0.5; // Sets their feet on the ground plane.
+
 class StandeeManager {
 
     readonly group: any;
@@ -18,6 +20,8 @@ class StandeeManager {
     }
 
     start() {
+        this.group.position.setY(Y_OFFSET);
+
         eventBus.register(EventType.NpcPlacedEventType, (event: NpcPlacedEvent) => {
             this.handleNpcPlacedEvent(event);
         });

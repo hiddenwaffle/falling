@@ -50,6 +50,8 @@ class LightingGrid {
     }
 
     start() {
+        // TODO: Scaling here
+
         for (let floor of this.panels) {
             for (let panel of floor) {
                 this.group.add(panel);

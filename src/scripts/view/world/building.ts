@@ -26,7 +26,7 @@ class Building {
             objLoader.setPath('');
             objLoader.load('green-building.obj', (obj: any) => {
                 obj.scale.setScalar(0.25);
-                obj.position.set(5, -1.01, 0);
+                obj.position.set(5, -0.01, 0);
                 this.group.add(obj);
             }, () => { }, () => { console.log('error while loading :(') });
         });
