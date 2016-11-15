@@ -9,7 +9,8 @@ export class Standee {
     readonly sprite: any;
     readonly npcId: number;
 
-    private tween: any;
+    private walkTween: any;
+    private walkTweenElapsed: number;
 
     constructor(npcId: number) {
         this.npcId = npcId;
@@ -26,7 +27,8 @@ export class Standee {
         // this.walkVector = new THREE.Vector3();
         // this.walkTtl = 0;
         // this.walkTime = 0;
-        this.tween = null;
+        this.walkTween = null;
+        this.walkTweenElapsed = 0;
     }
 
     start() {
@@ -52,24 +54,31 @@ export class Standee {
      * Speed dimension is 1 unit/sec.
      */
     walkTo(x: number, z: number, speed: number) {
-        let walkVector = new THREE.Vector3(x, 0, z).sub(this.sprite.position);
-
         // Calculate how long it would take, given the speed requested.
-        let distance = walkVector.length();
+        let vector = new THREE.Vector3(x, 0, z).sub(this.sprite.position);
+        let distance = vector.length();
         let time = (distance / speed) * 1000;
 
-        this.tween = new TWEEN.Tween(this.sprite.position)
+        // Delegate to tween.js. Pass in closures as callbacks because otherwise 'this' will refer
+        // to the position object, when executing stopWalk().
+        this.walkTweenElapsed = 0;
+        this.walkTween = new TWEEN.Tween(this.sprite.position)
             .to({x: x, z: z}, time)
-            .onComplete(() => { this.stopWalk(); }) // Pass in closure because otherwise 'this' will refer to the position object, when executing stopWalk().
-            .start();
+            .onComplete(() => { this.stopWalk(); })
+            .start(this.walkTweenElapsed);
     }
 
     private stepWalk(elapsed: number) {
-        // this.tween.update(elapsed);
-        TWEEN.update();
+        if (this.walkTween != null) {
+            this.walkTweenElapsed += elapsed;
+            this.walkTween.update(this.walkTweenElapsed);
+        }
     }
 
     private stopWalk() {
+        this.walkTween = null;
+        this.walkTweenElapsed = 0;
+        
         eventBus.fire(new StandeeMovementEndedEvent(
             this.npcId,
             this.sprite.position.x,
