@@ -5,7 +5,7 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 
-const Y_OFFSET = 0.5; // Sets their feet on the ground plane.
+const Y_OFFSET = 0.75; // Sets their feet on the ground plane.
 
 class StandeeManager {
 

@@ -31,6 +31,7 @@ class StandeeAnimationTextureBase {
             this.texture = texture;
 
             // Allows for texture flipping, when necessary.
+            // NOTE: To do so, set repeat.x *= -1 and offset.x *= -1.
             this.texture.wrapS = THREE.RepeatWrapping;
 
             // Have it show only one frame at a time:
@@ -39,9 +40,13 @@ class StandeeAnimationTextureBase {
                 FRAME_HEIGHT / SPRITESHEET_HEIGHT
             );
 
-            // Set the default frame to the upper-left corner. TODO: Necessary?
-            this.texture.offset.set(0, (SPRITESHEET_HEIGHT - FRAME_HEIGHT) / SPRITESHEET_HEIGHT);
-            
+            // Set the default frame to the upper-left corner
+            // TODO: Necessary? Might remove this after animations get defined.
+            this.texture.offset.set(
+                (0 * (SPRITESHEET_WIDTH  - FRAME_WIDTH )) / SPRITESHEET_WIDTH,
+                (1 * (SPRITESHEET_HEIGHT - FRAME_HEIGHT)) / SPRITESHEET_HEIGHT
+            );
+
             callback();
         });
     }
