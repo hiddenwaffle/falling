@@ -99,20 +99,47 @@ class View {
         });
 
         let textureLoader = new THREE.TextureLoader();
-        this.texture = textureLoader.load('fall-student.png');
-        // this.texture.wrapS = THREE.RepeatWrapping; // Allows for texture flipping, when necessary.
-        this.texture.repeat.set(48/256, 72/512); 
-        // this.texture.offset.set(0 + 0/5, 1 - 1/7);
+        this.texture = textureLoader.load('fall-student.png', () => {
+            // this.texture.wrapS = THREE.RepeatWrapping; // Allows for texture flipping, when necessary.
+            this.texture.repeat.set(48/256, 72/512); 
+            // this.texture.offset.set(0 + 0/5, 1 - 1/7);
 
-        let material = new THREE.SpriteMaterial({map: this.texture}); // FIXME: Why isn't depthWrite = true needed anymore?
-        this.sprite = new THREE.Sprite(material);
-        this.sprite.scale.set(5, 7, 1); // Adjusted for spritesheet rows = 7, cols = 5.
-        this.sprite.position.set(5, 6.75, 3);
-        this.scene.add(this.sprite);
+            let material = new THREE.SpriteMaterial({map: this.texture}); // FIXME: Why isn't depthWrite = true needed anymore?
+            this.sprite = new THREE.Sprite(material);
+            this.sprite.scale.set(5, 7, 1); // Adjusted for spritesheet rows = 7, cols = 5.
+            this.sprite.position.set(5, 6.75, 3);
+            this.scene.add(this.sprite);
 
-        this.row = 0;
-        this.col = 0;
-        this.ttl = 100;
+            this.row = 0;
+            this.col = 0;
+            this.ttl = 100;
+
+            for (let i = 0; i < 1000; i++) {
+                // let clonedTexture = this.texture;
+
+                // let clonedTexture = this.texture.clone();
+                // clonedTexture.needsUpdate = true;
+
+                let clonedTexture = this.texture.clone();
+                clonedTexture.__webglTexture = this.texture.__webglTexture;
+                clonedTexture.__webglInit = true;
+            
+                clonedTexture.wrapS = THREE.RepeatWrapping;
+                clonedTexture.wrapT = THREE.RepeatWrapping;
+                clonedTexture.repeat.set(0.5 + Math.random(), 0.5 + Math.random());
+                let geometry = new THREE.BoxGeometry(1, 1, 1);
+                let material = new THREE.MeshBasicMaterial({
+                    map: clonedTexture,
+                    side: THREE.DoubleSide
+                });
+                var mesh = new THREE.Mesh(geometry, material);
+                mesh.position.x = Math.random() * 20 - 5; 
+                mesh.position.y = Math.random() * 20 - 5; 
+                mesh.position.z = Math.random() * 20 - 5; 
+                this.scene.add(mesh);
+                console.log("Texture count: " + this.renderer.info.memory.textures);
+            }
+        });
     }
 }
 export const view = new View();
