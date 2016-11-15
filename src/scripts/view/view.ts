@@ -58,11 +58,6 @@ class View {
                 }
             }
 
-            // Using percentages:
-            // let x = 0 + (this.col / 5);       // Adjust for spritesheet, 5 columns from left.
-            // let y = 1 - ((this.row + 1) / 7); // Adjust for spritesheet, 7 rows from bottom.
-            // this.texture.offset.set(x, y);
-
             // Using pixels:
             let x = 48 * this.col;
             let y = 512 - ((this.row + 1) * 72);
@@ -70,10 +65,6 @@ class View {
             let ypct = y / 512;
             this.texture.offset.set(xpct, ypct);
         }
-
-        // let x = 1/5;
-        // let y = 1 - (5/7);
-        // this.texture.offset.set(x, y);
 
         this.renderer.render(this.scene, this.camera);
     }

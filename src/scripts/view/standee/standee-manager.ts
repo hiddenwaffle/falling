@@ -40,7 +40,7 @@ class StandeeManager {
     private handleNpcPlacedEvent(event: NpcPlacedEvent) {
         let standee = new Standee(event.npcId);
         standee.start();
-        this.group.add(standee.sprite);
+        this.group.add(standee.group);
         this.standees.set(standee.npcId, standee);
 
         let x = event.x;

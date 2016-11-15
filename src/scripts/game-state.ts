@@ -1,8 +1,13 @@
 export const enum GameStateType {
     /**
-     * This is the state after program starts and before before objects start().
+     * This is the state right when JavaScript starts running. Includes preloading.
      */
     Initializing,
+
+    /**
+     * After preload is complete and before making object start() calls.
+     */
+    Starting,
 
     /**
      * This is after initial objects start() and likely where the game is waiting on the player's first input.

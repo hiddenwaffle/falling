@@ -3,46 +3,44 @@ declare const TWEEN: any;
 
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
+import {StandeeAnimation} from './standee-animation';
 
 export class Standee {
 
-    readonly sprite: any;
     readonly npcId: number;
+
+    readonly group: any;
+    readonly animation: StandeeAnimation;
 
     private walkTweenElapsed: number;
     private walkTween: any;
 
     constructor(npcId: number) {
         this.npcId = npcId;
-        
-        // TODO: Delete this temporary code
-        let textureLoader = new THREE.TextureLoader();
-        let texture = textureLoader.load('crono.png');
-        // texture.minFilter = THREE.LinearMipMapFilter;
-        // texture.magFilter = THREE.NearestFilter;
-        let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
-        this.sprite = new THREE.Sprite(material);
+
+        this.group = new THREE.Object3D();
+        this.animation = new StandeeAnimation();
+        this.group.add(this.animation.group);
 
         this.walkTweenElapsed = 0;
         this.walkTween = null;
     }
 
     start() {
-        this.sprite.position.set(-200, 0, -200);
+        this.group.position.set(-200, 0, -200);
     }
 
     step(elapsed: number) {
         this.stepWalk(elapsed);
 
-        // TODO: Change lighting for when close to streetlamps
-        this.sprite.material.color.set(0xaaaaaa);
+        this.animation.step(elapsed);
     }
 
     /**
      * Immediately set standee on given position.
      */
     moveTo(x: number, z: number) {
-        this.sprite.position.set(x, 0, z);
+        this.group.position.set(x, 0, z);
     }
 
     /**
@@ -51,14 +49,14 @@ export class Standee {
      */
     walkTo(x: number, z: number, speed: number) {
         // Calculate how long it would take, given the speed requested.
-        let vector = new THREE.Vector3(x, 0, z).sub(this.sprite.position);
+        let vector = new THREE.Vector3(x, 0, z).sub(this.group.position);
         let distance = vector.length();
         let time = (distance / speed) * 1000;
 
         // Delegate to tween.js. Pass in closures as callbacks because otherwise 'this' will refer
         // to the position object, when executing stopWalk().
         this.walkTweenElapsed = 0;
-        this.walkTween = new TWEEN.Tween(this.sprite.position)
+        this.walkTween = new TWEEN.Tween(this.group.position)
             .to({x: x, z: z}, time)
             .onComplete(() => { this.stopWalk(); })
             .start(this.walkTweenElapsed);
@@ -77,8 +75,8 @@ export class Standee {
         
         eventBus.fire(new StandeeMovementEndedEvent(
             this.npcId,
-            this.sprite.position.x,
-            this.sprite.position.z)
+            this.group.position.x,
+            this.group.position.z)
         );
     }
 }
