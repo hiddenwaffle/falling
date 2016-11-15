@@ -1,4 +1,5 @@
 declare const THREE: any;
+declare const TWEEN: any;
 
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
@@ -8,10 +9,7 @@ export class Standee {
     readonly sprite: any;
     readonly npcId: number;
 
-    private walkOrigin: any;    // Where the walk started.
-    private walkVector: any;    // Where the walk ends, relative to where it started.
-    private walkTtl: number;    // How many ms it should take to get from start to end.
-    private walkTime: number;   // How many ms has passed since it started moving.
+    private tween: any;
 
     constructor(npcId: number) {
         this.npcId = npcId;
@@ -24,10 +22,11 @@ export class Standee {
         let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
         this.sprite = new THREE.Sprite(material);
 
-        this.walkOrigin = new THREE.Vector3();
-        this.walkVector = new THREE.Vector3();
-        this.walkTtl = 0;
-        this.walkTime = 0;
+        // this.walkOrigin = new THREE.Vector3();
+        // this.walkVector = new THREE.Vector3();
+        // this.walkTtl = 0;
+        // this.walkTime = 0;
+        this.tween = null;
     }
 
     start() {
@@ -53,42 +52,24 @@ export class Standee {
      * Speed dimension is 1 unit/sec.
      */
     walkTo(x: number, z: number, speed: number) {
-        this.walkOrigin = this.sprite.position.clone();
-        this.walkVector = new THREE.Vector3(x, 0, z).sub(this.walkOrigin);
+        let walkVector = new THREE.Vector3(x, 0, z).sub(this.sprite.position);
 
         // Calculate how long it would take, given the speed requested.
-        let distance = this.walkVector.length();
-        let ttl = (distance / speed) * 1000;
-        this.walkTtl = ttl;
+        let distance = walkVector.length();
+        let time = (distance / speed) * 1000;
 
-        this.walkTime = 0;
+        this.tween = new TWEEN.Tween(this.sprite.position)
+            .to({x: x, z: z}, time)
+            .onComplete(() => { this.stopWalk(); }) // Pass in closure because otherwise 'this' will refer to the position object, when executing stopWalk().
+            .start();
     }
 
     private stepWalk(elapsed: number) {
-        if (this.walkTtl > 0) {
-            this.walkTime += elapsed;
-
-            let walkFinished = false;
-            if (this.walkTime >= this.walkTtl) {
-                this.walkTime = this.walkTtl;
-                walkFinished = true;
-            }
-
-            let pctDone = this.walkTime / this.walkTtl;
-            let delta = this.walkVector.clone().multiplyScalar(pctDone);
-            let newPosition = this.walkOrigin.clone().add(delta);
-            this.sprite.position.copy(newPosition);
-
-            if (walkFinished) {
-                this.stopWalk();
-            }
-        }
+        // this.tween.update(elapsed);
+        TWEEN.update();
     }
 
     private stopWalk() {
-        this.walkTtl = 0;
-        this.walkTime = 0;
-
         eventBus.fire(new StandeeMovementEndedEvent(
             this.npcId,
             this.sprite.position.x,

@@ -25,7 +25,7 @@ gulp.task('scripts', () => {
         cache: {},
         packageCache: {}
     })
-    .plugin(tsify, { noImplicitAny: true })
+    .plugin(tsify, { noImplicitAny: true, target: 'es5' })
     .bundle()
     .pipe(source('bundle.js'))
     // .pipe(buffer())

@@ -52,6 +52,7 @@ export class Npc {
         this.xlast = x;
         this.ylast = y;
         this.transitionTo(NpcState.Idle);
+        console.log('lol');
     }
 
     getState(): NpcState {
