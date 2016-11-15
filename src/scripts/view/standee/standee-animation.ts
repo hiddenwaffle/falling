@@ -1,27 +1,27 @@
 declare const THREE: any;
 
-import {standeeAnimationTexture} from './standee-animation-texture';
+import {StandeeAnimationTextureWrapper, standeeAnimationTextureBase} from './standee-animation-texture-base';
 
 export class StandeeAnimation {
     
     readonly group: any;
 
     private sprite: any;
-    private texture: any;
+    private textureWrapper: StandeeAnimationTextureWrapper;
 
     constructor() {
         this.group = new THREE.Object3D();
-        this.texture = standeeAnimationTexture.clone();
-        let material = new THREE.SpriteMaterial({map: this.texture});
+
+        this.textureWrapper = standeeAnimationTextureBase.newInstance();
+        let material = new THREE.SpriteMaterial({map: this.textureWrapper.texture});
+
         this.sprite = new THREE.Sprite(material);
+        this.sprite.scale.set(1, 1.5); // Just aspect ratio for 48 x 72 size frames. 
         this.group.add(this.sprite);
-        
-        // TODO: Change lighting for when close to streetlamps
-        this.sprite.material.color.set(0xaaaaaa);
     }
 
     start() {
-        //
+        this.sprite.material.color.set(0xaaaaaa); // TODO: Set this elsewhere
     }
 
     step(elapsed: number) {

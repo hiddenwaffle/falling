@@ -1,9 +1,9 @@
-import {standeeAnimationTexture} from './view/standee/standee-animation-texture';
+import {standeeAnimationTextureBase} from './view/standee/standee-animation-texture-base';
 
 class Preloader {
     
     preload(callback: () => any) {
-        standeeAnimationTexture.preload(callback);
+        standeeAnimationTextureBase.preload(callback);
         // TODO: Going to have a parallelism mechanism after adding more to this.
     }
 }
