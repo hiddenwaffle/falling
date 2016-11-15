@@ -1,10 +1,15 @@
 declare const THREE: any;
+declare const TWEEN: any;
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
 export const PANEL_COUNT_PER_FLOOR = 10;
 
 const POINT_LIGHT_COUNT = 4;
+
+class EmissiveIntensity {
+    value: number;
+}
 
 class LightingGrid {
     
@@ -14,7 +19,9 @@ class LightingGrid {
     private pointLights: any[];
     private currentPointLightIdx: number;
 
-    private pulseDiff = 0;
+    private pulseTween: any;
+    private pulseTweenElapsed: number;
+    private emissiveIntensity: EmissiveIntensity;
 
     constructor() {
         this.group = new THREE.Object3D();
@@ -47,6 +54,10 @@ class LightingGrid {
         }
 
         this.currentPointLightIdx = 0;
+
+        this.pulseTween = null;
+        this.pulseTweenElapsed = 0;
+        this.emissiveIntensity = new EmissiveIntensity();
     }
 
     start() {
@@ -63,25 +74,20 @@ class LightingGrid {
         for (let pointLight of this.pointLights) {
             this.group.add(pointLight);
         }
+
+        // Make cells appear to pulse.
+        this.emissiveIntensity.value = 0.33;
+        this.pulseTweenElapsed = 0;
+        this.pulseTween = new TWEEN.Tween(this.emissiveIntensity)
+            .to({value: 1.0}, 750)
+            .easing(TWEEN.Easing.Sinusoidal.InOut)
+            .yoyo(true)
+            .repeat(Infinity)
+            .start(this.pulseTweenElapsed);
     }
 
-    private emissiveIntensity = 1.0;
-    private emissiveDiff = 0.01;
     step(elapsed: number) {
-        // TODO: Something other than a linear equation.
-        this.emissiveIntensity += this.emissiveDiff;
-        if (this.emissiveIntensity <= 0.33) {
-            this.emissiveDiff = 0.01;
-        } else if (this.emissiveIntensity >= 1) {
-            this.emissiveDiff = -0.01;
-        }
-        
-        for (let floor of this.panels) {
-            for (let panel of floor) {
-                panel.material.emissiveIntensity = this.emissiveIntensity;
-                // console.log('val: ' + val);
-            }
-        }
+        this.stepPulse(elapsed);
     }
 
     switchRoomLight(floorIdx: number, panelIdx: number, color: number) {
@@ -106,6 +112,19 @@ class LightingGrid {
             this.currentPointLightIdx = 0;
         }
         return pointLight;
+    }
+
+    private stepPulse(elapsed: number) {
+        if (this.pulseTween != null) {
+            this.pulseTweenElapsed += elapsed;
+            this.pulseTween.update(this.pulseTweenElapsed);
+        }
+        
+        for (let floor of this.panels) {
+            for (let panel of floor) {
+                panel.material.emissiveIntensity = this.emissiveIntensity.value;
+            }
+        }
     }
 }
 export const lightingGrid = new LightingGrid();

@@ -9,8 +9,8 @@ export class Standee {
     readonly sprite: any;
     readonly npcId: number;
 
-    private walkTween: any;
     private walkTweenElapsed: number;
+    private walkTween: any;
 
     constructor(npcId: number) {
         this.npcId = npcId;
@@ -23,12 +23,8 @@ export class Standee {
         let material = new THREE.SpriteMaterial({map: texture}); // FIXME: Why isn't this needed - depthWrite: true
         this.sprite = new THREE.Sprite(material);
 
-        // this.walkOrigin = new THREE.Vector3();
-        // this.walkVector = new THREE.Vector3();
-        // this.walkTtl = 0;
-        // this.walkTime = 0;
-        this.walkTween = null;
         this.walkTweenElapsed = 0;
+        this.walkTween = null;
     }
 
     start() {
@@ -76,8 +72,8 @@ export class Standee {
     }
 
     private stopWalk() {
-        this.walkTween = null;
         this.walkTweenElapsed = 0;
+        this.walkTween = null;
         
         eventBus.fire(new StandeeMovementEndedEvent(
             this.npcId,
