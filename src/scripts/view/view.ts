@@ -88,8 +88,6 @@ class View {
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
         });
-
-        // this.textureLeakNotes();
     }
 
     // private textureLeakNotes() {
