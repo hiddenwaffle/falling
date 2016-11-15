@@ -30,8 +30,8 @@ class StandeeAnimationTextureBase {
         textureLoader.load('fall-student.png', (texture: any) => {
             this.texture = texture;
 
-            // TODO: Allows for texture flipping, when necessary.
-            // this.texture.wrapS = THREE.RepeatWrapping;
+            // Allows for texture flipping, when necessary.
+            this.texture.wrapS = THREE.RepeatWrapping;
 
             // Have it show only one frame at a time:
             this.texture.repeat.set(
@@ -39,7 +39,7 @@ class StandeeAnimationTextureBase {
                 FRAME_HEIGHT / SPRITESHEET_HEIGHT
             );
 
-            // TODO: Remove
+            // Set the default frame to the upper-left corner. TODO: Necessary?
             this.texture.offset.set(0, (SPRITESHEET_HEIGHT - FRAME_HEIGHT) / SPRITESHEET_HEIGHT);
             
             callback();
