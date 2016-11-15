@@ -47,7 +47,7 @@ class View {
         
         this.ttl -= elapsed;
         if (this.ttl <= 0) {
-            this.ttl = 500;
+            this.ttl = 250;
 
             this.col++;
             if (this.col >= 3) { // 3 images + 2 blank padding
@@ -100,6 +100,7 @@ class View {
 
         let textureLoader = new THREE.TextureLoader();
         this.texture = textureLoader.load('fall-student.png');
+        // this.texture.wrapS = THREE.RepeatWrapping; // Allows for texture flipping, when necessary.
         this.texture.repeat.set(48/256, 72/512); 
         // this.texture.offset.set(0 + 0/5, 1 - 1/7);
 
