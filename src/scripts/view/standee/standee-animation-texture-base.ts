@@ -1,12 +1,12 @@
 declare const THREE: any;
 
 // Dimensions of the entire spritesheet:
-const SPRITESHEET_WIDTH   = 256;
-const SPRITESHEET_HEIGHT  = 512;
+export const SPRITESHEET_WIDTH   = 256;
+export const SPRITESHEET_HEIGHT  = 512;
 
 // Dimensions of one frame within the spritesheet:
-const FRAME_WIDTH   = 48;
-const FRAME_HEIGHT  = 72;
+export const FRAME_WIDTH   = 48;
+export const FRAME_HEIGHT  = 72;
 
 export class StandeeAnimationTextureWrapper {
 
@@ -42,10 +42,10 @@ class StandeeAnimationTextureBase {
 
             // Set the default frame to the upper-left corner
             // TODO: Necessary? Might remove this after animations get defined.
-            this.texture.offset.set(
-                (0 * (SPRITESHEET_WIDTH  - FRAME_WIDTH )) / SPRITESHEET_WIDTH,
-                (1 * (SPRITESHEET_HEIGHT - FRAME_HEIGHT)) / SPRITESHEET_HEIGHT
-            );
+            // this.texture.offset.set(
+            //     (0 * (SPRITESHEET_WIDTH  - FRAME_WIDTH )) / SPRITESHEET_WIDTH,
+            //     (1 * (SPRITESHEET_HEIGHT - FRAME_HEIGHT)) / SPRITESHEET_HEIGHT
+            // );
 
             callback();
         });

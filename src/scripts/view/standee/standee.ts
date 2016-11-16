@@ -3,14 +3,14 @@ declare const TWEEN: any;
 
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
-import {StandeeAnimation} from './standee-animation';
+import {StandeeSpriteWrapper} from './standee-sprite-wrapper';
 
 export class Standee {
 
     readonly npcId: number;
 
     readonly group: any;
-    readonly animation: StandeeAnimation;
+    readonly spriteWrapper: StandeeSpriteWrapper;
 
     private walkTweenElapsed: number;
     private walkTween: any;
@@ -19,8 +19,8 @@ export class Standee {
         this.npcId = npcId;
 
         this.group = new THREE.Object3D();
-        this.animation = new StandeeAnimation();
-        this.group.add(this.animation.group);
+        this.spriteWrapper = new StandeeSpriteWrapper();
+        this.group.add(this.spriteWrapper.group);
 
         this.walkTweenElapsed = 0;
         this.walkTween = null;
@@ -33,7 +33,7 @@ export class Standee {
     step(elapsed: number) {
         this.stepWalk(elapsed);
 
-        this.animation.step(elapsed);
+        this.spriteWrapper.step(elapsed);
     }
 
     /**
