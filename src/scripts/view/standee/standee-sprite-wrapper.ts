@@ -11,7 +11,7 @@ import {
     standeeAnimationTextureBase}
 from './standee-animation-texture-base';
 
-const STANDARD_DELAY = 100; // TODO: Perhaps have some randomness combined with this?
+const STANDARD_DELAY = 250; // TODO: Perhaps have some randomness combined with this?
 
 class StandeeAnimationFrame {
 
@@ -136,8 +136,38 @@ export class StandeeSpriteWrapper {
 function determineAnimation(type: StandeeAnimationType): StandeeAnimation {
     let animation: StandeeAnimation;
     switch (type) {
+        case StandeeAnimationType.StandUp:
+            animation = createStandUp();
+            break;
+        case StandeeAnimationType.WalkUp:
+            animation = createWalkUp();
+            break;
         case StandeeAnimationType.StandDown:
             animation = createStandDown();
+            break;
+        case StandeeAnimationType.WalkDown:
+            animation = createWalkDown();
+            break;
+        case StandeeAnimationType.StandLeft:
+            animation = createStandLeft();
+            break;
+        case StandeeAnimationType.WalkLeft:
+            animation = createWalkLeft();
+            break;
+        case StandeeAnimationType.StandRight:
+            animation = createStandRight();
+            break;
+        case StandeeAnimationType.WalkRight:
+            animation = createWalkRight();
+            break;
+        case StandeeAnimationType.CheerUp:
+            animation = createCheerUp();
+            break;
+        case StandeeAnimationType.PanicUp:
+            animation = createPanicUp();
+            break;
+        case StandeeAnimationType.PanicDown:
+            animation = createPanicDown();
             break;
         default:
             console.log('Should not get here');
@@ -148,6 +178,12 @@ function determineAnimation(type: StandeeAnimationType): StandeeAnimation {
 // Standing Up
 let standUpFrame1       = new StandeeAnimationFrame(2, 0);
 
+function createStandUp(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.StandUp);
+    animation.push(standUpFrame1);
+    return animation;
+}
+
 // Walking Up
 let walkUpFrame1        = new StandeeAnimationFrame(2, 0);
 let walkUpFrame2        = new StandeeAnimationFrame(2, 1);
@@ -155,6 +191,17 @@ let walkUpFrame3        = new StandeeAnimationFrame(2, 2);
 let walkUpFrame4        = new StandeeAnimationFrame(2, 0, true);
 let walkUpFrame5        = new StandeeAnimationFrame(2, 1, true);
 let walkUpFrame6        = new StandeeAnimationFrame(2, 2, true);
+
+function createWalkUp(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.WalkUp);
+    animation.push(walkUpFrame1);
+    animation.push(walkUpFrame2);
+    animation.push(walkUpFrame3);
+    animation.push(walkUpFrame4);
+    animation.push(walkUpFrame5);
+    animation.push(walkUpFrame6);
+    return animation;
+}
 
 // Standing Down
 let standDownFrame1     = new StandeeAnimationFrame(0, 0);
@@ -173,8 +220,25 @@ let walkDownFrame4      = new StandeeAnimationFrame(0, 0, true);
 let walkDownFrame5      = new StandeeAnimationFrame(0, 1, true);
 let walkDownFrame6      = new StandeeAnimationFrame(0, 2, true);
 
+function createWalkDown(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.WalkDown);
+    animation.push(walkDownFrame1);
+    animation.push(walkDownFrame2);
+    animation.push(walkDownFrame3);
+    animation.push(walkDownFrame4);
+    animation.push(walkDownFrame5);
+    animation.push(walkDownFrame6);
+    return animation;
+}
+
 // Standing Left
 let standLeftFrame1     = new StandeeAnimationFrame(1, 1);
+
+function createStandLeft(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.StandLeft);
+    animation.push(standLeftFrame1);
+    return animation;
+}
 
 // Walking Left
 let walkLeftFrame1      = new StandeeAnimationFrame(1, 1);
@@ -182,8 +246,23 @@ let walkLeftFrame2      = new StandeeAnimationFrame(1, 0);
 let walkLeftFrame3      = new StandeeAnimationFrame(1, 1);
 let walkLeftFrame4      = new StandeeAnimationFrame(1, 2);
 
+function createWalkLeft(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.WalkLeft);
+    animation.push(walkLeftFrame1);
+    animation.push(walkLeftFrame2);
+    animation.push(walkLeftFrame3);
+    animation.push(walkLeftFrame4);
+    return animation;
+}
+
 // Standing Right
 let standRightFrame1    = new StandeeAnimationFrame(1, 1, true);
+
+function createStandRight(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.StandRight);
+    animation.push(standRightFrame1);
+    return animation;
+}
 
 // Walking Right
 let walkRightFrame1     = new StandeeAnimationFrame(1, 1, true);
@@ -191,14 +270,56 @@ let walkRightFrame2     = new StandeeAnimationFrame(1, 0, true);
 let walkRightFrame3     = new StandeeAnimationFrame(1, 1, true);
 let walkRightFrame4     = new StandeeAnimationFrame(1, 2, true);
 
+function createWalkRight(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.WalkRight);
+    animation.push(walkRightFrame1);
+    animation.push(walkRightFrame2);
+    animation.push(walkRightFrame3);
+    animation.push(walkRightFrame4);
+    return animation;
+}
+
 // Cheer Up
 let cheerUpFrame1       = new StandeeAnimationFrame(2, 0);
 let cheerUpFrame2       = new StandeeAnimationFrame(3, 0);
 let cheerUpFrame3       = new StandeeAnimationFrame(3, 1);
 let cheerUpFrame4       = new StandeeAnimationFrame(3, 0);
 
+function createCheerUp(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.CheerUp);
+    animation.push(cheerUpFrame1);
+    animation.push(cheerUpFrame2);
+    animation.push(cheerUpFrame3);
+    animation.push(cheerUpFrame4);
+    return animation;
+}
+
 // Panic Up
 let panicUpFrame1       = new StandeeAnimationFrame(2, 0);
 let panicUpFrame2       = new StandeeAnimationFrame(3, 2);
 let panicUpFrame3       = new StandeeAnimationFrame(4, 0);
 let panicUpFrame4       = new StandeeAnimationFrame(3, 2);
+
+function createPanicUp(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.PanicUp);
+    animation.push(panicUpFrame1);
+    animation.push(panicUpFrame2);
+    animation.push(panicUpFrame3);
+    animation.push(panicUpFrame4);
+    return animation;
+}
+
+// Panic Down
+let panicDownFrame1     = new StandeeAnimationFrame(0, 0);
+let panicDownFrame2     = new StandeeAnimationFrame(4, 1);
+let panicDownFrame3     = new StandeeAnimationFrame(4, 2);
+let panicDownFrame4     = new StandeeAnimationFrame(4, 1);
+
+function createPanicDown(): StandeeAnimation {
+    let animation = new StandeeAnimation(StandeeAnimationType.PanicDown);
+    animation.push(panicDownFrame1);
+    animation.push(panicDownFrame2);
+    animation.push(panicDownFrame3);
+    animation.push(panicDownFrame4);
+    return animation;
+}
