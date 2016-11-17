@@ -11,18 +11,17 @@ import {
     standeeAnimationTextureBase}
 from './standee-animation-texture-base';
 
-const STANDARD_DELAY = 200;
+const STANDARD_DELAY = 225;
+const WALK_UP_OR_DOWN_DELAY = Math.floor(STANDARD_DELAY * (2/3)); // Because up/down walk cycles have more frames. 
 
 class StandeeAnimationFrame {
 
     readonly row: number;
     readonly col: number;
-    readonly flipped: boolean;
 
-    constructor(row: number, col: number, flipped = false) {
+    constructor(row: number, col: number) {
         this.row = row; 
         this.col = col;
-        this.flipped = flipped;
     }
 }
 
@@ -107,7 +106,7 @@ export class StandeeSpriteWrapper {
         this.group.add(this.sprite);
 
         // Initialize default animation to standing facing down:
-        this.currentAnimation = createWalkDown();
+        this.currentAnimation = createWalkRight();
     }
 
     start() {
@@ -193,12 +192,12 @@ let walkUpFrame6        = new StandeeAnimationFrame(5, 3);
 
 function createWalkUp(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.WalkUp);
-    animation.push(walkUpFrame1);
-    animation.push(walkUpFrame2);
-    animation.push(walkUpFrame3);
-    animation.push(walkUpFrame4);
-    animation.push(walkUpFrame5);
-    animation.push(walkUpFrame6);
+    animation.push(walkUpFrame1, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkUpFrame2, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkUpFrame3, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkUpFrame4, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkUpFrame5, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkUpFrame6, WALK_UP_OR_DOWN_DELAY);
     return animation;
 }
 
@@ -221,12 +220,12 @@ let walkDownFrame6      = new StandeeAnimationFrame(2, 3);
 
 function createWalkDown(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.WalkDown);
-    animation.push(walkDownFrame1);
-    animation.push(walkDownFrame2);
-    animation.push(walkDownFrame3);
-    animation.push(walkDownFrame4);
-    animation.push(walkDownFrame5);
-    animation.push(walkDownFrame6);
+    animation.push(walkDownFrame1, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkDownFrame2, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkDownFrame3, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkDownFrame4, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkDownFrame5, WALK_UP_OR_DOWN_DELAY);
+    animation.push(walkDownFrame6, WALK_UP_OR_DOWN_DELAY);
     return animation;
 }
 
