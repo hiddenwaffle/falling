@@ -7,7 +7,7 @@ import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-even
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 
 // Starting position counts used in initialization.
-const TOTAL_NPCS = 20;
+const TOTAL_NPCS = 1;
 
 class NpcManager {
 
@@ -28,15 +28,17 @@ class NpcManager {
 
         this.npcs.forEach((npc: Npc) => {
             {
-                let x = (Math.random() * 20) - 5;
-                let y = (Math.random() * 20) + 5;
+                let x = 5 // (Math.random() * 10);
+                let y = 1 // (Math.random() * 15);
+                console.log("start: %f, %f", x, y);
                 npc.start(x, y);
             }
 
             // TODO: Move this elsewhere:
             {
-                let x = (Math.random() * 20) - 5;
-                let y = (Math.random() * 20) + 5;
+                let x = 5;
+                let y = 10;
+                console.log("end: %f, %f", x, y);
                 npc.beginWalkingTo(x, y);
             }
         });

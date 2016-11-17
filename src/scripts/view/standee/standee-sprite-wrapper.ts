@@ -25,7 +25,7 @@ class StandeeAnimationFrame {
     }
 }
 
-enum StandeeAnimationType {
+export const enum StandeeAnimationType {
     StandUp,
     StandDown,
     StandLeft,
@@ -43,17 +43,22 @@ class StandeeAnimation {
     
     readonly frames: StandeeAnimationFrame[];
     readonly delays: number[];
-    readonly next: StandeeAnimationType;
+    readonly next: StandeeAnimationType; // Probably not going to be used for this game
 
     private currentFrameIdx: number;
     private currentFrameTimeElapsed: number;
 
     private finished: boolean;
 
-    constructor(next: StandeeAnimationType) {
+    constructor(type: StandeeAnimationType, next?: StandeeAnimationType) {
         this.frames = [];
         this.delays = [];
-        this.next = next;
+
+        if (next) {
+            this.next = next;
+        } else {
+            this.next = type;
+        }
 
         this.currentFrameIdx = 0;
         this.currentFrameTimeElapsed = 0;
@@ -116,8 +121,16 @@ export class StandeeSpriteWrapper {
     step(elapsed: number) {
         this.stepCurrentFrame(elapsed);
     }
+    
+    switchAnimation(type: StandeeAnimationType) {
+        this.currentAnimation = determineAnimation(type); 
+    }
 
     private stepCurrentFrame(elapsed: number) {
+        if (this.currentAnimation == null) {
+            return;
+        }
+
         this.currentAnimation.step(elapsed);
         if (this.currentAnimation.isFinished()) {
             this.currentAnimation = determineAnimation(this.currentAnimation.next);

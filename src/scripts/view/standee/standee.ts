@@ -3,7 +3,7 @@ declare const TWEEN: any;
 
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
-import {StandeeSpriteWrapper} from './standee-sprite-wrapper';
+import {StandeeSpriteWrapper, StandeeAnimationType} from './standee-sprite-wrapper';
 
 export class Standee {
 
