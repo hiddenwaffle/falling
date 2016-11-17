@@ -4,6 +4,7 @@ declare const TWEEN: any;
 import {EventType, eventBus} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {StandeeSpriteWrapper, StandeeAnimationType} from './standee-sprite-wrapper';
+import {cameraWrapper} from '../camera-wrapper';
 
 export class Standee {
 
@@ -15,6 +16,8 @@ export class Standee {
     private walkTweenElapsed: number;
     private walkTween: any;
 
+    private facing: any; // Faces in the vector of which way the NPC is walking or was walking before stopping.
+
     constructor(npcId: number) {
         this.npcId = npcId;
 
@@ -24,6 +27,8 @@ export class Standee {
 
         this.walkTweenElapsed = 0;
         this.walkTween = null;
+
+        this.facing = new THREE.Vector3();
     }
 
     start() {
@@ -32,6 +37,7 @@ export class Standee {
 
     step(elapsed: number) {
         this.stepWalk(elapsed);
+        this.ensureCorrectAnimation();
 
         this.spriteWrapper.step(elapsed);
     }
@@ -60,6 +66,10 @@ export class Standee {
             .to({x: x, z: z}, time)
             .onComplete(() => { this.stopWalk(); })
             .start(this.walkTweenElapsed);
+        
+        // Update direction this standee will be facing when walking.
+        this.facing.setX(x - this.group.position.x);
+        this.facing.setZ(z - this.group.position.z);
     }
 
     private stepWalk(elapsed: number) {
@@ -78,5 +88,32 @@ export class Standee {
             this.group.position.x,
             this.group.position.z)
         );
+    }
+
+    private ensureCorrectAnimation() {
+        cameraWrapper.camera.lookAt(this.group.position);
+
+        let angle = cameraWrapper.camera.getWorldDirection().angleTo(this.facing);
+        angle *= (180/Math.PI); // It's my party and I'll use degrees if I want to.
+
+        if (this.walkTween != null) {
+            if (angle < 60) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkUp);
+            } else if (angle >= 60 && angle < 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkLeft);
+                // this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkRight); // TODO: How to tell?
+            } else if (angle >= 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkDown);
+            }
+        } else {
+            if (angle < 60) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandUp);
+            } else if (angle >= 60 && angle < 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandLeft);
+                // this.spriteWrapper.switchAnimation(StandeeAnimationType.StandLeft); // TODO: How to tell?
+            } else if (angle >= 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandDown);
+            }
+        }
     }
 }

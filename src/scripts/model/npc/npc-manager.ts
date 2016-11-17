@@ -29,7 +29,7 @@ class NpcManager {
         this.npcs.forEach((npc: Npc) => {
             {
                 let x = 5 // (Math.random() * 10);
-                let y = 1 // (Math.random() * 15);
+                let y = 5 // (Math.random() * 15);
                 console.log("start: %f, %f", x, y);
                 npc.start(x, y);
             }
@@ -37,7 +37,7 @@ class NpcManager {
             // TODO: Move this elsewhere:
             {
                 let x = 5;
-                let y = 10;
+                let y = 8;
                 console.log("end: %f, %f", x, y);
                 npc.beginWalkingTo(x, y);
             }
