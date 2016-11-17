@@ -40,13 +40,6 @@ class StandeeAnimationTextureBase {
                 FRAME_HEIGHT / SPRITESHEET_HEIGHT
             );
 
-            // Set the default frame to the upper-left corner
-            // TODO: Necessary? Might remove this after animations get defined.
-            // this.texture.offset.set(
-            //     (0 * (SPRITESHEET_WIDTH  - FRAME_WIDTH )) / SPRITESHEET_WIDTH,
-            //     (1 * (SPRITESHEET_HEIGHT - FRAME_HEIGHT)) / SPRITESHEET_HEIGHT
-            // );
-
             callback();
         });
     }

@@ -11,7 +11,7 @@ import {
     standeeAnimationTextureBase}
 from './standee-animation-texture-base';
 
-const STANDARD_DELAY = 250; // TODO: Perhaps have some randomness combined with this?
+const STANDARD_DELAY = 200; // TODO: Perhaps have some randomness combined with this?
 
 class StandeeAnimationFrame {
 
@@ -107,7 +107,7 @@ export class StandeeSpriteWrapper {
         this.group.add(this.sprite);
 
         // Initialize default animation to standing facing down:
-        this.currentAnimation = createStandDown();
+        this.currentAnimation = createWalkLeft();
     }
 
     start() {
@@ -126,7 +126,6 @@ export class StandeeSpriteWrapper {
         let frame = this.currentAnimation.getCurrentFrame();
 
         // Convert frame coordinates to texture coordinates and set the current one
-        // TODO: Use flipped flag
         let xpct = (frame.col * FRAME_WIDTH) / SPRITESHEET_WIDTH;
         let ypct = (((Math.floor(SPRITESHEET_HEIGHT / FRAME_HEIGHT)) - 1 - frame.row) * FRAME_HEIGHT) / SPRITESHEET_HEIGHT;
         this.textureWrapper.texture.offset.set(xpct, ypct);
@@ -188,9 +187,9 @@ function createStandUp(): StandeeAnimation {
 let walkUpFrame1        = new StandeeAnimationFrame(2, 0);
 let walkUpFrame2        = new StandeeAnimationFrame(2, 1);
 let walkUpFrame3        = new StandeeAnimationFrame(2, 2);
-let walkUpFrame4        = new StandeeAnimationFrame(2, 0, true);
-let walkUpFrame5        = new StandeeAnimationFrame(2, 1, true);
-let walkUpFrame6        = new StandeeAnimationFrame(2, 2, true);
+let walkUpFrame4        = new StandeeAnimationFrame(3, 3);
+let walkUpFrame5        = new StandeeAnimationFrame(4, 3);
+let walkUpFrame6        = new StandeeAnimationFrame(5, 3);
 
 function createWalkUp(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.WalkUp);
@@ -216,9 +215,9 @@ function createStandDown(): StandeeAnimation {
 let walkDownFrame1      = new StandeeAnimationFrame(0, 0);
 let walkDownFrame2      = new StandeeAnimationFrame(0, 1);
 let walkDownFrame3      = new StandeeAnimationFrame(0, 2);
-let walkDownFrame4      = new StandeeAnimationFrame(0, 0, true);
-let walkDownFrame5      = new StandeeAnimationFrame(0, 1, true);
-let walkDownFrame6      = new StandeeAnimationFrame(0, 2, true);
+let walkDownFrame4      = new StandeeAnimationFrame(0, 3);
+let walkDownFrame5      = new StandeeAnimationFrame(1, 3);
+let walkDownFrame6      = new StandeeAnimationFrame(2, 3);
 
 function createWalkDown(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.WalkDown);
@@ -256,7 +255,7 @@ function createWalkLeft(): StandeeAnimation {
 }
 
 // Standing Right
-let standRightFrame1    = new StandeeAnimationFrame(1, 1, true);
+let standRightFrame1    = new StandeeAnimationFrame(1, 4);
 
 function createStandRight(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.StandRight);
@@ -265,10 +264,10 @@ function createStandRight(): StandeeAnimation {
 }
 
 // Walking Right
-let walkRightFrame1     = new StandeeAnimationFrame(1, 1, true);
-let walkRightFrame2     = new StandeeAnimationFrame(1, 0, true);
-let walkRightFrame3     = new StandeeAnimationFrame(1, 1, true);
-let walkRightFrame4     = new StandeeAnimationFrame(1, 2, true);
+let walkRightFrame1     = new StandeeAnimationFrame(1, 4);
+let walkRightFrame2     = new StandeeAnimationFrame(2, 4);
+let walkRightFrame3     = new StandeeAnimationFrame(1, 4);
+let walkRightFrame4     = new StandeeAnimationFrame(0, 4);
 
 function createWalkRight(): StandeeAnimation {
     let animation = new StandeeAnimation(StandeeAnimationType.WalkRight);
