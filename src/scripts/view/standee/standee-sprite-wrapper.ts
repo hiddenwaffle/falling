@@ -11,7 +11,7 @@ import {
     standeeAnimationTextureBase}
 from './standee-animation-texture-base';
 
-const STANDARD_DELAY = 200; // TODO: Perhaps have some randomness combined with this?
+const STANDARD_DELAY = 200;
 
 class StandeeAnimationFrame {
 
@@ -107,7 +107,7 @@ export class StandeeSpriteWrapper {
         this.group.add(this.sprite);
 
         // Initialize default animation to standing facing down:
-        this.currentAnimation = createWalkLeft();
+        this.currentAnimation = createWalkDown();
     }
 
     start() {
@@ -127,7 +127,7 @@ export class StandeeSpriteWrapper {
 
         // Convert frame coordinates to texture coordinates and set the current one
         let xpct = (frame.col * FRAME_WIDTH) / SPRITESHEET_WIDTH;
-        let ypct = (((Math.floor(SPRITESHEET_HEIGHT / FRAME_HEIGHT)) - 1 - frame.row) * FRAME_HEIGHT) / SPRITESHEET_HEIGHT;
+        let ypct = (((SPRITESHEET_HEIGHT / FRAME_HEIGHT) - 1 - frame.row) * FRAME_HEIGHT) / SPRITESHEET_HEIGHT;
         this.textureWrapper.texture.offset.set(xpct, ypct);
     }
 }
