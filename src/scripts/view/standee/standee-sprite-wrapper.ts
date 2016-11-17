@@ -106,7 +106,7 @@ export class StandeeSpriteWrapper {
         this.group.add(this.sprite);
 
         // Initialize default animation to standing facing down:
-        this.currentAnimation = createWalkRight();
+        this.currentAnimation = createStandDown();
     }
 
     start() {
