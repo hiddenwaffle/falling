@@ -91,32 +91,35 @@ export class Standee {
     }
 
     private ensureCorrectAnimation() {
-        cameraWrapper.camera.lookAt(this.group.position);
+        // let target = this.group.position.clone();
+        // target.setY(target.y + 0.5);
+        // cameraWrapper.camera.lookAt(target);
 
+        // Angle between two vectors: http://stackoverflow.com/a/21484228
         let worldDirection = cameraWrapper.camera.getWorldDirection();
-        let angle = worldDirection.angleTo(this.facing);
-        if (isNaN(angle)) {
-            angle = 0;
-        }
+        let angle = Math.atan2(this.facing.z, this.facing.x) - Math.atan2(worldDirection.z, worldDirection.x);
+        if (angle < 0) angle += 2 * Math.PI;
         angle *= (180/Math.PI); // It's my party and I'll use degrees if I want to.
 
         if (this.walkTween != null) {
-            if (angle < 60) {
+            if (angle < 60 || angle >= 300) {
                 this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkUp);
             } else if (angle >= 60 && angle < 120) {
-                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkLeft);
-                // this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkRight); // TODO: How to tell?
-            } else if (angle >= 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkRight);
+            } else if (angle >= 120 && angle < 240) {
                 this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkDown);
+            } else if (angle >= 240 && angle < 300) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.WalkLeft);
             }
         } else {
-            if (angle < 60) {
+            if (angle < 60 || angle >= 300) {
                 this.spriteWrapper.switchAnimation(StandeeAnimationType.StandUp);
             } else if (angle >= 60 && angle < 120) {
-                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandLeft);
-                // this.spriteWrapper.switchAnimation(StandeeAnimationType.StandLeft); // TODO: How to tell?
-            } else if (angle >= 120) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandRight);
+            } else if (angle >= 120 && angle < 240) {
                 this.spriteWrapper.switchAnimation(StandeeAnimationType.StandDown);
+            } else if (angle >= 240 && angle < 300) {
+                this.spriteWrapper.switchAnimation(StandeeAnimationType.StandLeft);
             }
         }
     }

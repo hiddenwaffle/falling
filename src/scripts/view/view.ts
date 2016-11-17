@@ -49,8 +49,8 @@ class View {
         // TODO: Temporary for debugging?
         this.scene.add(new THREE.AmbientLight(0x404040));
 
-        cameraWrapper.camera.position.set(3, 0.75, 15); // A little higher than eye-level with the NPCs.
-        cameraWrapper.camera.lookAt(new THREE.Vector3(5, 2, 1));
+        cameraWrapper.camera.position.set(-1, 0.75, 17); // More or less eye-level with the NPCs.
+        cameraWrapper.camera.lookAt(new THREE.Vector3(4, 9, 1));
 
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild(this.renderer.domElement);
