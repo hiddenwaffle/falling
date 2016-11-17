@@ -16,7 +16,7 @@ export class Standee {
     private walkTweenElapsed: number;
     private walkTween: any;
 
-    private facing: any; // Faces in the vector of which way the NPC is walking or was walking before stopping.
+    private facing: any; // Faces in the vector of which way the NPC is walking, was walking before stopping, or was set to.
 
     constructor(npcId: number) {
         this.npcId = npcId;
@@ -93,7 +93,11 @@ export class Standee {
     private ensureCorrectAnimation() {
         cameraWrapper.camera.lookAt(this.group.position);
 
-        let angle = cameraWrapper.camera.getWorldDirection().angleTo(this.facing);
+        let worldDirection = cameraWrapper.camera.getWorldDirection();
+        let angle = worldDirection.angleTo(this.facing);
+        if (isNaN(angle)) {
+            angle = 0;
+        }
         angle *= (180/Math.PI); // It's my party and I'll use degrees if I want to.
 
         if (this.walkTween != null) {
