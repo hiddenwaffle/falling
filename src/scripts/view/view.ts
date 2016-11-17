@@ -78,8 +78,7 @@ class View {
         this.scene.add(new THREE.AmbientLight(0x404040));
 
         this.camera.position.set(-3, 0.75, 15); // A little higher than eye-level with the NPCs.
-        this.camera.lookAt(new THREE.Vector3(4, 5, 0));
-        // this.camera.lookAt(new THREE.Vector3(4, 9, 0));
+        this.camera.lookAt(new THREE.Vector3(4, 9, 0));
 
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild(this.renderer.domElement);
