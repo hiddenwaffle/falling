@@ -93,7 +93,7 @@ export class LightingGrid {
         this.panelGroup.scale.set(0.7, 1.0, 1);
 
         // Make cells appear to pulse.
-        this.emissiveIntensity.value = 0.33;
+        this.emissiveIntensity.value = 0.25;
         this.pulseTweenElapsed = 0;
         this.pulseTween = new TWEEN.Tween(this.emissiveIntensity)
             .to({value: 1.0}, 750)

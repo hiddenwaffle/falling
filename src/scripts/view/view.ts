@@ -65,7 +65,9 @@ class View {
         this.scene.add(this.playerGrid.group);
 
         this.scene.add(this.aiGrid.group);
-        this.aiGrid.group.position.setX(10);
+        this.aiGrid.group.position.setX(11);
+        this.aiGrid.group.position.setZ(1);
+        this.aiGrid.group.rotation.y = -Math.PI / 4;
 
         // TODO: Temporary for debugging?
         // this.scene.add(new THREE.AmbientLight(0x404040));
@@ -73,11 +75,11 @@ class View {
         // TODO: Temporary
         let spotLight = new THREE.SpotLight(0xbbbbff);
         spotLight.position.set(-3, 0.75, 15);
-        spotLight.target = this.playerGrid.group;
+        spotLight.target = this.aiGrid.group;
         this.scene.add(spotLight);
 
         cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
-        cameraWrapper.lookAt(new THREE.Vector3(3, 8, 1));
+        cameraWrapper.lookAt(new THREE.Vector3(5, 8, 2));
 
         cameraWrapper.updateRendererSize(this.renderer);
         window.addEventListener('resize', () => {
