@@ -2,11 +2,17 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
-import {lightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
+import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
 
-class Switchboard {
+export class Switchboard {
+
+    private lightingGrid: LightingGrid;
+
+    constructor(lightingGrid: LightingGrid) {
+        this.lightingGrid = lightingGrid;
+    }
     
     start() {
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
@@ -20,8 +26,6 @@ class Switchboard {
         eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
             this.handleCellChangeEvent(event);
         });
-
-        lightingGrid.start();
     }
 
     step(elapsed: number) {
@@ -39,7 +43,7 @@ class Switchboard {
                 continue; // Skip obstructed floors
             }
             let offsetPanelIdx = panelIdx + offset.x;
-            lightingGrid.sendPointLightTo(offsetFloorIdx, offsetPanelIdx, color);
+            this.lightingGrid.sendActiveShapeLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
     }
 
@@ -55,10 +59,10 @@ class Switchboard {
 
         let panelIdx = event.col;
         if (event.cell.getColor() === Color.Empty) {
-            lightingGrid.switchRoomOff(floorIdx, panelIdx);
+            this.lightingGrid.switchRoomOff(floorIdx, panelIdx);
         } else {
             let color = this.convertColor(event.cell.getColor());
-            lightingGrid.switchRoomOn(floorIdx, panelIdx, color);
+            this.lightingGrid.switchRoomOn(floorIdx, panelIdx, color);
         }
     }
 
@@ -107,4 +111,3 @@ class Switchboard {
         return value;
     }
 }
-export const switchboard = new Switchboard();

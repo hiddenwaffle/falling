@@ -5,19 +5,41 @@ declare const TWEEN: any;
 export const FLOOR_COUNT = 17;
 export const PANEL_COUNT_PER_FLOOR = 10;
 
-const POINT_LIGHT_COUNT = 4;
+const ACTIVE_SHAPE_LIGHT_COUNT = 4;
 
 class EmissiveIntensity {
     value: number;
 }
 
-class LightingGrid {
+/**
+ * The coordinates here should transfer directly to the
+ * light that is assigned to it for each render.
+ */
+class ActiveShapeLight {
+    x: number;
+    y: number;
+    z: number;
+    color: number;
+
+    constructor() {
+        this.x = -200;
+        this.y = -200;
+        this.z = -200;
+        this.color = 0xff00ff;
+    }
+}
+
+export class LightingGrid {
     
     readonly group: any;
     
     private panels: any[][];
-    private pointLights: any[];
-    private currentPointLightIdx: number;
+    
+    // private pointLights: any[];
+    // private currentPointLightIdx: number;
+
+    private activeShapeLights: ActiveShapeLight[];
+    private currentActiveShapeLightIdx: number;
 
     private pulseTween: any;
     private pulseTweenElapsed: number;
@@ -44,17 +66,23 @@ class LightingGrid {
             }
         }
 
-        this.pointLights = [];
-        for (let count = 0; count < POINT_LIGHT_COUNT; count++) {
-            let pointLight = new THREE.PointLight(0xff00ff, 2, 1.5);
-// These two lines are for debugging:
-// let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
-// pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
-            pointLight.position.set(-100, -100, 0.33); // Just get it out of the way for now
-            this.pointLights.push(pointLight);
-        }
+//         this.pointLights = [];
+//         for (let count = 0; count < ACTIVE_SHAPE_LIGHT_COUNT; count++) {
+//             let pointLight = new THREE.PointLight(0xff00ff, 2, 1.5);
+// // These two lines are for debugging:
+// // let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
+// // pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
+//             pointLight.position.set(-100, -100, 0.33); // Just get it out of the way for now
+//             this.pointLights.push(pointLight);
+//         }
+//         this.currentPointLightIdx = 0;
 
-        this.currentPointLightIdx = 0;
+        this.activeShapeLights = [];
+        for (let count = 0; count < ACTIVE_SHAPE_LIGHT_COUNT; count++) {
+            let activeShapeLight = new ActiveShapeLight();
+            this.activeShapeLights.push(activeShapeLight);
+        }
+        this.currentActiveShapeLightIdx = 0;
 
         this.pulseTween = null;
         this.pulseTweenElapsed = 0;
@@ -72,9 +100,9 @@ class LightingGrid {
             }
         }
 
-        for (let pointLight of this.pointLights) {
-            this.group.add(pointLight);
-        }
+        // for (let pointLight of this.pointLights) {
+        //     this.group.add(pointLight);
+        // }
 
         // Make cells appear to pulse.
         this.emissiveIntensity.value = 0.33;
@@ -102,24 +130,37 @@ class LightingGrid {
         panel.material.emissive.setHex(color);
     }
 
-    sendPointLightTo(floorIdx: number, panelIdx: number, color: number) {
-        let pointLight = this.getNextPointLight();
-        pointLight.color.setHex(color);
+    sendActiveShapeLightTo(floorIdx: number, panelIdx: number, color: number) {
+        let activeShapeLight = this.getNextActiveShapeLight();
+        activeShapeLight.color = color;
+        activeShapeLight.x = panelIdx;
+        activeShapeLight.y = floorIdx + 1; // Offset up 1 because ground is y = 0.
+        activeShapeLight.z = 0.33;
 
-        let x = panelIdx;
-        let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
-        let z = 0.33;
-        pointLight.position.set(x, y, z);
+        // TODO: Remove this old code.
+        // let x = panelIdx;
+        // let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
+        // let z = 0.33;
+        // pointLight.position.set(x, y, z);
     }
 
-    private getNextPointLight() {
-        let pointLight = this.pointLights[this.currentPointLightIdx];
-        this.currentPointLightIdx++;
-        if (this.currentPointLightIdx >= POINT_LIGHT_COUNT) {
-            this.currentPointLightIdx = 0;
+    private getNextActiveShapeLight(): ActiveShapeLight {
+        let activeShapeLight = this.activeShapeLights[this.currentActiveShapeLightIdx];
+        this.currentActiveShapeLightIdx++;
+        if (this.currentActiveShapeLightIdx >= ACTIVE_SHAPE_LIGHT_COUNT) {
+            this.currentActiveShapeLightIdx = 0;
         }
-        return pointLight;
+        return activeShapeLight;
     }
+
+    // private getNextPointLight() {
+    //     let pointLight = this.pointLights[this.currentPointLightIdx];
+    //     this.currentPointLightIdx++;
+    //     if (this.currentPointLightIdx >= ACTIVE_SHAPE_LIGHT_COUNT) {
+    //         this.currentPointLightIdx = 0;
+    //     }
+    //     return pointLight;
+    // }
 
     private stepPulse(elapsed: number) {
         if (this.pulseTween != null) {
@@ -134,4 +175,3 @@ class LightingGrid {
         }
     }
 }
-export const lightingGrid = new LightingGrid();

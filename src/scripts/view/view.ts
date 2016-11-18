@@ -2,8 +2,8 @@ declare const THREE: any;
 
 import {cameraWrapper} from './camera-wrapper';
 import {world} from './world/world';
-import {lightingGrid} from './lighting/lighting-grid';
-import {switchboard} from './lighting/switchboard';
+import {LightingGrid} from './lighting/lighting-grid';
+import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
 
 class View {
@@ -12,20 +12,32 @@ class View {
     private scene: any;
     private renderer: any;
 
+    private playerGrid: LightingGrid;
+    private playerSwitchboard: Switchboard;
+    private aiGrid: LightingGrid;
+    private aiSwitchboard: Switchboard;
+
     constructor() {
         this.scene = new THREE.Scene();
         
         this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
-        // this.renderer.sortObjects = false; // FIXME: I'm not sure why I'm able to comment this out now...
+
+        this.playerGrid = new LightingGrid();
+        this.playerSwitchboard = new Switchboard(this.playerGrid);
+        this.aiGrid = new LightingGrid();
+        this.aiSwitchboard = new Switchboard(this.aiGrid);
     }
 
     start() {
+        this.playerGrid.start();
+        this.playerSwitchboard.start();
+        this.aiGrid.start();
+        this.aiSwitchboard.start();
+
         this.doStart();
 
         world.start();
-        lightingGrid.start();
-        switchboard.start();
         standeeManager.start();
 
         // The canvas should have been hidden until setup is complete.
@@ -34,15 +46,14 @@ class View {
 
     step(elapsed: number) {
         world.step(elapsed);
-        lightingGrid.step(elapsed);
-        switchboard.step(elapsed);
-        standeeManager.step(elapsed);
 
-        // FIXME: I'm not really sure why it is sorting these correctly without this:
-        // for (let obj of standeeManager.group.children) {
-        //     let distance = this.camera.position.distanceTo(obj.position);
-        //     obj.renderOrder = distance * -1;
-        // }
+        this.playerSwitchboard.step(elapsed);
+        this.playerGrid.step(elapsed);
+
+        this.aiGrid.step(elapsed);
+        this.playerSwitchboard.step(elapsed);
+
+        standeeManager.step(elapsed);
 
         this.renderer.render(this.scene, cameraWrapper.camera);
     }
@@ -50,7 +61,11 @@ class View {
     private doStart() {
         this.scene.add(world.group);
         this.scene.add(standeeManager.group);
-        this.scene.add(lightingGrid.group);
+
+        this.scene.add(this.playerGrid.group);
+
+        this.scene.add(this.aiGrid.group);
+        this.aiGrid.group.position.setX(10);
 
         // TODO: Temporary for debugging?
         // this.scene.add(new THREE.AmbientLight(0x404040));
@@ -58,7 +73,7 @@ class View {
         // TODO: Temporary
         let spotLight = new THREE.SpotLight(0x999999);
         spotLight.position.set(-3, 0.75, 15);
-        spotLight.target = lightingGrid.group;
+        spotLight.target = this.playerGrid.group;
         this.scene.add(spotLight);
 
         cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
