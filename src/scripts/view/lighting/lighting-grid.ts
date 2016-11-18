@@ -31,8 +31,9 @@ class LightingGrid {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
                 let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1); // TODO: clone() ?
-                let material = new THREE.MeshPhongMaterial({color: 0xf2e9d8});
+                let material = new THREE.MeshLambertMaterial();
                 let panel = new THREE.Mesh(geometry, material);
+                panel.visible = false;
 
                 let x = panelIdx;
                 let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
@@ -45,7 +46,7 @@ class LightingGrid {
 
         this.pointLights = [];
         for (let count = 0; count < POINT_LIGHT_COUNT; count++) {
-            let pointLight = new THREE.PointLight(0xff00ff, 1.75, 1.25);
+            let pointLight = new THREE.PointLight(0xff00ff, 2, 1.5);
 // These two lines are for debugging:
 // let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
 // pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
@@ -90,8 +91,14 @@ class LightingGrid {
         this.stepPulse(elapsed);
     }
 
-    switchRoomLight(floorIdx: number, panelIdx: number, color: number) {
+    switchRoomOff(floorIdx: number, panelIdx: number) {
         let panel = this.panels[floorIdx][panelIdx];
+        panel.visible = false;
+    }
+
+    switchRoomOn(floorIdx: number, panelIdx: number, color: number) {
+        let panel = this.panels[floorIdx][panelIdx];
+        panel.visible = true;
         panel.material.emissive.setHex(color);
     }
 

@@ -54,8 +54,12 @@ class Switchboard {
         }
 
         let panelIdx = event.col;
-        let color = this.convertColor(event.cell.getColor());
-        lightingGrid.switchRoomLight(floorIdx, panelIdx, color);
+        if (event.cell.getColor() === Color.Empty) {
+            lightingGrid.switchRoomOff(floorIdx, panelIdx);
+        } else {
+            let color = this.convertColor(event.cell.getColor());
+            lightingGrid.switchRoomOn(floorIdx, panelIdx, color);
+        }
     }
 
     /**

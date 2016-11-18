@@ -53,7 +53,13 @@ class View {
         this.scene.add(lightingGrid.group);
 
         // TODO: Temporary for debugging?
-        this.scene.add(new THREE.AmbientLight(0x404040));
+        // this.scene.add(new THREE.AmbientLight(0x404040));
+
+        // TODO: Temporary
+        let spotLight = new THREE.SpotLight(0x999999);
+        spotLight.position.set(-3, 0.75, 15);
+        spotLight.target = lightingGrid.group;
+        this.scene.add(spotLight);
 
         cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
         cameraWrapper.lookAt(new THREE.Vector3(3, 8, 1));
