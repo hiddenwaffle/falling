@@ -8,14 +8,15 @@ import {standeeManager} from './standee/standee-manager';
 
 class View {
 
+    private canvas: HTMLCanvasElement;
     private scene: any;
     private renderer: any;
 
     constructor() {
         this.scene = new THREE.Scene();
         
-        let canvas = document.getElementById('canvas');
-        this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
+        this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
+        this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
         // this.renderer.sortObjects = false; // FIXME: I'm not sure why I'm able to comment this out now...
     }
 
@@ -26,6 +27,9 @@ class View {
         lightingGrid.start();
         switchboard.start();
         standeeManager.start();
+
+        // The canvas should have been hidden until setup is complete.
+        this.canvas.style.display = 'inline';
     }
 
     step(elapsed: number) {
