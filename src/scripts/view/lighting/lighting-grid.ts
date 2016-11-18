@@ -57,6 +57,12 @@ export class LightingGrid {
 // // These two lines are for debugging:
 // let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
 // pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
+            let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1);
+            let material = new THREE.MeshPhongMaterial({color: 0xffffff});
+            let glass = new THREE.Mesh(geometry, material);
+            glass.position.setZ(-0.33); // Should be on same level as regular cells.
+            pointLight.add(glass);
+
             pointLight.position.set(-100, -100, 0.33); // Just get it out of the way for now
             this.pointLights.push(pointLight);
         }
