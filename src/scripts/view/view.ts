@@ -13,7 +13,9 @@ class View {
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        
+        let canvas = document.getElementById('canvas');
+        this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: canvas});
         // this.renderer.sortObjects = false; // FIXME: I'm not sure why I'm able to comment this out now...
     }
 
@@ -52,13 +54,9 @@ class View {
         cameraWrapper.camera.position.set(-1, 0.75, 17); // More or less eye-level with the NPCs.
         cameraWrapper.camera.lookAt(new THREE.Vector3(4, 9, 1));
 
-        this.renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild(this.renderer.domElement);
-
+        cameraWrapper.updateRendererSize(this.renderer);
         window.addEventListener('resize', () => {
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            cameraWrapper.camera.aspect = window.innerWidth / window.innerHeight;
-            cameraWrapper.camera.updateProjectionMatrix();
+            cameraWrapper.updateRendererSize(this.renderer);
         });
     }
 }

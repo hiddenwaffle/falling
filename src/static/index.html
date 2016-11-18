@@ -8,14 +8,23 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            background: #222;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            text-align: center;
         }
         canvas {
-            width: 100%;
-            height: 100%
+            text-align: center;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
         }
     </style>
 </head>
 <body>
+<canvas id="canvas"></canvas>
 <script src="Tween.js"></script>
 <script src="three.js"></script>
 <script src="MTLLoader.js"></script>
