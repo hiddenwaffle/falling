@@ -8,6 +8,8 @@ export const SPRITESHEET_HEIGHT  = 512;
 export const FRAME_WIDTH   = 48;
 export const FRAME_HEIGHT  = 72;
 
+const TOTAL_DIFFERENT_TEXTURES = 3;
+
 export class StandeeAnimationTextureWrapper {
 
     readonly texture: any;
@@ -19,39 +21,48 @@ export class StandeeAnimationTextureWrapper {
 
 class StandeeAnimationTextureBase {
 
-    private texture: any;
+    private textures: any[];
+    private loadedCount: number;
+    private currentTextureIdx: number;
 
     constructor() {
-        this.texture = null;
+        this.textures = [];
+        this.loadedCount = 0;
+        this.currentTextureIdx = 0;
     }
 
     preload(callback: () => any) {
-        let textureLoader = new THREE.TextureLoader();
-        textureLoader.load('fall-student.png', (texture: any) => {
-            this.texture = texture;
-
-            // Allows for texture flipping, when necessary.
-            // NOTE: To do so, set repeat.x *= -1 and offset.x *= -1.
-            this.texture.wrapS = THREE.RepeatWrapping;
-
+        let textureLoadedHandler = (texture: any) => {
             // Have it show only one frame at a time:
-            this.texture.repeat.set(
+            texture.repeat.set(
                 FRAME_WIDTH  / SPRITESHEET_WIDTH,
                 FRAME_HEIGHT / SPRITESHEET_HEIGHT
             );
+            this.textures.push(texture);
+            this.loadedCount++;
+            if (this.loadedCount >= TOTAL_DIFFERENT_TEXTURES) {
+                callback();
+            }
+        }
 
-            callback();
-        });
+        let textureLoader = new THREE.TextureLoader();
+        textureLoader.load('fall-student.png', textureLoadedHandler);
+        textureLoader.load('fall-student2.png', textureLoadedHandler);
+        textureLoader.load('fall-student3.png', textureLoadedHandler);
     }
 
     newInstance(): StandeeAnimationTextureWrapper {
-        // return this.texture.clone(); // This is the bane of my existence.
-        let texture = this.texture.clone();
+        let idx = this.getNextTextureIdx();
+        let texture = this.textures[idx].clone(); // Cloning textures in the version of ThreeJS that I am currently using will duplicate them :(
         return new StandeeAnimationTextureWrapper(texture);
     }
 
-    setTexture(texture: any) {
-        this.texture = texture;
+    private getNextTextureIdx() {
+        this.currentTextureIdx++;
+        if (this.currentTextureIdx >= TOTAL_DIFFERENT_TEXTURES) {
+            this.currentTextureIdx = 0;
+        }
+        return this.currentTextureIdx;
     }
 }
 export const standeeAnimationTextureBase = new StandeeAnimationTextureBase();
