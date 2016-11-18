@@ -1,6 +1,8 @@
 declare const THREE: any;
 declare const TWEEN: any;
 
+import {Building} from './building';
+
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
 export const PANEL_COUNT_PER_FLOOR = 10;
@@ -32,7 +34,9 @@ class ActiveShapeLight {
 export class LightingGrid {
     
     readonly group: any;
-    
+    private panelGroup: any;
+    private building: Building;
+
     private panels: any[][];
     
     // private pointLights: any[];
@@ -47,6 +51,8 @@ export class LightingGrid {
 
     constructor() {
         this.group = new THREE.Object3D();
+        this.panelGroup = new THREE.Object3D();
+        this.building = new Building();
 
         this.panels = [];
         for (let floorIdx = 0; floorIdx < FLOOR_COUNT; floorIdx++) {
@@ -90,13 +96,17 @@ export class LightingGrid {
     }
 
     start() {
+        this.group.add(this.building.group);
+        this.group.add(this.panelGroup);
+        this.building.start();
+
         // Transform to fit against building.
-        this.group.position.set(1.9, 3.8, -1.55);
-        this.group.scale.set(0.7, 1.0, 1);
+        this.panelGroup.position.set(1.9, 3.8, -1.55);
+        this.panelGroup.scale.set(0.7, 1.0, 1);
 
         for (let floor of this.panels) {
             for (let panel of floor) {
-                this.group.add(panel);
+                this.panelGroup.add(panel);
             }
         }
 

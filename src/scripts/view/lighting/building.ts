@@ -1,6 +1,6 @@
 declare const THREE: any;
 
-class Building {
+export class Building {
 
     readonly group: any;
 
@@ -16,6 +16,7 @@ class Building {
         // this.slab.position.set(4.5, 10, -5.8);
     }
 
+    // TODO: Move this into a loader
     start() {
         let mtlLoader = new THREE.MTLLoader();
         mtlLoader.setPath('');
@@ -36,4 +37,3 @@ class Building {
         //
     }
 }
-export const building = new Building();
