@@ -106,7 +106,7 @@ export class StandeeSpriteWrapper {
 
         // Initialize ThreeJS objects: 
         this.textureWrapper = standeeAnimationTextureBase.newInstance();
-        let material = new THREE.SpriteMaterial({map: this.textureWrapper.texture});
+        let material = new THREE.SpriteMaterial({map: this.textureWrapper.texture, color: 0x999999});
         this.sprite = new THREE.Sprite(material);
         this.sprite.scale.set(1, 1.5); // Adjust aspect ratio for 48 x 72 size frames. 
         this.group.add(this.sprite);
@@ -116,7 +116,7 @@ export class StandeeSpriteWrapper {
     }
 
     start() {
-        this.sprite.material.color.set(0xaaaaaa); // TODO: Set this elsewhere
+        // TODO: Set this elsewhere
     }
 
     step(elapsed: number) {

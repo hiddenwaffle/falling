@@ -71,7 +71,7 @@ class View {
         // this.scene.add(new THREE.AmbientLight(0x404040));
 
         // TODO: Temporary
-        let spotLight = new THREE.SpotLight(0x999999);
+        let spotLight = new THREE.SpotLight(0xbbbbff);
         spotLight.position.set(-3, 0.75, 15);
         spotLight.target = this.playerGrid.group;
         this.scene.add(spotLight);
