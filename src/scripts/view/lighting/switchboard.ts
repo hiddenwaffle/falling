@@ -35,9 +35,9 @@ class Switchboard {
 
         for (let offset of event.shape.getOffsets()) {
             let offsetFloorIdx = floorIdx - offset.y;
-            // if (offsetFloorIdx >= FLOOR_COUNT) {
-                // continue; // Skip obstructed floors
-            // }
+            if (offsetFloorIdx >= FLOOR_COUNT) {
+                continue; // Skip obstructed floors
+            }
             let offsetPanelIdx = panelIdx + offset.x;
             lightingGrid.sendPointLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
