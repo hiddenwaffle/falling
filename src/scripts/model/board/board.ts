@@ -16,7 +16,7 @@ export class Board {
     private player: Player;
     private currentShape: Shape;
 
-    private matrix: Cell[][];
+    readonly matrix: Cell[][];
     private msTillGravityTick: number;
 
     constructor(player: Player) {
