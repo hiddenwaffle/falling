@@ -2,7 +2,7 @@ import {Shape} from '../board/shape';
 import {Cell} from '../../domain/cell';
 import {eventBus, EventType} from '../../event/event-bus';
 import {PlayerMovement} from '../../domain/player-movement';
-import {Player} from '../../domain/player';
+import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
 
 const TIME_BETWEEN_MOVES = 250;
@@ -42,17 +42,17 @@ export class Ai {
         let rand = Math.floor(Math.random() * 5);
 
         if (rand === 0) {
-            eventBus.fire(new PlayerMovementEvent(PlayerMovement.RotateClockwise, Player.Ai));
+            eventBus.fire(new PlayerMovementEvent(PlayerMovement.RotateClockwise, PlayerType.Ai));
         } else if (rand === 1) {
-            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Left, Player.Ai));
+            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Left, PlayerType.Ai));
         } else if (rand === 2) {
-            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Right, Player.Ai));
+            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Right, PlayerType.Ai));
         } else if (rand === 3) {
-            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Down, Player.Ai));
+            eventBus.fire(new PlayerMovementEvent(PlayerMovement.Down, PlayerType.Ai));
         } else if (rand === 4) {
             let dropChance = Math.floor(Math.random() * 100); // Is this called Monte-Carlo?
             if (dropChance < 10) {
-                eventBus.fire(new PlayerMovementEvent(PlayerMovement.Drop, Player.Ai));
+                eventBus.fire(new PlayerMovementEvent(PlayerMovement.Drop, PlayerType.Ai));
             } else {
                 // Do nothing this round; maybe considered a hesitation.
             }

@@ -1,20 +1,20 @@
 import {EventType, AbstractEvent} from './event-bus';
 import {Cell} from '../domain/cell';
 import {Color} from '../domain/color';
-import {Player} from '../domain/player';
+import {PlayerType} from '../domain/player-type';
 
 export class CellChangeEvent extends AbstractEvent {
     readonly cell: Cell;
     readonly row: number;
     readonly col: number;
-    readonly player: Player;
+    readonly playerType: PlayerType;
 
-    constructor(cell: Cell, row: number, col: number, player: Player) {
+    constructor(cell: Cell, row: number, col: number, playerType: PlayerType) {
         super();
         this.cell = cell;
         this.row = row;
         this.col = col;
-        this.player = player;
+        this.playerType = playerType;
     }
 
     getType() {

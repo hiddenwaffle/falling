@@ -1,7 +1,7 @@
 import {Shape} from './shape';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
-import {Player} from '../../domain/player';
+import {PlayerType} from '../../domain/player-type';
 import {shapeFactory} from './shape-factory';
 import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
@@ -13,15 +13,15 @@ const MAX_COLS = 10;
 const TEMP_DELAY_MS = 500;
 
 export class Board {
-    private player: Player;
+    private playerType: PlayerType;
 
     currentShape: Shape;
     readonly matrix: Cell[][];
 
     private msTillGravityTick: number;
 
-    constructor(player: Player) {
-        this.player = player;
+    constructor(playerType: PlayerType) {
+        this.playerType = playerType;
 
         this.currentShape = null;
         this.matrix = [];
@@ -143,7 +143,7 @@ export class Board {
         // TODO: Maybe bounds check here.
         let cell = this.matrix[rowIdx][colIdx];
         cell.setColor(color);
-        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.player));
+        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
     }
 
     private startShape() {
@@ -241,7 +241,7 @@ export class Board {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
-                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.player));
+                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
     }
@@ -263,10 +263,10 @@ export class Board {
     }
 
     private fireActiveShapeChangedEvent() {
-        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.player));
+        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType));
     }
 
     private fireActiveShapeEndedEvent() {
-        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape, this.player));
+        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape, this.playerType));
     }
 }

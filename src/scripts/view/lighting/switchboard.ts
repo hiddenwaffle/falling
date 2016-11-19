@@ -5,33 +5,33 @@ import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
-import {Player} from '../../domain/player';
+import {PlayerType} from '../../domain/player-type';
 
 export class Switchboard {
 
     private lightingGrid: LightingGrid;
-    private player: Player;
+    private playerType: PlayerType;
 
-    constructor(lightingGrid: LightingGrid, player: Player) {
+    constructor(lightingGrid: LightingGrid, playerType: PlayerType) {
         this.lightingGrid = lightingGrid;
-        this.player = player;
+        this.playerType = playerType;
     }
     
     start() {
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
-            if (this.player === event.player) {
+            if (this.playerType === event.playerType) {
                 this.handleActiveShapeChangedEvent(event);
             }
         });
 
         eventBus.register(EventType.ActiveShapeEndedEventType, (event: ActiveShapeEndedEvent) => {
-            if (this.player === event.player) {
+            if (this.playerType === event.playerType) {
                 this.handleActiveShapeEndedEvent(event);
             }
         });
         
         eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
-            if (this.player === event.player) {
+            if (this.playerType === event.playerType) {
                 this.handleCellChangeEvent(event);
             }
         });

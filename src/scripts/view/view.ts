@@ -5,7 +5,7 @@ import {world} from './world/world';
 import {LightingGrid} from './lighting/lighting-grid';
 import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
-import {Player} from '../domain/player';
+import {PlayerType} from '../domain/player-type';
 
 class View {
 
@@ -25,9 +25,9 @@ class View {
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
 
         this.humanGrid = new LightingGrid();
-        this.hmanSwitchboard = new Switchboard(this.humanGrid, Player.Human);
+        this.hmanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
         this.aiGrid = new LightingGrid();
-        this.aiSwitchboard = new Switchboard(this.aiGrid, Player.Ai);
+        this.aiSwitchboard = new Switchboard(this.aiGrid, PlayerType.Ai);
     }
 
     start() {

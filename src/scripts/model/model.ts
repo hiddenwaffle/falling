@@ -2,7 +2,7 @@ import {Board} from './board/board';
 import {Ai} from './ai/ai';
 import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
-import {Player} from '../domain/player';
+import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 
@@ -12,8 +12,8 @@ class Model {
     private ai: Ai;
 
     constructor() {
-        this.humanBoard = new Board(Player.Human);
-        this.aiBoard = new Board(Player.Ai);
+        this.humanBoard = new Board(PlayerType.Human);
+        this.aiBoard = new Board(PlayerType.Ai);
         this.ai = new Ai(this.aiBoard);
     }
 
@@ -41,7 +41,7 @@ class Model {
 
     private handlePlayerMovement(event: PlayerMovementEvent) {
         let board: Board;
-        if (event.player === Player.Human) {
+        if (event.playerType === PlayerType.Human) {
             board = this.humanBoard;
         } else {
             board = this.aiBoard;

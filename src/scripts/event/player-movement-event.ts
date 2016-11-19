@@ -1,16 +1,16 @@
 import {EventType, AbstractEvent} from './event-bus';
 import {PlayerMovement} from '../domain/player-movement';
-import {Player} from '../domain/player';
+import {PlayerType} from '../domain/player-type';
 
 export class PlayerMovementEvent extends AbstractEvent {
 
     readonly movement: PlayerMovement;
-    readonly player: Player;
+    readonly playerType: PlayerType;
 
-    constructor(movement: PlayerMovement, player: Player) {
+    constructor(movement: PlayerMovement, playerType: PlayerType) {
         super();
         this.movement = movement;
-        this.player = player;
+        this.playerType = playerType;
     }
 
     getType() {
