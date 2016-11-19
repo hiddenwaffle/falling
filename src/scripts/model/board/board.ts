@@ -1,6 +1,7 @@
 import {Shape} from './shape';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
+import {Player} from '../../domain/player';
 import {shapeFactory} from './shape-factory';
 import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
@@ -12,12 +13,14 @@ const MAX_COLS = 10;
 const TEMP_DELAY_MS = 500;
 
 export class Board {
+    private player: Player;
     private currentShape: Shape;
 
     private matrix: Cell[][];
     private msTillGravityTick: number;
 
-    constructor() {
+    constructor(player: Player) {
+        this.player = player;
         this.currentShape = null;
 
         this.matrix = [];
@@ -266,4 +269,3 @@ export class Board {
         eventBus.fire(new ActiveShapeEndedEvent(this.currentShape));
     }
 }
-export const board = new Board();
