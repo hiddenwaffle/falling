@@ -19,7 +19,7 @@ class Model {
 
     start() {
         eventBus.register(EventType.PlayerMovementEventType, (event: PlayerMovementEvent) => {
-            this.handlePlayerMovement(event.movement);
+            this.handlePlayerMovement(event);
         });
 
         this.humanBoard.start();
@@ -39,23 +39,30 @@ class Model {
         npcManager.step(elapsed);
     }
 
-    private handlePlayerMovement(movement: PlayerMovement) {
-        switch (movement) {
+    private handlePlayerMovement(event: PlayerMovementEvent) {
+        let board: Board;
+        if (event.player === Player.Human) {
+            board = this.humanBoard;
+        } else {
+            board = this.aiBoard;
+        }
+
+        switch (event.movement) {
             case PlayerMovement.Left:
-                this.humanBoard.moveShapeLeft();
+                board.moveShapeLeft();
                 break;
             case PlayerMovement.Right:
-                this.humanBoard.moveShapeRight();
+                board.moveShapeRight();
                 break;
             case PlayerMovement.Down:
-                this.humanBoard.moveShapeDown();
+                board.moveShapeDown();
                 break;
             case PlayerMovement.Drop:
-                this.humanBoard.moveShapeDownAllTheWay();
-                this.humanBoard.stepNow(); // prevent any other keystrokes till next tick
+                board.moveShapeDownAllTheWay();
+                board.stepNow(); // prevent any other keystrokes till next tick
                 break;
             case PlayerMovement.RotateClockwise:
-                this.humanBoard.rotateShapeClockwise();
+                board.rotateShapeClockwise();
                 break;
             default:
                 console.log('unhandled movement');
