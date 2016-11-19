@@ -14,15 +14,16 @@ const TEMP_DELAY_MS = 500;
 
 export class Board {
     private player: Player;
-    private currentShape: Shape;
 
+    currentShape: Shape;
     readonly matrix: Cell[][];
+
     private msTillGravityTick: number;
 
     constructor(player: Player) {
         this.player = player;
-        this.currentShape = null;
 
+        this.currentShape = null;
         this.matrix = [];
         for (let rowIdx = 0; rowIdx < MAX_ROWS; rowIdx++) {
             this.matrix[rowIdx] = [];

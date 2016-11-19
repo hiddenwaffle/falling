@@ -1,3 +1,4 @@
+import {Shape} from '../board/shape';
 import {Cell} from '../../domain/cell';
 import {eventBus, EventType} from '../../event/event-bus';
 import {PlayerMovement} from '../../domain/player-movement';
@@ -7,8 +8,9 @@ import {PlayerMovementEvent} from '../../event/player-movement-event';
 const TIME_BETWEEN_MOVES = 250;
 const TIME_MAX_DEVIATION = 100;
 
-interface Visual {
+export interface Visual {
     readonly matrix: Cell[][];
+    readonly currentShape: Shape;
 }
 
 export class Ai {
@@ -35,6 +37,7 @@ export class Ai {
 
     private performNewMovement() {
         let matrix = this.visual.matrix;
+        let shape = this.visual.currentShape;
 
         let rand = Math.floor(Math.random() * 5);
 
