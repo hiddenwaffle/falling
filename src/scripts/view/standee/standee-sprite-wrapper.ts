@@ -106,7 +106,7 @@ export class StandeeSpriteWrapper {
 
         // Initialize ThreeJS objects: 
         this.textureWrapper = standeeAnimationTextureBase.newInstance();
-        let material = new THREE.SpriteMaterial({map: this.textureWrapper.texture, color: 0x999999});
+        let material = new THREE.SpriteMaterial({map: this.textureWrapper.texture});
         this.sprite = new THREE.Sprite(material);
         this.sprite.scale.set(1, 1.5); // Adjust aspect ratio for 48 x 72 size frames. 
         this.group.add(this.sprite);
@@ -120,7 +120,8 @@ export class StandeeSpriteWrapper {
     }
 
     step(elapsed: number) {
-        this.stepCurrentFrame(elapsed);
+        this.adjustLighting(elapsed);
+        this.stepAnimation(elapsed);
     }
     
     /**
@@ -133,7 +134,12 @@ export class StandeeSpriteWrapper {
         } 
     }
 
-    private stepCurrentFrame(elapsed: number) {
+    private adjustLighting(elapsed: number) {
+        // TODO: Not yet sure if I'll need to use the elapsed variable here.
+        this.sprite.material.color.set(0xaaaaaa);
+    }
+
+    private stepAnimation(elapsed: number) {
         if (this.currentAnimation == null) {
             return;
         }
