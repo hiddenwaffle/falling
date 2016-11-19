@@ -5,6 +5,7 @@ import {world} from './world/world';
 import {LightingGrid} from './lighting/lighting-grid';
 import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
+import {Player} from '../domain/player';
 
 class View {
 
@@ -12,8 +13,8 @@ class View {
     private scene: any;
     private renderer: any;
 
-    private playerGrid: LightingGrid;
-    private playerSwitchboard: Switchboard;
+    private humanGrid: LightingGrid;
+    private hmanSwitchboard: Switchboard;
     private aiGrid: LightingGrid;
     private aiSwitchboard: Switchboard;
 
@@ -23,15 +24,15 @@ class View {
         this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
 
-        this.playerGrid = new LightingGrid();
-        this.playerSwitchboard = new Switchboard(this.playerGrid);
+        this.humanGrid = new LightingGrid();
+        this.hmanSwitchboard = new Switchboard(this.humanGrid, Player.Human);
         this.aiGrid = new LightingGrid();
-        this.aiSwitchboard = new Switchboard(this.aiGrid);
+        this.aiSwitchboard = new Switchboard(this.aiGrid, Player.Ai);
     }
 
     start() {
-        this.playerGrid.start();
-        this.playerSwitchboard.start();
+        this.humanGrid.start();
+        this.hmanSwitchboard.start();
         this.aiGrid.start();
         this.aiSwitchboard.start();
 
@@ -47,11 +48,11 @@ class View {
     step(elapsed: number) {
         world.step(elapsed);
 
-        this.playerSwitchboard.step(elapsed);
-        this.playerGrid.step(elapsed);
+        this.hmanSwitchboard.step(elapsed);
+        this.humanGrid.step(elapsed);
 
         this.aiGrid.step(elapsed);
-        this.playerSwitchboard.step(elapsed);
+        this.hmanSwitchboard.step(elapsed);
 
         standeeManager.step(elapsed);
 
@@ -62,7 +63,7 @@ class View {
         this.scene.add(world.group);
         this.scene.add(standeeManager.group);
 
-        this.scene.add(this.playerGrid.group);
+        this.scene.add(this.humanGrid.group);
 
         this.scene.add(this.aiGrid.group);
         this.aiGrid.group.position.setX(11);

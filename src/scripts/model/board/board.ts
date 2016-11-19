@@ -142,7 +142,7 @@ export class Board {
         // TODO: Maybe bounds check here.
         let cell = this.matrix[rowIdx][colIdx];
         cell.setColor(color);
-        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx));
+        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.player));
     }
 
     private startShape() {
@@ -240,7 +240,7 @@ export class Board {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
-                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx));
+                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.player));
             }
         }
     }
@@ -262,10 +262,10 @@ export class Board {
     }
 
     private fireActiveShapeChangedEvent() {
-        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape));
+        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.player));
     }
 
     private fireActiveShapeEndedEvent() {
-        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape));
+        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape, this.player));
     }
 }

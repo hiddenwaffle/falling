@@ -1,13 +1,16 @@
 import {EventType, AbstractEvent} from './event-bus';
 import {Shape} from '../model/board/shape';
+import {Player} from '../domain/player';
 
 export class ActiveShapeChangedEvent extends AbstractEvent {
 
     readonly shape: Shape;
+    readonly player: Player;
 
-    constructor(shape: Shape) {
+    constructor(shape: Shape, player: Player) {
         super();
         this.shape = shape;
+        this.player = player;
     }
 
     getType() {
