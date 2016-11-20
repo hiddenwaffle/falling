@@ -6,7 +6,6 @@ import {shapeFactory} from './shape-factory';
 import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
-import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 const MAX_COLS = 10;
@@ -54,25 +53,19 @@ export class Board {
         if (this.tryGravity()) {
             this.moveShapeDown();
         } else {
-            this.fireActiveShapeEndedEvent();
             this.convertShapeToCells();
 
-            if (this.checkForGameOver()) {
-                // TODO: Fire game lose event
+            if (this.checkForFilledToTop()) {
+                this.hitPointDeductionAndReset();
             } else {
                 this.handleAnyFilledLines();
-                if (this.checkForGameWin()) {
-                    // TODO: Fire game win event
-                } else {
-                    this.startShape();
-                }
+                this.startShape();
             }
         }
     }
 
-    beginNewGame() {
+    resetBoard() {
         this.clear();
-        this.setRandomWhiteLights();
         this.startShape();
     }
 
@@ -127,13 +120,6 @@ export class Board {
                 this.changeCellColor(rowIdx, colIdx, Color.Empty);
             }
         }
-    }
-
-    private setRandomWhiteLights() {
-        // // http://stackoverflow.com/a/7228322
-        // function randomIntFromInterval(min: number, max: number) {
-        //     return Math.floor(Math.random()*(max - min + 1) + min);
-        // }
     }
 
     /**
@@ -210,8 +196,25 @@ export class Board {
         }
     }
 
-    private checkForGameOver(): boolean {
-        return false; // TODO: Do it
+    /**
+     * It is "filled to the top" if the two obscured rows have colored cells in them.
+     */
+    private checkForFilledToTop(): boolean {
+        for (let rowIdx = 0; rowIdx < 2; rowIdx++) {
+            for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+                let cell = this.matrix[rowIdx][colIdx];
+                if (cell.getColor() !== Color.Empty) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private hitPointDeductionAndReset() {
+        this.resetBoard();
+        // TODO: hit point
     }
 
     private handleAnyFilledLines() {
@@ -258,15 +261,7 @@ export class Board {
         }
     }
 
-    private checkForGameWin(): boolean {
-        return false; // TODO: Do it
-    }
-
     private fireActiveShapeChangedEvent() {
         eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType));
-    }
-
-    private fireActiveShapeEndedEvent() {
-        eventBus.fire(new ActiveShapeEndedEvent(this.currentShape, this.playerType));
     }
 }

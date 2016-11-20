@@ -122,6 +122,13 @@ export class LightingGrid {
         let pointLight = this.getNextPointLight();
         pointLight.color.setHex(color);
 
+        // Do not light if higher than the highest *visible* floor.
+        if (floorIdx >= FLOOR_COUNT) {
+            pointLight.visible = false;
+        } else {
+            pointLight.visible = true;
+        }
+
         let x = panelIdx;
         let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
         let z = 0.33;

@@ -28,8 +28,8 @@ class Model {
         npcManager.start();
 
         // TODO: Instead, start game when player hits a key first.
-        this.humanBoard.beginNewGame();
-        this.aiBoard.beginNewGame();
+        this.humanBoard.resetBoard();
+        this.aiBoard.resetBoard();
     }
 
     step(elapsed: number) {

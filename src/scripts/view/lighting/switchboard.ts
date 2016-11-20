@@ -1,7 +1,6 @@
 import {EventType, eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
-import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
@@ -24,12 +23,6 @@ export class Switchboard {
             }
         });
 
-        eventBus.register(EventType.ActiveShapeEndedEventType, (event: ActiveShapeEndedEvent) => {
-            if (this.playerType === event.playerType) {
-                this.handleActiveShapeEndedEvent(event);
-            }
-        });
-        
         eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
             if (this.playerType === event.playerType) {
                 this.handleCellChangeEvent(event);
@@ -48,16 +41,9 @@ export class Switchboard {
 
         for (let offset of event.shape.getOffsets()) {
             let offsetFloorIdx = floorIdx - offset.y;
-            if (offsetFloorIdx >= FLOOR_COUNT) {
-                continue; // Skip obstructed floors
-            }
             let offsetPanelIdx = panelIdx + offset.x;
             this.lightingGrid.sendActiveShapeLightTo(offsetFloorIdx, offsetPanelIdx, color);
         }
-    }
-
-    private handleActiveShapeEndedEvent(event: ActiveShapeEndedEvent) {
-        // TODO: Maybe set some sort of animation in motion
     }
 
     private handleCellChangeEvent(event: CellChangeEvent) {
