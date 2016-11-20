@@ -2,8 +2,8 @@ import {Shape} from './shape';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
 import {PlayerType} from '../../domain/player-type';
-import {ShapeFactory} from './shape-factory';
-import {eventBus} from '../../event/event-bus';
+import {ShapeFactory, deadShapeFactory} from './shape-factory';
+import {EventBus, deadEventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
@@ -14,14 +14,16 @@ export const MAX_COLS = 10;
 
 export class Board {
     private playerType: PlayerType;
+    private shapeFactory: ShapeFactory;
+    private eventBus: EventBus;
 
     currentShape: Shape;
     readonly matrix: Cell[][];
 
-    private shapeFactory: ShapeFactory;
-
-    constructor(playerType: PlayerType) {
+    constructor(playerType: PlayerType, shapeFactory: ShapeFactory, eventBus: EventBus) {
         this.playerType = playerType;
+        this.shapeFactory = shapeFactory;
+        this.eventBus = eventBus;
 
         this.currentShape = null;
         this.matrix = [];
@@ -41,6 +43,7 @@ export class Board {
 
     /**
      * This gives a high level view of the main game loop.
+     * This shouldn't be called by the AI.
      */
     step() {
         if (this.tryGravity()) {
@@ -134,9 +137,61 @@ export class Board {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
-                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
+                this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
+    }
+
+    // getMatrixWithCurrentShapeAdded(): boolean[][] {
+    //     let copy = [];
+    //     for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+    //         let row = this.matrix[rowIdx];
+    //         let rowCopy = [];
+    //         for (let colIdx = 0; colIdx < row.length; colIdx++) {
+    //             rowCopy.push(row[colIdx].getColor() !== Color.Empty);
+    //         }
+    //         copy.push(rowCopy);
+    //     }
+    //     return copy;
+    // }
+
+    /**
+     * Very hacky method just so the AI has a temp copy of the board to experiment with.
+     */
+    cloneZombie(): Board {
+        let copy = new Board(this.playerType, deadShapeFactory, deadEventBus);
+        
+        // Copy the current shape and the matrix. Shouldn't need anything else.
+        copy.currentShape = this.currentShape.cloneSimple();
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                copy.matrix[rowIdx][colIdx].setColor(row[colIdx].getColor());
+            }
+        }
+
+        return copy;
+    }
+
+    calculateAggregateHeight(): number {
+        let colHeights: number[] = [];
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            colHeights.push(0);
+        }
+
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                if (row[colIdx].getColor() !== Color.Empty) {
+                    colHeights[colIdx]++;
+                }
+            }
+        }
+
+        let aggregateHeight = colHeights.reduce((a, b) => {
+            return a + b;
+        });
+        return aggregateHeight;
     }
 
     private clear() {
@@ -155,7 +210,7 @@ export class Board {
         // TODO: Maybe bounds check here.
         let cell = this.matrix[rowIdx][colIdx];
         cell.setColor(color);
-        eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
+        this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
     }
 
     private startShape(forceBagRefill: boolean) {
@@ -239,7 +294,7 @@ export class Board {
     }
 
     private signalFullBoard() {
-        eventBus.fire(new BoardFilledEvent(this.playerType));
+        this.eventBus.fire(new BoardFilledEvent(this.playerType));
     }
 
     private handleAnyFilledLines() {
@@ -271,12 +326,12 @@ export class Board {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
-                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
+                this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
 
         if (totalFilled > 0) {
-            eventBus.fire(new RowsFilledEvent(totalFilled, this.playerType));
+            this.eventBus.fire(new RowsFilledEvent(totalFilled, this.playerType));
         }
     }
 
@@ -293,6 +348,6 @@ export class Board {
     }
 
     private fireActiveShapeChangedEvent() {
-        eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType));
+        this.eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType));
     }
 }

@@ -10,18 +10,28 @@ import {PlayerMovementEvent} from '../../event/player-movement-event';
 const TIME_BETWEEN_MOVES = 250;
 const TIME_MAX_DEVIATION = 100;
 
-interface Visual {
-    readonly matrix: Cell[][];
-    readonly currentShape: Shape;
+interface ZombieBoard {
+    // Ways to interact with it.
+    moveShapeLeft(): void;
+    moveShapeRight(): void;
+    moveShapeDown(): void;
+    moveShapeDownAllTheWay(): void;
+
+    // Ways to derive information from it.
+    calculateAggregateHeight(): number;
+}
+
+interface RealBoard extends ZombieBoard {
+    cloneZombie(): ZombieBoard;
 }
 
 export class Ai {
 
-    private visual: Visual;
+    private realBoard: RealBoard;
     private timeUntilNextMove: number;
 
-    constructor(visual: Visual) {
-        this.visual = visual;
+    constructor(realBoard: RealBoard) {
+        this.realBoard = realBoard;
         this.timeUntilNextMove = TIME_BETWEEN_MOVES;
     }
 
@@ -38,30 +48,11 @@ export class Ai {
     }
 
     private performNewMovement() {
+        let zombie = this.realBoard.cloneZombie();
+
         // TODO: Determine if new piece that is needing direction
-        let aggregateHeight = this.calculateAggregateHeight();
-        console.log('1: %d', aggregateHeight);
-    }
 
-    private calculateAggregateHeight() {
-        let colHeights: number[] = [];
-        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
-            colHeights.push(0);
-        }
-
-        for (let rowIdx = 0; rowIdx < this.visual.matrix.length; rowIdx++) {
-            let row = this.visual.matrix[rowIdx];
-            for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
-                if (row[colIdx].getColor() !== Color.Empty) {
-                    colHeights[colIdx]++;
-                }
-            }
-        }
-
-        let aggregateHeight = colHeights.reduce((a, b) => {
-            return a + b;
-        });
-        return aggregateHeight;
+        let aggregateHeight = zombie.calculateAggregateHeight();
     }
 
     // private performNewMovement() {

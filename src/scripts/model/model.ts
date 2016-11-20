@@ -8,6 +8,7 @@ import {PlayerMovementEvent} from '../event/player-movement-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
 import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
+import {ShapeFactory} from './board/shape-factory';
 
 const MAX_HP = MAX_COLS; // HP corresponds to the number of long windows on the second floor of the physical building.
 const TEMP_DELAY_MS = 500;
@@ -18,16 +19,20 @@ class Model {
 
     private aiBoard: Board;
     private aiHitPoints: number;
+
     private ai: Ai;
 
     private msTillGravityTick: number;
 
     constructor() {
-        this.humanBoard = new Board(PlayerType.Human);
+        let humanShapeFactory = new ShapeFactory();
+        this.humanBoard = new Board(PlayerType.Human, humanShapeFactory, eventBus);
         this.humanHitPoints = MAX_HP;
 
-        this.aiBoard = new Board(PlayerType.Ai);
+        let aiShapeFactory = new ShapeFactory();
+        this.aiBoard = new Board(PlayerType.Ai, aiShapeFactory, eventBus);
         this.aiHitPoints = MAX_HP;
+        
         this.ai = new Ai(this.aiBoard);
 
         this.msTillGravityTick = TEMP_DELAY_MS;

@@ -2,7 +2,6 @@ import {Shape} from './shape';
 import {Color} from '../../domain/color';
 
 class ShapeI extends Shape {
-    spawnColumn = 3;
     color = Color.Cyan;
     valuesPerRow = 4;
     matrices = [
@@ -31,6 +30,10 @@ class ShapeI extends Shape {
             0, 1, 0, 0
         ]
     ]
+
+    getInstance(): ShapeI {
+        return new ShapeI();
+    }
 }
 
 class ShapeJ extends Shape {
@@ -58,6 +61,10 @@ class ShapeJ extends Shape {
             1, 1, 0
         ]
     ];
+
+    getInstance(): ShapeJ {
+        return new ShapeJ();
+    }
 }
 
 class ShapeL extends Shape {
@@ -85,6 +92,10 @@ class ShapeL extends Shape {
             0, 1, 0
         ]
     ]
+
+    getInstance(): ShapeL {
+        return new ShapeL();
+    }
 }
 
 class ShapeO extends Shape {
@@ -97,6 +108,10 @@ class ShapeO extends Shape {
             0, 0, 0, 0
         ]
     ]
+
+    getInstance(): ShapeO {
+        return new ShapeO();
+    }
 }
 
 class ShapeS extends Shape {
@@ -124,6 +139,10 @@ class ShapeS extends Shape {
             0, 1, 0
         ]
     ]
+
+    getInstance(): ShapeS {
+        return new ShapeS();
+    }
 }
 
 class ShapeT extends Shape {
@@ -151,6 +170,10 @@ class ShapeT extends Shape {
             0, 1, 0
         ]
     ]
+
+    getInstance(): ShapeT {
+        return new ShapeT();
+    }
 }
 
 class ShapeZ extends Shape {
@@ -178,6 +201,10 @@ class ShapeZ extends Shape {
             1, 0, 0
         ]
     ]
+
+    getInstance(): ShapeZ {
+        return new ShapeZ();
+    }
 }
 
 export class ShapeFactory {
@@ -224,3 +251,4 @@ export class ShapeFactory {
         }
     }
 }
+export const deadShapeFactory = new ShapeFactory(); // Used by AI.

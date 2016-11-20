@@ -6,7 +6,9 @@ const SPAWN_COL = 3; // Left side of matrix should correspond to this.
 export abstract class Shape {
     abstract readonly color: Color;
     abstract readonly valuesPerRow: number;
+
     protected abstract matrices: ReadonlyArray<ReadonlyArray<number>>;
+    protected abstract getInstance(): Shape;
 
     private currentMatrixIndex: number;
     private row: number;
@@ -69,6 +71,15 @@ export abstract class Shape {
             }
         }
         return offsets;
+    }
+
+    /**
+     * Hacky method used by the AI.
+     * "Simple" as in doesn't matter what the current row/col/matrix is.
+     */
+    cloneSimple(): Shape {
+        // Get an instance of the concrete class. Rest of values are irrelevant.
+        return this.getInstance();
     }
 
     private getCurrentMatrix() {

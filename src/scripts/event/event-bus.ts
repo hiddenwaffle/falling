@@ -20,7 +20,7 @@ export interface EventHandler<T extends AbstractEvent> {
     (event: T):void;
 }
 
-class EventBus {
+export class EventBus {
 
     private handlersByType:Map<EventType, EventHandler<AbstractEvent>[]>;
 
@@ -60,3 +60,4 @@ class EventBus {
     }
 }
 export const eventBus = new EventBus();
+export const deadEventBus = new EventBus(); // Used by AI.
