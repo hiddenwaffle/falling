@@ -69,7 +69,7 @@ export class Switchboard {
     }
 
     private handleHpChangedEvent(event: HpChangedEvent) {
-        console.log('changing hp: ' + event.playerType + ' = ' + event.hp);
+        this.lightingGrid.updateHp(event.hp);
     }
 
     /**

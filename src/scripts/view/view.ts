@@ -6,6 +6,7 @@ import {LightingGrid} from './lighting/lighting-grid';
 import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
 import {PlayerType} from '../domain/player-type';
+import {HpOrientation} from './hp-orientation';
 
 class View {
 
@@ -31,9 +32,9 @@ class View {
     }
 
     start() {
-        this.humanGrid.start();
+        this.humanGrid.start(HpOrientation.DecreasesRightToLeft);
         this.humanSwitchboard.start();
-        this.aiGrid.start();
+        this.aiGrid.start(HpOrientation.DecreasesLeftToRight);
         this.aiSwitchboard.start();
 
         this.doStart();

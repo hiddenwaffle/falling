@@ -3,6 +3,7 @@ declare const TWEEN: any;
 
 import {Building} from './building';
 import {HpPanels} from './hp-panels';
+import {HpOrientation} from '../hp-orientation';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
@@ -76,13 +77,13 @@ export class LightingGrid {
         this.emissiveIntensity = new EmissiveIntensity();
     }
 
-    start() {
+    start(hpOrientation: HpOrientation) {
         this.group.add(this.building.group);
         this.group.add(this.hpPanels.group);
         this.group.add(this.panelGroup);
 
         this.building.start();
-        this.hpPanels.start();
+        this.hpPanels.start(hpOrientation);
 
         for (let floor of this.panels) {
             for (let panel of floor) {
@@ -140,6 +141,10 @@ export class LightingGrid {
         let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
         let z = 0.33;
         pointLight.position.set(x, y, z);
+    }
+
+    updateHp(hp: number) {
+        this.hpPanels.updateHp(hp);
     }
 
     private getNextPointLight() {
