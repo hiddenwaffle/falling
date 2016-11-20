@@ -2,7 +2,7 @@ import {Shape} from './shape';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
 import {PlayerType} from '../../domain/player-type';
-import {shapeFactory} from './shape-factory';
+import {ShapeFactory} from './shape-factory';
 import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
@@ -19,6 +19,7 @@ export class Board {
     currentShape: Shape;
     readonly matrix: Cell[][];
 
+    private shapeFactory: ShapeFactory;
     private msTillGravityTick: number;
 
     constructor(playerType: PlayerType) {
@@ -33,6 +34,7 @@ export class Board {
             }
         }
 
+        this.shapeFactory = new ShapeFactory();
         this.msTillGravityTick = TEMP_DELAY_MS;
     }
 
@@ -56,20 +58,19 @@ export class Board {
             this.moveShapeDown();
         } else {
             this.convertShapeToCells();
-
             if (this.isBoardFull()) {
                 this.signalFullBoard();
                 this.resetBoard();
             } else {
                 this.handleAnyFilledLines();
-                this.startShape();
+                this.startShape(false);
             }
         }
     }
 
     resetBoard() {
         this.clear();
-        this.startShape();
+        this.startShape(true);
     }
 
     moveShapeLeft() {
@@ -168,8 +169,8 @@ export class Board {
         eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
     }
 
-    private startShape() {
-        this.currentShape = shapeFactory.nextShape();
+    private startShape(forceBagRefill: boolean) {
+        this.currentShape = this.shapeFactory.nextShape(forceBagRefill);
         this.fireActiveShapeChangedEvent();
     }
 

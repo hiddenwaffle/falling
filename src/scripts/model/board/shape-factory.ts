@@ -180,30 +180,36 @@ class ShapeZ extends Shape {
     ]
 }
 
-class ShapeFactory {
+export class ShapeFactory {
     private bag: Shape[];
 
     constructor() {
-        this.refillBag();
+        this.refillBag(true);
     }
 
-    nextShape() {
-        if (this.bag.length <= 0) {
-            this.refillBag();
+    nextShape(forceBagRefill: boolean) {
+        if (this.bag.length <= 0 || forceBagRefill === true) {
+            this.refillBag(forceBagRefill);
         }
         return this.bag.pop();
     }
 
-    private refillBag() {
+    private refillBag(startingPiecesOnly: boolean) {
+        console.log('test: ' + startingPiecesOnly);
         this.bag = [
             new ShapeI(),
             new ShapeJ(),
             new ShapeL(),
-            new ShapeO(),
-            new ShapeS(),
             new ShapeT(),
-            new ShapeZ()
         ];
+
+        if (startingPiecesOnly === false) {
+            this.bag.push(
+                new ShapeO(),
+                new ShapeS(),
+                new ShapeZ()
+            );
+        }
 
         // Fisher-Yates Shuffle, based on: http://stackoverflow.com/a/2450976
         let idx = this.bag.length
@@ -219,5 +225,3 @@ class ShapeFactory {
         }
     }
 }
-
-export const shapeFactory = new ShapeFactory();
