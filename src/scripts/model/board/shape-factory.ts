@@ -195,7 +195,6 @@ export class ShapeFactory {
     }
 
     private refillBag(startingPiecesOnly: boolean) {
-        console.log('test: ' + startingPiecesOnly);
         this.bag = [
             new ShapeI(),
             new ShapeJ(),
