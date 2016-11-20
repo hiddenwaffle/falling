@@ -65,31 +65,43 @@ export class Board {
         this.startShape(true);
     }
 
-    moveShapeLeft() {
+    moveShapeLeft(): boolean {
+        let success: boolean;
         this.currentShape.moveLeft();
         if (this.collisionDetected()) {
             this.currentShape.moveRight();
+            success = false;
         } else {
             this.fireActiveShapeChangedEvent();
+            success = true;
         }
+        return success;
     }
 
-    moveShapeRight() {
+    moveShapeRight(): boolean {
+        let success: boolean;
         this.currentShape.moveRight();
         if (this.collisionDetected()) {
             this.currentShape.moveLeft();
+            success = false;
         } else {
             this.fireActiveShapeChangedEvent();
+            success = true;
         }
+        return success;
     }
 
-    moveShapeDown() {
+    moveShapeDown(): boolean {
+        let success: boolean;
         this.currentShape.moveDown();
         if (this.collisionDetected()) {
             this.currentShape.moveUp();
+            success = false;
         } else {
             this.fireActiveShapeChangedEvent();
+            success = true;
         }
+        return success;
     }
 
     moveShapeDownAllTheWay() {
@@ -100,13 +112,17 @@ export class Board {
         this.fireActiveShapeChangedEvent();
     }
 
-    rotateShapeClockwise() {
+    rotateShapeClockwise(): boolean {
+        let success: boolean;
         this.currentShape.rotateClockwise();
         if (this.collisionDetected()) {
             this.currentShape.rotateCounterClockwise();
+            success = false;
         } else {
             this.fireActiveShapeChangedEvent();
+            success = true;
         }
+        return success;
     }
 
     addJunkRows(numberOfRowsToAdd: number) {
@@ -173,25 +189,70 @@ export class Board {
         return copy;
     }
 
+    /**
+     * Used by the AI.
+     */
     calculateAggregateHeight(): number {
         let colHeights: number[] = [];
         for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
             colHeights.push(0);
         }
 
-        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
-            let row = this.matrix[rowIdx];
-            for (let colIdx = 0; colIdx < row.length; colIdx++) {
-                if (row[colIdx].getColor() !== Color.Empty) {
-                    colHeights[colIdx]++;
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            let highest = 0;
+            for (let rowIdx = MAX_ROWS - 1; rowIdx >= 0; rowIdx--) {
+                let cell = this.matrix[rowIdx][colIdx];
+                if (cell.getColor() !== Color.Empty) {
+                    highest = MAX_ROWS - rowIdx;
                 }
             }
+            colHeights[colIdx] = highest;
         }
 
         let aggregateHeight = colHeights.reduce((a, b) => {
             return a + b;
         });
         return aggregateHeight;
+    }
+
+    /**
+     * Used by the AI.
+     */
+    calculateCompleteLines(): number {
+        let completeLines = 0;
+
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            let count = 0;
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                if (row[colIdx].getColor() !== Color.Empty) {
+                    count++;
+                }
+            }
+            if (count >= row.length) {
+                completeLines++;
+            }
+        }
+
+        return completeLines;
+    }
+
+    /**
+     * Used by the AI.
+     * TODO: Determine if this will be used.
+     */
+    calculateHoles(): number {
+        let holes = 0;
+        return holes;
+    }
+
+    /**
+     * Used by the AI.
+     * TODO: Determine if this will be used.
+     */
+    calculateBumpiness(): number {
+        let bumpiness = 0;
+        return bumpiness;
     }
 
     private clear() {
@@ -215,7 +276,7 @@ export class Board {
 
     private startShape(forceBagRefill: boolean) {
         this.currentShape = this.shapeFactory.nextShape(forceBagRefill);
-        this.fireActiveShapeChangedEvent();
+        this.fireActiveShapeChangedEvent(true);
     }
 
     private tryGravity(): boolean {
@@ -347,7 +408,7 @@ export class Board {
         }
     }
 
-    private fireActiveShapeChangedEvent() {
-        this.eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType));
+    private fireActiveShapeChangedEvent(starting=false) {
+        this.eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType, starting));
     }
 }

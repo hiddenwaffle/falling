@@ -5,6 +5,7 @@ import {eventBus, EventType} from '../event/event-bus';
 import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
+import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
 import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
@@ -32,7 +33,7 @@ class Model {
         let aiShapeFactory = new ShapeFactory();
         this.aiBoard = new Board(PlayerType.Ai, aiShapeFactory, eventBus);
         this.aiHitPoints = MAX_HP;
-        
+
         this.ai = new Ai(this.aiBoard);
 
         this.msTillGravityTick = TEMP_DELAY_MS;
@@ -49,6 +50,10 @@ class Model {
 
         eventBus.register(EventType.BoardFilledEventType, (event: BoardFilledEvent) => {
             this.handleBoardFilledEvent(event);
+        });
+
+        eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
+            this.handleActiveShapeChangedEvent(event);
         });
 
         this.humanBoard.start();
@@ -142,6 +147,14 @@ class Model {
         eventBus.fire(new HpChangedEvent(hp, event.playerType));
 
         // TODO: See if one of the players has run out of HP.
+    }
+
+    private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
+        if (event.starting === true && event.playerType === PlayerType.Ai) {
+            this.ai.strategize();
+        } else {
+            // Nothing currently for the human's board to be doing at this time.
+        }
     }
 }
 export const model = new Model();

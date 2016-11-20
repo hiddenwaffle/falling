@@ -12,13 +12,17 @@ const TIME_MAX_DEVIATION = 100;
 
 interface ZombieBoard {
     // Ways to interact with it.
-    moveShapeLeft(): void;
-    moveShapeRight(): void;
-    moveShapeDown(): void;
+    moveShapeLeft(): boolean;
+    moveShapeRight(): boolean;
+    moveShapeDown(): boolean;
     moveShapeDownAllTheWay(): void;
+    rotateShapeClockwise(): boolean;
 
     // Ways to derive information from it.
     calculateAggregateHeight(): number;
+    calculateCompleteLines(): number;
+    calculateHoles(): number;
+    calculateBumpiness(): number;
 }
 
 interface RealBoard extends ZombieBoard {
@@ -43,16 +47,45 @@ export class Ai {
         this.timeUntilNextMove -= elapsed;
         if (this.timeUntilNextMove <= 0) {
             this.timeUntilNextMove = TIME_BETWEEN_MOVES;
-            this.performNewMovement();
+            // TODO: Do something.
         }
     }
 
-    private performNewMovement() {
+    strategize() {
         let zombie = this.realBoard.cloneZombie();
 
-        // TODO: Determine if new piece that is needing direction
+        // Iterate through all possible rotations and columns
+        let bestFitness = Number.MIN_SAFE_INTEGER;
+        let bestRotation = 0;
+        let bestColIdx = 0;
+        for (let rotation = 0; rotation < 4; rotation++) {
+            while(zombie.moveShapeLeft());
+            for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+                zombie.moveShapeDownAllTheWay();
+                let fitness = this.calculateFitness(zombie);
+                if (fitness > bestFitness) {
+                    bestFitness = fitness;
+                    bestRotation = rotation;
+                    bestColIdx = colIdx;
+                }
+                zombie.moveShapeRight();
+            }
+            zombie.rotateShapeClockwise();
+        }
 
+        console.log('bestFitness: %f, %d, %d', bestFitness, bestRotation, bestColIdx);
+    }
+
+    /**
+     * Based on https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/
+     */
+    private calculateFitness(zombie: ZombieBoard) {
         let aggregateHeight = zombie.calculateAggregateHeight();
+        let completeLines = zombie.calculateCompleteLines();
+        let holes = zombie.calculateHoles();
+        let bumpiness = zombie.calculateBumpiness();
+        let fitness = -0.510066 * aggregateHeight + 0.760666 * completeLines + -0.35663 * holes + -0.184483 * bumpiness;
+        return fitness;
     }
 
     // private performNewMovement() {
