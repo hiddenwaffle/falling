@@ -11,7 +11,6 @@ import {BoardFilledEvent} from '../../event/board-filled-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 export const MAX_COLS = 10;
-const TEMP_DELAY_MS = 500;
 
 export class Board {
     private playerType: PlayerType;
@@ -20,7 +19,6 @@ export class Board {
     readonly matrix: Cell[][];
 
     private shapeFactory: ShapeFactory;
-    private msTillGravityTick: number;
 
     constructor(playerType: PlayerType) {
         this.playerType = playerType;
@@ -35,25 +33,16 @@ export class Board {
         }
 
         this.shapeFactory = new ShapeFactory();
-        this.msTillGravityTick = TEMP_DELAY_MS;
     }
 
     start() {
         this.clear();
     }
 
-    step(elapsed: number) {
-        this.msTillGravityTick -= elapsed;
-        if (this.msTillGravityTick <= 0) {
-            this.msTillGravityTick = TEMP_DELAY_MS;
-            this.stepNow();
-        }
-    }
-
     /**
-     * This gives high level view of the main game loop.
+     * This gives a high level view of the main game loop.
      */
-    stepNow() {
+    step() {
         if (this.tryGravity()) {
             this.moveShapeDown();
         } else {
