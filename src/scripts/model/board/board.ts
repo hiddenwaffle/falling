@@ -207,26 +207,8 @@ export class Board {
      * Used by the AI.
      */
     calculateAggregateHeight(): number {
-        let colHeights: number[] = [];
-        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
-            colHeights.push(0);
-        }
-
-        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
-            let highest = 0;
-            for (let rowIdx = MAX_ROWS - 1; rowIdx >= 0; rowIdx--) {
-                let cell = this.matrix[rowIdx][colIdx];
-                if (cell.getColor() !== Color.Empty) {
-                    highest = MAX_ROWS - rowIdx;
-                }
-            }
-            colHeights[colIdx] = highest;
-        }
-
-        let aggregateHeight = colHeights.reduce((a, b) => {
-            return a + b;
-        });
-        return aggregateHeight;
+        let colHeights = this.calculateColumnHeights();
+        return colHeights.reduce((a, b) => { return a + b; });
     }
 
     /**
@@ -253,20 +235,67 @@ export class Board {
 
     /**
      * Used by the AI.
-     * TODO: Determine if this will be used.
+     * Determines holes by scanning each column, highest floor to lowest floor, and
+     * seeing how many times it switches from colored to empty (but not the other way around).
      */
     calculateHoles(): number {
-        let holes = 0;
-        return holes;
+        let totalHoles = 0;
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            let holes = 0;
+            let previousCellWasEmpty = true;
+            for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+                let cell = this.matrix[rowIdx][colIdx];
+                if (previousCellWasEmpty === false) {
+                    if (cell.getColor() === Color.Empty) {
+                        holes++;
+                        previousCellWasEmpty = true;
+                    } else {
+                        previousCellWasEmpty = false;
+                    }
+                } else {
+                    if (cell.getColor() === Color.Empty) {
+                        previousCellWasEmpty = true;
+                    } else {
+                        previousCellWasEmpty = false;
+                    }
+                }
+            }
+            totalHoles += holes;
+        }
+        return totalHoles;
     }
 
     /**
      * Used by the AI.
-     * TODO: Determine if this will be used.
      */
     calculateBumpiness(): number {
         let bumpiness = 0;
+        let colHeights = this.calculateColumnHeights();
+        for (let idx = 0; idx < colHeights.length - 2; idx++) {
+            let val1 = colHeights[idx];
+            let val2 = colHeights[idx + 1];
+            bumpiness += Math.abs(val1 - val2);
+        }
         return bumpiness;
+    }
+
+    private calculateColumnHeights(): number[] {
+        let colHeights: number[] = [];
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            colHeights.push(0);
+        }
+
+        for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            let highest = 0;
+            for (let rowIdx = MAX_ROWS - 1; rowIdx >= 0; rowIdx--) {
+                let cell = this.matrix[rowIdx][colIdx];
+                if (cell.getColor() !== Color.Empty) {
+                    highest = MAX_ROWS - rowIdx;
+                }
+            }
+            colHeights[colIdx] = highest;
+        }
+        return colHeights;
     }
 
     /**
