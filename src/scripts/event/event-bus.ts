@@ -6,6 +6,7 @@ export enum EventType {
     NpcPlacedEventType,
     NpcStateChagedEventType,
     PlayerMovementEventType,
+    RowsFilledEventType,
     StandeeMovementEndedEventType
 }
 

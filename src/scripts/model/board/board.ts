@@ -5,6 +5,7 @@ import {PlayerType} from '../../domain/player-type';
 import {shapeFactory} from './shape-factory';
 import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
+import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
@@ -110,6 +111,39 @@ export class Board {
             this.currentShape.rotateCounterClockwise();
         } else {
             this.fireActiveShapeChangedEvent();
+        }
+    }
+
+    addJunkRows(numberOfRowsToAdd: number) {
+        // Clear rows at the top to make room at the bottom.
+        this.matrix.splice(0, numberOfRowsToAdd);
+
+        // Add junk rows at the bottom.
+        for (let idx = 0; idx < numberOfRowsToAdd; idx++) {
+            // Set the row to completely filled.
+            let row: Cell[] = [];
+            for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+                let cell = new Cell();
+                cell.setColor(Color.White);
+                row.push(cell);
+            }
+
+            // Punch one hole in a random cell between the end cells.
+            let holeIdx = Math.floor(Math.random() * (row.length - 2)) + 1;
+            let cell = row[holeIdx];
+            cell.setColor(Color.Empty);
+
+            this.matrix.push(row);
+        }
+        
+        // Notify for all cells because entire board has changed.
+        // TODO: Move to own method?
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                let cell = this.matrix[rowIdx][colIdx];
+                eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
+            }
         }
     }
 
@@ -221,6 +255,7 @@ export class Board {
         let highestLineFilled = 0; // "highest" as in the highest in the array, which is the lowest visually to the player.
 
         // Traverse backwards to prevent row index from becoming out of sync when removing rows.
+        let totalFilled = 0;
         for (let rowIdx = this.matrix.length - 1; rowIdx >= 0; rowIdx--) {
             let row = this.matrix[rowIdx];
             let filled = true;
@@ -231,6 +266,7 @@ export class Board {
                 }
             }
             if (filled) {
+                totalFilled++;
                 if (rowIdx > highestLineFilled) {
                     highestLineFilled = rowIdx;
                 }
@@ -246,6 +282,10 @@ export class Board {
                 let cell = this.matrix[rowIdx][colIdx];
                 eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
+        }
+
+        if (totalFilled > 0) {
+            eventBus.fire(new RowsFilledEvent(totalFilled, this.playerType));
         }
     }
 

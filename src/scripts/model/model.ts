@@ -5,6 +5,7 @@ import {eventBus, EventType} from '../event/event-bus';
 import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
+import {RowsFilledEvent} from '../event/rows-filled-event';
 
 class Model {
     private humanBoard: Board;
@@ -20,6 +21,10 @@ class Model {
     start() {
         eventBus.register(EventType.PlayerMovementEventType, (event: PlayerMovementEvent) => {
             this.handlePlayerMovement(event);
+        });
+
+        eventBus.register(EventType.RowsFilledEventType, (event: RowsFilledEvent) => {
+            this.handleRowsFilledEvent(event);
         });
 
         this.humanBoard.start();
@@ -40,12 +45,7 @@ class Model {
     }
 
     private handlePlayerMovement(event: PlayerMovementEvent) {
-        let board: Board;
-        if (event.playerType === PlayerType.Human) {
-            board = this.humanBoard;
-        } else {
-            board = this.aiBoard;
-        }
+        let board = this.determineBoardFor(event.playerType);
 
         switch (event.movement) {
             case PlayerMovement.Left:
@@ -67,6 +67,36 @@ class Model {
             default:
                 console.log('unhandled movement');
                 break;
+        }
+    }
+
+    /**
+     * Transfer the filled rows to be junk rows on the opposite player's board.
+     */
+    private handleRowsFilledEvent(event: RowsFilledEvent) {
+        let board = this.determineBoardForOppositeOf(event.playerType);
+        board.addJunkRows(event.totalFilled);
+    }
+
+    /**
+     * Returns the human's board if given the human's type, or AI's board if given the AI. 
+     */
+    private determineBoardFor(playerType: PlayerType): Board {
+        if (playerType === PlayerType.Human) {
+            return this.humanBoard;
+        } else {
+            return this.aiBoard;
+        }
+    }
+
+    /**
+     * If this method is given "Human", it will return the AI's board, and vice versa.
+     */
+    private determineBoardForOppositeOf(playerType: PlayerType): Board {
+        if (playerType === PlayerType.Human) {
+            return this.aiBoard;
+        } else {
+            return this.humanBoard;
         }
     }
 }
