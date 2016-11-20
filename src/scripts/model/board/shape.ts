@@ -35,7 +35,7 @@ export abstract class Shape {
     moveDown() {
         this.row++;
     }
-
+    
     rotateCounterClockwise() {
         this.currentMatrixIndex -= 1;
         this.ensureArrayBounds();

@@ -65,6 +65,13 @@ export class Board {
         this.startShape(true);
     }
 
+    /**
+     * Used by the AI.
+     */
+    getCurrentShapeColIdx(): number {
+        return this.currentShape.getCol();
+    }
+
     moveShapeLeft(): boolean {
         let success: boolean;
         this.currentShape.moveLeft();
@@ -255,6 +262,26 @@ export class Board {
         return bumpiness;
     }
 
+    /**
+     * The only reason this is not private is so the AI can experiment with it.
+     */
+    convertShapeToCells() {
+        for (let offset of this.currentShape.getOffsets()) {
+            let rowIdx = offset.y + this.currentShape.getRow();
+            let colIdx = offset.x + this.currentShape.getCol();
+
+            if (rowIdx < 0 || rowIdx >= this.matrix.length) {
+                continue;
+            }
+
+            if (colIdx < 0 || colIdx >= this.matrix[rowIdx].length) {
+                continue;
+            }
+
+            this.changeCellColor(rowIdx, colIdx, this.currentShape.color);
+        }
+    }
+
     private clear() {
         for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
             let row = this.matrix[rowIdx];
@@ -319,23 +346,6 @@ export class Board {
         }
 
         return collision;
-    }
-
-    private convertShapeToCells() {
-        for (let offset of this.currentShape.getOffsets()) {
-            let rowIdx = offset.y + this.currentShape.getRow();
-            let colIdx = offset.x + this.currentShape.getCol();
-
-            if (rowIdx < 0 || rowIdx >= this.matrix.length) {
-                continue;
-            }
-
-            if (colIdx < 0 || colIdx >= this.matrix[rowIdx].length) {
-                continue;
-            }
-
-            this.changeCellColor(rowIdx, colIdx, this.currentShape.color);
-        }
     }
 
     /**

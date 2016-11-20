@@ -17,8 +17,10 @@ interface ZombieBoard {
     moveShapeDown(): boolean;
     moveShapeDownAllTheWay(): void;
     rotateShapeClockwise(): boolean;
+    convertShapeToCells(): void;
 
     // Ways to derive information from it.
+    getCurrentShapeColIdx(): number;
     calculateAggregateHeight(): number;
     calculateCompleteLines(): number;
     calculateHoles(): number;
@@ -34,9 +36,18 @@ export class Ai {
     private realBoard: RealBoard;
     private timeUntilNextMove: number;
 
+    // 0 = no rotation, 1 = one rotation, 2 = two rotations, 3 = three rotations.
+    private targetRotation: number;
+    private currentRotation: number;
+    private targetColIdx: number;
+
     constructor(realBoard: RealBoard) {
         this.realBoard = realBoard;
         this.timeUntilNextMove = TIME_BETWEEN_MOVES;
+
+        this.targetRotation = 0;
+        this.currentRotation = 0;
+        this.targetColIdx = 0;
     }
 
     start() {
@@ -47,10 +58,13 @@ export class Ai {
         this.timeUntilNextMove -= elapsed;
         if (this.timeUntilNextMove <= 0) {
             this.timeUntilNextMove = TIME_BETWEEN_MOVES;
-            // TODO: Do something.
+            this.advanceTowardsTarget();
         }
     }
 
+    /**
+     * This method provides a high-level view of the AI's thought process.
+     */
     strategize() {
         let zombie = this.realBoard.cloneZombie();
 
@@ -60,20 +74,28 @@ export class Ai {
         let bestColIdx = 0;
         for (let rotation = 0; rotation < 4; rotation++) {
             while(zombie.moveShapeLeft());
+
             for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
                 zombie.moveShapeDownAllTheWay();
+                zombie.convertShapeToCells();
+
                 let fitness = this.calculateFitness(zombie);
+                console.log('fitness: ' + fitness + ', col: ' + colIdx + ', rotation: ' + rotation);
                 if (fitness > bestFitness) {
                     bestFitness = fitness;
                     bestRotation = rotation;
                     bestColIdx = colIdx;
                 }
+
                 zombie.moveShapeRight();
             }
             zombie.rotateShapeClockwise();
         }
-
         console.log('bestFitness: %f, %d, %d', bestFitness, bestRotation, bestColIdx);
+
+        this.targetRotation = bestRotation;
+        this.currentRotation = 0;
+        this.targetColIdx = bestColIdx;
     }
 
     /**
@@ -86,6 +108,23 @@ export class Ai {
         let bumpiness = zombie.calculateBumpiness();
         let fitness = -0.510066 * aggregateHeight + 0.760666 * completeLines + -0.35663 * holes + -0.184483 * bumpiness;
         return fitness;
+    }
+
+    private advanceTowardsTarget() {
+        // TODO: Drop shape should be on a timer or something.
+        if (this.currentRotation === this.targetRotation && this.realBoard.getCurrentShapeColIdx() === this.targetColIdx) {
+            this.realBoard.moveShapeDownAllTheWay();
+        }
+
+        if (this.currentRotation < this.targetRotation) {
+            this.realBoard.rotateShapeClockwise();
+        }
+
+        if (this.realBoard.getCurrentShapeColIdx() < this.targetColIdx) {
+            this.realBoard.moveShapeRight();
+        } else if (this.realBoard.getCurrentShapeColIdx() > this.targetColIdx) {
+            this.realBoard.moveShapeLeft();
+        }
     }
 
     // private performNewMovement() {
