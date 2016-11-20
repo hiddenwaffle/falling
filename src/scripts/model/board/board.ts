@@ -119,6 +119,13 @@ export class Board {
         this.fireActiveShapeChangedEvent();
     }
 
+    /**
+     * Used by the AI.
+     */
+    moveToTop() {
+        this.currentShape.moveToTop(); 
+    }
+
     rotateShapeClockwise(): boolean {
         let success: boolean;
         this.currentShape.rotateClockwise();
@@ -264,6 +271,7 @@ export class Board {
 
     /**
      * The only reason this is not private is so the AI can experiment with it.
+     * Work here should able to be be undone by undoConvertShapeToCells.
      */
     convertShapeToCells() {
         for (let offset of this.currentShape.getOffsets()) {
@@ -279,6 +287,26 @@ export class Board {
             }
 
             this.changeCellColor(rowIdx, colIdx, this.currentShape.color);
+        }
+    }
+
+    /**
+     * Used by the AI. Should undo convertShapeToCells().
+     */
+    undoConvertShapeToCells() {
+        for (let offset of this.currentShape.getOffsets()) {
+            let rowIdx = offset.y + this.currentShape.getRow();
+            let colIdx = offset.x + this.currentShape.getCol();
+
+            if (rowIdx < 0 || rowIdx >= this.matrix.length) {
+                continue;
+            }
+
+            if (colIdx < 0 || colIdx >= this.matrix[rowIdx].length) {
+                continue;
+            }
+
+            this.changeCellColor(rowIdx, colIdx, Color.Empty);
         }
     }
 

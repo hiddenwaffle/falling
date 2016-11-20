@@ -16,8 +16,10 @@ interface ZombieBoard {
     moveShapeRight(): boolean;
     moveShapeDown(): boolean;
     moveShapeDownAllTheWay(): void;
+    moveToTop(): void;
     rotateShapeClockwise(): boolean;
     convertShapeToCells(): void;
+    undoConvertShapeToCells(): void;
 
     // Ways to derive information from it.
     getCurrentShapeColIdx(): number;
@@ -40,6 +42,8 @@ export class Ai {
     private targetRotation: number;
     private currentRotation: number;
     private targetColIdx: number;
+    // Prevent AI from doing anything while the piece is waiting to "lock" into the matrix.
+    private moveCompleted: boolean;
 
     constructor(realBoard: RealBoard) {
         this.realBoard = realBoard;
@@ -48,6 +52,7 @@ export class Ai {
         this.targetRotation = 0;
         this.currentRotation = 0;
         this.targetColIdx = 0;
+        this.moveCompleted = false;
     }
 
     start() {
@@ -75,27 +80,34 @@ export class Ai {
         for (let rotation = 0; rotation < 4; rotation++) {
             while(zombie.moveShapeLeft());
 
-            for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
+            for (let idx = 0; idx < MAX_COLS; idx++) {
                 zombie.moveShapeDownAllTheWay();
                 zombie.convertShapeToCells();
 
                 let fitness = this.calculateFitness(zombie);
-                console.log('fitness: ' + fitness + ', col: ' + colIdx + ', rotation: ' + rotation);
+                // console.log('fitness: ' + fitness + ', rotation: ' + rotation + ', col: ' + colIdx);
                 if (fitness > bestFitness) {
                     bestFitness = fitness;
                     bestRotation = rotation;
-                    bestColIdx = colIdx;
+                    bestColIdx = zombie.getCurrentShapeColIdx(); // Use this rather than idx in case it was off because of whatever reason (obstruction, wall, etc...)
                 }
 
-                zombie.moveShapeRight();
+                zombie.undoConvertShapeToCells();
+                zombie.moveToTop();
+                let canMoveRight = zombie.moveShapeRight();
+                if (canMoveRight === false) {
+                    break;
+                }
             }
             zombie.rotateShapeClockwise();
         }
-        console.log('bestFitness: %f, %d, %d', bestFitness, bestRotation, bestColIdx);
+        // console.log('bestFitness: %f, %d, %d', bestFitness, bestRotation, bestColIdx);
 
+        // Finally, set the values that will let the AI advance towards the target.
         this.targetRotation = bestRotation;
         this.currentRotation = 0;
         this.targetColIdx = bestColIdx;
+        this.moveCompleted = false;
     }
 
     /**
@@ -106,24 +118,35 @@ export class Ai {
         let completeLines = zombie.calculateCompleteLines();
         let holes = zombie.calculateHoles();
         let bumpiness = zombie.calculateBumpiness();
-        let fitness = -0.510066 * aggregateHeight + 0.760666 * completeLines + -0.35663 * holes + -0.184483 * bumpiness;
+        let fitness = (-0.510066 * aggregateHeight)
+                    + ( 0.760666 * completeLines)
+                    + (-0.35663  * holes)
+                    + (-0.184483 * bumpiness);
         return fitness;
     }
 
     private advanceTowardsTarget() {
-        // TODO: Drop shape should be on a timer or something.
+        if (this.moveCompleted === true) {
+            return;
+        }
+
         if (this.currentRotation === this.targetRotation && this.realBoard.getCurrentShapeColIdx() === this.targetColIdx) {
+            // TODO: Drop shape should be on a timer or something.
             this.realBoard.moveShapeDownAllTheWay();
-        }
+            this.currentRotation = 0;
+            this.targetColIdx = 0;
+            this.moveCompleted = true;
+        } else {
+            if (this.currentRotation < this.targetRotation) {
+                this.realBoard.rotateShapeClockwise();
+                this.currentRotation++;
+            }
 
-        if (this.currentRotation < this.targetRotation) {
-            this.realBoard.rotateShapeClockwise();
-        }
-
-        if (this.realBoard.getCurrentShapeColIdx() < this.targetColIdx) {
-            this.realBoard.moveShapeRight();
-        } else if (this.realBoard.getCurrentShapeColIdx() > this.targetColIdx) {
-            this.realBoard.moveShapeLeft();
+            if (this.realBoard.getCurrentShapeColIdx() < this.targetColIdx) {
+                this.realBoard.moveShapeRight();
+            } else if (this.realBoard.getCurrentShapeColIdx() > this.targetColIdx) {
+                this.realBoard.moveShapeLeft();
+            }
         }
     }
 

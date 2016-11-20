@@ -35,7 +35,14 @@ export abstract class Shape {
     moveDown() {
         this.row++;
     }
-    
+
+    /**
+     * Used by the AI.
+     */
+    moveToTop() {
+        this.row = 0;
+    }
+
     rotateCounterClockwise() {
         this.currentMatrixIndex -= 1;
         this.ensureArrayBounds();
