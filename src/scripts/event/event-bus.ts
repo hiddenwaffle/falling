@@ -3,6 +3,7 @@ export enum EventType {
     ActiveShapeEndedEventType,
     BoardFilledEventType,
     CellChangeEventType,
+    HpChangedEventType,
     NpcMovementChangedEventType,
     NpcPlacedEventType,
     NpcStateChagedEventType,

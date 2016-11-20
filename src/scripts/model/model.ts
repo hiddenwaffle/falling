@@ -7,16 +7,23 @@ import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
 import {BoardFilledEvent} from '../event/board-filled-event';
+import {HpChangedEvent} from '../event/hp-changed-event';
+
+const MAX_HP = 10; // Corrsponds to the number of white windows on the bottom row.
 
 class Model {
     private humanBoard: Board;
     private aiBoard: Board;
     private ai: Ai;
+    private humanHitPoints: number;
+    private aiHitPoints: number;
 
     constructor() {
         this.humanBoard = new Board(PlayerType.Human);
         this.aiBoard = new Board(PlayerType.Ai);
         this.ai = new Ai(this.aiBoard);
+        this.humanHitPoints = MAX_HP;
+        this.aiHitPoints = MAX_HP;
     }
 
     start() {
@@ -106,7 +113,15 @@ class Model {
     }
 
     private handleBoardFilledEvent(event: BoardFilledEvent) {
-        //
+        let hp: number;
+        if (event.playerType === PlayerType.Human) {
+            hp = (this.humanHitPoints -= 1);
+        } else {
+            hp = (this.aiHitPoints -= 1);
+        }
+        eventBus.fire(new HpChangedEvent(hp, event.playerType));
+
+        // TODO: See if one of the players has run out of HP.
     }
 }
 export const model = new Model();

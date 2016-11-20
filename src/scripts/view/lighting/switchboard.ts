@@ -1,6 +1,7 @@
 import {EventType, eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {HpChangedEvent} from '../../event/hp-changed-event';
 import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
@@ -26,6 +27,12 @@ export class Switchboard {
         eventBus.register(EventType.CellChangeEventType, (event: CellChangeEvent) => {
             if (this.playerType === event.playerType) {
                 this.handleCellChangeEvent(event);
+            }
+        });
+
+        eventBus.register(EventType.HpChangedEventType, (event: HpChangedEvent) => {
+            if (this.playerType === event.playerType) {
+                this.handleHpChangedEvent(event);
             }
         });
     }
@@ -59,6 +66,10 @@ export class Switchboard {
             let color = this.convertColor(event.cell.getColor());
             this.lightingGrid.switchRoomOn(floorIdx, panelIdx, color);
         }
+    }
+
+    private handleHpChangedEvent(event: HpChangedEvent) {
+        console.log('changing hp: ' + event.playerType + ' = ' + event.hp);
     }
 
     /**
