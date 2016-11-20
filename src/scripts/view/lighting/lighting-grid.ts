@@ -2,6 +2,7 @@ declare const THREE: any;
 declare const TWEEN: any;
 
 import {Building} from './building';
+import {HpPanels} from './hp-panels';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
@@ -18,6 +19,7 @@ export class LightingGrid {
     readonly group: any;
     private panelGroup: any;
     private building: Building;
+    private hpPanels: HpPanels;
 
     private panels: any[][];
     
@@ -32,13 +34,14 @@ export class LightingGrid {
         this.group = new THREE.Object3D();
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
+        this.hpPanels = new HpPanels();
 
         this.panels = [];
         for (let floorIdx = 0; floorIdx < FLOOR_COUNT; floorIdx++) {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
                 let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1); // TODO: clone() ?
-                let material = new THREE.MeshLambertMaterial();
+                let material = new THREE.MeshPhongMaterial();
                 let panel = new THREE.Mesh(geometry, material);
                 panel.visible = false;
 
@@ -75,8 +78,11 @@ export class LightingGrid {
 
     start() {
         this.group.add(this.building.group);
+        this.group.add(this.hpPanels.group);
         this.group.add(this.panelGroup);
+
         this.building.start();
+        this.hpPanels.start();
 
         for (let floor of this.panels) {
             for (let panel of floor) {
@@ -105,6 +111,7 @@ export class LightingGrid {
 
     step(elapsed: number) {
         this.stepPulse(elapsed);
+        this.hpPanels.step(elapsed);
     }
 
     switchRoomOff(floorIdx: number, panelIdx: number) {

@@ -1,4 +1,4 @@
-import {Board} from './board/board';
+import {MAX_COLS, Board} from './board/board';
 import {Ai} from './ai/ai';
 import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
@@ -9,7 +9,7 @@ import {RowsFilledEvent} from '../event/rows-filled-event';
 import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
 
-const MAX_HP = 10; // Corrsponds to the number of white windows on the bottom row.
+const MAX_HP = MAX_COLS; // HP corresponds to the number of long windows on the second floor of the physical building.
 
 class Model {
     private humanBoard: Board;
