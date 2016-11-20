@@ -14,7 +14,7 @@ class View {
     private renderer: any;
 
     private humanGrid: LightingGrid;
-    private hmanSwitchboard: Switchboard;
+    private humanSwitchboard: Switchboard;
     private aiGrid: LightingGrid;
     private aiSwitchboard: Switchboard;
 
@@ -25,14 +25,14 @@ class View {
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
 
         this.humanGrid = new LightingGrid();
-        this.hmanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
+        this.humanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
         this.aiGrid = new LightingGrid();
         this.aiSwitchboard = new Switchboard(this.aiGrid, PlayerType.Ai);
     }
 
     start() {
         this.humanGrid.start();
-        this.hmanSwitchboard.start();
+        this.humanSwitchboard.start();
         this.aiGrid.start();
         this.aiSwitchboard.start();
 
@@ -48,11 +48,11 @@ class View {
     step(elapsed: number) {
         world.step(elapsed);
 
-        this.hmanSwitchboard.step(elapsed);
+        this.humanSwitchboard.step(elapsed);
         this.humanGrid.step(elapsed);
 
         this.aiGrid.step(elapsed);
-        this.hmanSwitchboard.step(elapsed);
+        this.humanSwitchboard.step(elapsed);
 
         standeeManager.step(elapsed);
 
