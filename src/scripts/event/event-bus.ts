@@ -1,6 +1,7 @@
 export enum EventType {
     ActiveShapeChangedEventType,
     ActiveShapeEndedEventType,
+    BoardFilledEventType,
     CellChangeEventType,
     NpcMovementChangedEventType,
     NpcPlacedEventType,

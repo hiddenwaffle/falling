@@ -7,6 +7,7 @@ import {eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {BoardFilledEvent} from '../../event/board-filled-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 const MAX_COLS = 10;
@@ -56,8 +57,9 @@ export class Board {
         } else {
             this.convertShapeToCells();
 
-            if (this.checkForFilledToTop()) {
-                this.hitPointDeductionAndReset();
+            if (this.isBoardFull()) {
+                this.signalFullBoard();
+                this.resetBoard();
             } else {
                 this.handleAnyFilledLines();
                 this.startShape();
@@ -231,9 +233,9 @@ export class Board {
     }
 
     /**
-     * It is "filled to the top" if the two obscured rows have colored cells in them.
+     * It is considered full if the two obscured rows at the top have colored cells in them.
      */
-    private checkForFilledToTop(): boolean {
+    private isBoardFull(): boolean {
         for (let rowIdx = 0; rowIdx < 2; rowIdx++) {
             for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
@@ -246,9 +248,8 @@ export class Board {
         return false;
     }
 
-    private hitPointDeductionAndReset() {
-        this.resetBoard();
-        // TODO: hit point
+    private signalFullBoard() {
+        eventBus.fire(new BoardFilledEvent(this.playerType));
     }
 
     private handleAnyFilledLines() {

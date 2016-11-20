@@ -6,6 +6,7 @@ import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
+import {BoardFilledEvent} from '../event/board-filled-event';
 
 class Model {
     private humanBoard: Board;
@@ -25,6 +26,10 @@ class Model {
 
         eventBus.register(EventType.RowsFilledEventType, (event: RowsFilledEvent) => {
             this.handleRowsFilledEvent(event);
+        });
+
+        eventBus.register(EventType.BoardFilledEventType, (event: BoardFilledEvent) => {
+            this.handleBoardFilledEvent(event);
         });
 
         this.humanBoard.start();
@@ -98,6 +103,10 @@ class Model {
         } else {
             return this.humanBoard;
         }
+    }
+
+    private handleBoardFilledEvent(event: BoardFilledEvent) {
+        //
     }
 }
 export const model = new Model();
