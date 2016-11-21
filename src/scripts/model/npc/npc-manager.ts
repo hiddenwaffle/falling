@@ -51,9 +51,17 @@ class NpcManager {
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
         let npc = this.npcs.get(event.npcId);
         if (npc != null) {
-            let x = event.x;
-            let y = event.z;
-            npc.updatePosition(x, y);
+            {
+                let x = event.x;
+                let y = event.z;
+                npc.updatePosition(x, y);
+            }
+            
+            {
+                let x = (Math.random() * 7);
+                let y = (Math.random() * 15);
+                npc.beginWalkingTo(x, y);
+            }
         }
     }
 }
