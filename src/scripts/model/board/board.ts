@@ -20,6 +20,8 @@ export class Board {
     currentShape: Shape;
     readonly matrix: Cell[][];
 
+    private lastJunkRowHoleColumn: number;
+
     constructor(playerType: PlayerType, shapeFactory: ShapeFactory, eventBus: EventBus) {
         this.playerType = playerType;
         this.shapeFactory = shapeFactory;
@@ -34,7 +36,7 @@ export class Board {
             }
         }
 
-        this.shapeFactory = new ShapeFactory();
+        this.lastJunkRowHoleColumn = 0;
     }
 
     start() {
@@ -154,10 +156,13 @@ export class Board {
                 row.push(cell);
             }
 
-            // Punch one hole in a random cell between the end cells.
-            let holeIdx = Math.floor(Math.random() * (row.length - 2)) + 1;
-            let cell = row[holeIdx];
+            // Punch a hole in the line.
+            let cell = row[this.lastJunkRowHoleColumn];
             cell.setColor(Color.Empty);
+            this.lastJunkRowHoleColumn++;
+            if (this.lastJunkRowHoleColumn >= MAX_COLS) {
+                this.lastJunkRowHoleColumn = 0;
+            }
 
             this.matrix.push(row);
         }
