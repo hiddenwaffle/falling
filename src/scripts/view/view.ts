@@ -98,11 +98,11 @@ class View {
 
         // TODO: Temporary
         let leftSpotLight = new THREE.SpotLight(0xbbbbff);
-        leftSpotLight.position.set(-3, 0.75, 15);
+        leftSpotLight.position.set(-3, 0.75, 20);
         leftSpotLight.target = this.aiGrid.group;
         this.leftScene.add(leftSpotLight);
         let rightSpotLight = new THREE.SpotLight(0xbbbbff);
-        rightSpotLight.position.set(0, 0.75, 15);
+        rightSpotLight.position.set(0, 0.75, 20);
         rightSpotLight.target = this.aiGrid.group;
         this.rightScene.add(rightSpotLight);
 
