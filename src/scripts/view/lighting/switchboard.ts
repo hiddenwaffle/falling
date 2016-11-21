@@ -103,7 +103,7 @@ export class Switchboard {
                 value = 0x33cccc;
                 break;
             case Color.Yellow:
-                value = 0xffff44;
+                value = 0xffff55;
                 break;
             case Color.Purple:
                 value = 0xa020a0;
@@ -118,7 +118,7 @@ export class Switchboard {
                 value = 0x4444cc;
                 break;
             case Color.Orange:
-                value = 0xffd530;
+                value = 0xeed530;
                 break;
             case Color.White:
                 value = 0xffffff;
