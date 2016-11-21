@@ -22,6 +22,9 @@ export class Board {
 
     private junkRowHoleColumn: number;
     private junkRowHoleDirection: number;
+    private junkRowColor1: Color;
+    private junkRowColor2: Color;
+    private junkRowColorIdx: number;
 
     constructor(playerType: PlayerType, shapeFactory: ShapeFactory, eventBus: EventBus) {
         this.playerType = playerType;
@@ -43,6 +46,9 @@ export class Board {
             this.junkRowHoleColumn = MAX_COLS - 1;
         }
         this.junkRowHoleDirection = 1;
+        this.junkRowColor1 = Color.White;
+        this.junkRowColor2 = Color.White;
+        this.junkRowColorIdx = 0;
     }
 
     start() {
@@ -154,7 +160,7 @@ export class Board {
         // Add junk rows at the bottom.
         for (let idx = 0; idx < numberOfRowsToAdd; idx++) {
             // Set the row to completely filled.
-            let color = this.getRandomColor();
+            let color = this.getNextJunkRowColor();
             let row: Cell[] = [];
             for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
                 let cell = new Cell();
@@ -364,6 +370,8 @@ export class Board {
                 this.changeCellColor(rowIdx, colIdx, Color.Empty);
             }
         }
+
+        [this.junkRowColor1, this.junkRowColor2] = this.getRandomColors();
     }
 
     /**
@@ -497,10 +505,35 @@ export class Board {
         this.eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType, starting));
     }
 
-    private getRandomColor(): Color {
-        let rand = Math.floor(Math.random() * 8);
+    private getNextJunkRowColor(): Color {
         let color: Color;
-        switch(rand) {
+        if (this.junkRowColorIdx <= 0) {
+            color = this.junkRowColor1;
+            this.junkRowColorIdx = 1;
+        } else if (this.junkRowColorIdx >= 1) {
+            color = this.junkRowColor2;
+            this.junkRowColorIdx = 0;
+        }
+        return color;
+    }
+
+    private getRandomColors(): [Color, Color] {
+
+        // Select two colors that are not equal to each other.
+        let rand1 = Math.floor(Math.random() * 7);
+        let rand2 = Math.floor(Math.random() * 7);
+        if (rand1 === rand2) {
+            rand2++;
+            if (rand2 > 6) {
+                rand2 = 0;
+            }
+        }
+        return [this.colorByNumber(rand1), this.colorByNumber(rand2)];
+    }
+    
+    private colorByNumber(value: number): Color {
+        let color: Color;
+        switch(value) {
             case 0:
                 color = Color.Cyan;
                 break;
@@ -523,9 +556,8 @@ export class Board {
                 color = Color.Orange;
                 break;
             default:
-                color = Color.White;
+                color = Color.White; // Shouldn't get here
         }
-
         return color;
     }
 }
