@@ -20,7 +20,8 @@ export class Board {
     currentShape: Shape;
     readonly matrix: Cell[][];
 
-    private lastJunkRowHoleColumn: number;
+    private junkRowHoleColumn: number;
+    private junkRowHoleDirection: number;
 
     constructor(playerType: PlayerType, shapeFactory: ShapeFactory, eventBus: EventBus) {
         this.playerType = playerType;
@@ -36,7 +37,12 @@ export class Board {
             }
         }
 
-        this.lastJunkRowHoleColumn = 0;
+        if (playerType === PlayerType.Human) {
+            this.junkRowHoleColumn = 0;
+        } else {
+            this.junkRowHoleColumn = MAX_COLS - 1;
+        }
+        this.junkRowHoleDirection = 1;
     }
 
     start() {
@@ -157,11 +163,17 @@ export class Board {
             }
 
             // Punch a hole in the line.
-            let cell = row[this.lastJunkRowHoleColumn];
+            let cell = row[this.junkRowHoleColumn];
             cell.setColor(Color.Empty);
-            this.lastJunkRowHoleColumn++;
-            if (this.lastJunkRowHoleColumn >= MAX_COLS) {
-                this.lastJunkRowHoleColumn = 0;
+
+            // Prepare for the next junk row line.
+            this.junkRowHoleColumn += this.junkRowHoleDirection;
+            if (this.junkRowHoleColumn < 0) {
+                this.junkRowHoleColumn = 1;
+                this.junkRowHoleDirection *= -1; // Flips the direction
+            } else if (this.junkRowHoleColumn >= MAX_COLS) {
+                this.junkRowHoleColumn = MAX_COLS - 2;
+                this.junkRowHoleDirection *= -1; // Flips the direction
             }
 
             this.matrix.push(row);
