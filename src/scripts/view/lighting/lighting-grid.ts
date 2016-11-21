@@ -98,7 +98,7 @@ export class LightingGrid {
         this.panelGroup.scale.set(0.7, 1.0, 1);
 
         // Make cells appear to pulse.
-        this.emissiveIntensity.value = 0.25;
+        this.emissiveIntensity.value = 0.0;
         this.pulseTweenElapsed = 0;
         this.pulseTween = new TWEEN.Tween(this.emissiveIntensity)
             .to({value: 1.0}, 750)
@@ -121,11 +121,13 @@ export class LightingGrid {
     switchRoomOn(floorIdx: number, panelIdx: number, color: number) {
         let panel = this.panels[floorIdx][panelIdx];
         panel.visible = true;
+        panel.material.color.setHex(color);
         panel.material.emissive.setHex(color);
     }
 
     sendActiveShapeLightTo(floorIdx: number, panelIdx: number, color: number) {
         let shapeLight = this.getNextShapeLight();
+        shapeLight.material.color.setHex(color);
         shapeLight.material.emissive.setHex(color);
 
         // Do not light if higher than the highest *visible* floor.
