@@ -146,10 +146,11 @@ export class Board {
         // Add junk rows at the bottom.
         for (let idx = 0; idx < numberOfRowsToAdd; idx++) {
             // Set the row to completely filled.
+            let color = this.getRandomColor();
             let row: Cell[] = [];
             for (let colIdx = 0; colIdx < MAX_COLS; colIdx++) {
                 let cell = new Cell();
-                cell.setColor(Color.White);
+                cell.setColor(color);
                 row.push(cell);
             }
 
@@ -477,5 +478,37 @@ export class Board {
 
     private fireActiveShapeChangedEvent(starting=false) {
         this.eventBus.fire(new ActiveShapeChangedEvent(this.currentShape, this.playerType, starting));
+    }
+
+    private getRandomColor(): Color {
+        let rand = Math.floor(Math.random() * 8);
+        let color: Color;
+        switch(rand) {
+            case 0:
+                color = Color.Cyan;
+                break;
+            case 1:
+                color = Color.Yellow;
+                break;
+            case 2:
+                color = Color.Purple;
+                break;
+            case 3:
+                color = Color.Green;
+                break;
+            case 4:
+                color = Color.Red;
+                break;
+            case 5:
+                color = Color.Blue;
+                break;
+            case 6:
+                color = Color.Orange;
+                break;
+            default:
+                color = Color.White;
+        }
+
+        return color;
     }
 }
