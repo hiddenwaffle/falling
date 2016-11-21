@@ -58,9 +58,8 @@ export class Switchboard {
             xTotalOffset += offset.x;
         }
 
-        let yoff = (yTotalOffset / offsets.length) - 1.5;
+        let yoff = (yTotalOffset / offsets.length) - 2;
         let xoff = xTotalOffset / offsets.length;
-
         this.lightingGrid.sendHighlighterTo(floorIdx + yoff, panelIdx + xoff, color);
     }
 
