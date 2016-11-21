@@ -66,7 +66,7 @@ export class LightingGrid {
         }
         this.currentShapeLightIdx = 0;
 
-        this.highlighter = new THREE.PointLight(0xff00ff, 3, 3);
+        this.highlighter = new THREE.PointLight(0xff00ff, 3.5, 3);
 
         this.pulseTween = null;
         this.pulseTweenElapsed = 0;
