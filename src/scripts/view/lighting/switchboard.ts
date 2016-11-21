@@ -46,11 +46,22 @@ export class Switchboard {
         let panelIdx = event.shape.getCol();
         let color = this.convertColor(event.shape.color);
 
-        for (let offset of event.shape.getOffsets()) {
+        let yTotalOffset = 0;
+        let xTotalOffset = 0;
+        let offsets = event.shape.getOffsets();
+        for (let offset of offsets) {
             let offsetFloorIdx = floorIdx - offset.y;
             let offsetPanelIdx = panelIdx + offset.x;
             this.lightingGrid.sendActiveShapeLightTo(offsetFloorIdx, offsetPanelIdx, color);
+
+            yTotalOffset += offset.y;
+            xTotalOffset += offset.x;
         }
+
+        let yoff = (yTotalOffset / offsets.length) - 1.5;
+        let xoff = xTotalOffset / offsets.length;
+
+        this.lightingGrid.sendHighlighterTo(floorIdx + yoff, panelIdx + xoff, color);
     }
 
     private handleCellChangeEvent(event: CellChangeEvent) {

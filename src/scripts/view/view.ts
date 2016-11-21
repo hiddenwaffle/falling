@@ -96,12 +96,13 @@ class View {
         // TODO: Temporary for debugging?
         // this.scene.add(new THREE.AmbientLight(0x404040));
 
-        // TODO: Temporary
-        let leftSpotLight = new THREE.SpotLight(0xbbbbff);
+        // TODO: Temporary?
+        let spotLightColor = 0x9999ee;
+        let leftSpotLight = new THREE.SpotLight(spotLightColor);
         leftSpotLight.position.set(-3, 0.75, 20);
         leftSpotLight.target = this.aiGrid.group;
         this.leftScene.add(leftSpotLight);
-        let rightSpotLight = new THREE.SpotLight(0xbbbbff);
+        let rightSpotLight = new THREE.SpotLight(spotLightColor);
         rightSpotLight.position.set(0, 0.75, 20);
         rightSpotLight.target = this.aiGrid.group;
         this.rightScene.add(rightSpotLight);

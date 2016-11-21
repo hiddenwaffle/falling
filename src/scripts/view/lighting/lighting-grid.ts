@@ -24,8 +24,9 @@ export class LightingGrid {
 
     private panels: any[][];
     
-    private pointLights: any[];
-    private currentPointLightIdx: number;
+    private shapeLights: any[];
+    private currentShapeLightIdx: number;
+    private highlighter: any;
 
     private pulseTween: any;
     private pulseTweenElapsed: number;
@@ -55,22 +56,16 @@ export class LightingGrid {
             }
         }
 
-        this.pointLights = [];
+        this.shapeLights = [];
         for (let count = 0; count < ACTIVE_SHAPE_LIGHT_COUNT; count++) {
-            let pointLight = new THREE.PointLight(0xff00ff, 2, 1.5);
-// // These two lines are for debugging:
-// let sphere = new THREE.SphereGeometry( 0.1, 16, 8 );
-// pointLight.add( new THREE.Mesh(sphere, new THREE.MeshBasicMaterial({color: 0xffffff})));
             let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1);
-            let material = new THREE.MeshPhongMaterial({color: 0xffffff});
-            let glass = new THREE.Mesh(geometry, material);
-            glass.position.setZ(-0.33); // Should be on same level as regular cells.
-            pointLight.add(glass);
-
-            pointLight.position.set(-100, -100, 0.33); // Just get it out of the way for now
-            this.pointLights.push(pointLight);
+            let material = new THREE.MeshPhongMaterial({emissiveIntensity: 1.0});
+            let shapeLight = new THREE.Mesh(geometry, material);
+            this.shapeLights.push(shapeLight);
         }
-        this.currentPointLightIdx = 0;
+        this.currentShapeLightIdx = 0;
+
+        this.highlighter = new THREE.PointLight(0xff00ff, 3, 3);
 
         this.pulseTween = null;
         this.pulseTweenElapsed = 0;
@@ -91,9 +86,11 @@ export class LightingGrid {
             }
         }
 
-        for (let pointLight of this.pointLights) {
-            this.panelGroup.add(pointLight);
+        for (let shapeLight of this.shapeLights) {
+            this.panelGroup.add(shapeLight);
         }
+
+        this.panelGroup.add(this.highlighter);
 
         // Transform to fit against building.
         this.panelGroup.position.set(1.9, 3.8, -1.55);
@@ -127,33 +124,48 @@ export class LightingGrid {
     }
 
     sendActiveShapeLightTo(floorIdx: number, panelIdx: number, color: number) {
-        let pointLight = this.getNextPointLight();
-        pointLight.color.setHex(color);
+        let shapeLight = this.getNextShapeLight();
+        shapeLight.material.emissive.setHex(color);
 
         // Do not light if higher than the highest *visible* floor.
         if (floorIdx >= FLOOR_COUNT) {
-            pointLight.visible = false;
+            shapeLight.visible = false;
         } else {
-            pointLight.visible = true;
+            shapeLight.visible = true;
         }
 
         let x = panelIdx;
         let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
-        let z = 0.33;
-        pointLight.position.set(x, y, z);
+        let z = 0;
+        shapeLight.position.set(x, y, z);
+    }
+
+    sendHighlighterTo(floorIdx: number, panelIdx: number, color: number) {
+        // Do not light if higher than the highest *visible* floor.
+        if (floorIdx >= FLOOR_COUNT) {
+            this.highlighter.visible = false;
+        } else {
+            this.highlighter.visible = true;
+            this.highlighter.color.setHex(color);            
+        }
+
+        let x = panelIdx;
+        let y = floorIdx + 1; // Offset up 1 because ground is y = 0.
+        let z = 0;
+        this.highlighter.position.set(x, y, z);
     }
 
     updateHp(hp: number) {
         this.hpPanels.updateHp(hp);
     }
 
-    private getNextPointLight() {
-        let pointLight = this.pointLights[this.currentPointLightIdx];
-        this.currentPointLightIdx++;
-        if (this.currentPointLightIdx >= ACTIVE_SHAPE_LIGHT_COUNT) {
-            this.currentPointLightIdx = 0;
+    private getNextShapeLight() {
+        let shapeLight = this.shapeLights[this.currentShapeLightIdx];
+        this.currentShapeLightIdx++;
+        if (this.currentShapeLightIdx >= ACTIVE_SHAPE_LIGHT_COUNT) {
+            this.currentShapeLightIdx = 0;
         }
-        return pointLight;
+        return shapeLight;
     }
 
     private stepPulse(elapsed: number) {
