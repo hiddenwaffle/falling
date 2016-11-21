@@ -95,25 +95,25 @@ export class Switchboard {
         let value: number;
         switch (color) {
             case Color.Cyan:
-                value = 0x00ffff;
+                value = 0x33cccc;
                 break;
             case Color.Yellow:
-                value = 0xffff00;
+                value = 0xffff44;
                 break;
             case Color.Purple:
-                value = 0x800080;
+                value = 0xa020a0;
                 break;
             case Color.Green:
-                value = 0x008000;
+                value = 0x20a020;
                 break;
             case Color.Red:
-                value = 0xff0000;
+                value = 0xff3333;
                 break;
             case Color.Blue:
-                value = 0x0000ff;
+                value = 0x4444cc;
                 break;
             case Color.Orange:
-                value = 0xffa500;
+                value = 0xffd530;
                 break;
             case Color.White:
                 value = 0xffffff;

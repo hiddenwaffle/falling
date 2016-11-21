@@ -44,7 +44,7 @@ export class LightingGrid {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
                 let geometry = new THREE.PlaneGeometry(PANEL_SIZE, PANEL_SIZE); // TODO: clone() ?
-                let material = new THREE.MeshPhongMaterial();
+                let material = new THREE.MeshPhongMaterial({emissiveIntensity: 1.0});
                 let panel = new THREE.Mesh(geometry, material);
                 panel.visible = false;
 
@@ -98,7 +98,7 @@ export class LightingGrid {
         this.panelGroup.scale.set(0.7, 1.0, 1);
 
         // Make cells appear to pulse.
-        this.emissiveIntensity.value = 0.0;
+        this.emissiveIntensity.value = 0.33;
         this.pulseTweenElapsed = 0;
         this.pulseTween = new TWEEN.Tween(this.emissiveIntensity)
             .to({value: 1.0}, 750)
