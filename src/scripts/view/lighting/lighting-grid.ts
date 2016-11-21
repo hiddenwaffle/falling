@@ -10,6 +10,7 @@ export const FLOOR_COUNT = 17;
 export const PANEL_COUNT_PER_FLOOR = 10;
 
 const ACTIVE_SHAPE_LIGHT_COUNT = 4;
+const PANEL_SIZE = 0.7;
 
 class EmissiveIntensity {
     value: number;
@@ -42,7 +43,7 @@ export class LightingGrid {
         for (let floorIdx = 0; floorIdx < FLOOR_COUNT; floorIdx++) {
             this.panels[floorIdx] = [];
             for (let panelIdx = 0; panelIdx < PANEL_COUNT_PER_FLOOR; panelIdx++) {
-                let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1); // TODO: clone() ?
+                let geometry = new THREE.PlaneGeometry(PANEL_SIZE, PANEL_SIZE); // TODO: clone() ?
                 let material = new THREE.MeshPhongMaterial();
                 let panel = new THREE.Mesh(geometry, material);
                 panel.visible = false;
@@ -58,7 +59,7 @@ export class LightingGrid {
 
         this.shapeLights = [];
         for (let count = 0; count < ACTIVE_SHAPE_LIGHT_COUNT; count++) {
-            let geometry = new THREE.BoxGeometry(0.6, 0.6, 0.1);
+            let geometry = new THREE.PlaneGeometry(PANEL_SIZE, PANEL_SIZE);
             let material = new THREE.MeshPhongMaterial({emissiveIntensity: 1.0});
             let shapeLight = new THREE.Mesh(geometry, material);
             this.shapeLights.push(shapeLight);
@@ -93,7 +94,7 @@ export class LightingGrid {
         this.panelGroup.add(this.highlighter);
 
         // Transform to fit against building.
-        this.panelGroup.position.set(1.9, 3.8, -1.55);
+        this.panelGroup.position.set(1.85, 3.8, -1.55);
         this.panelGroup.scale.set(0.7, 1.0, 1);
 
         // Make cells appear to pulse.
