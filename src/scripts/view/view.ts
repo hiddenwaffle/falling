@@ -1,7 +1,8 @@
 declare const THREE: any;
 
 import {cameraWrapper} from './camera-wrapper';
-import {world} from './world/world';
+import {sky} from './world/sky';
+import {ground} from './world/ground';
 import {LightingGrid} from './lighting/lighting-grid';
 import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
@@ -11,7 +12,12 @@ import {HpOrientation} from './hp-orientation';
 class View {
 
     private canvas: HTMLCanvasElement;
-    private scene: any;
+
+    private skyScene: any;
+    private leftScene: any;
+    private rightScene: any;
+    private groundScene: any;
+
     private renderer: any;
 
     private humanGrid: LightingGrid;
@@ -20,10 +26,15 @@ class View {
     private aiSwitchboard: Switchboard;
 
     constructor() {
-        this.scene = new THREE.Scene();
-        
         this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
+
+        this.skyScene = new THREE.Scene();
+        this.leftScene = new THREE.Scene();
+        this.rightScene = new THREE.Scene();
+        this.groundScene = new THREE.Scene();
+
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
+        this.renderer.autoClear = false;
 
         this.humanGrid = new LightingGrid();
         this.humanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
@@ -39,7 +50,8 @@ class View {
 
         this.doStart();
 
-        world.start();
+        sky.start();
+        ground.start();
         standeeManager.start();
 
         // The canvas should have been hidden until setup is complete.
@@ -47,7 +59,8 @@ class View {
     }
 
     step(elapsed: number) {
-        world.step(elapsed);
+        sky.step(elapsed);
+        ground.step(elapsed);
 
         this.humanSwitchboard.step(elapsed);
         this.humanGrid.step(elapsed);
@@ -57,16 +70,25 @@ class View {
 
         standeeManager.step(elapsed);
 
-        this.renderer.render(this.scene, cameraWrapper.camera);
+        this.renderer.clear();
+        this.renderer.render(this.skyScene, cameraWrapper.camera);
+        this.renderer.clearDepth();
+        this.renderer.render(this.leftScene, cameraWrapper.camera);
+        this.renderer.clearDepth();
+        this.renderer.render(this.rightScene, cameraWrapper.camera);
+        this.renderer.clearDepth();
+        this.renderer.render(this.groundScene, cameraWrapper.camera);
     }
 
     private doStart() {
-        this.scene.add(world.group);
-        this.scene.add(standeeManager.group);
+        this.skyScene.add(sky.group);
 
-        this.scene.add(this.humanGrid.group);
+        this.groundScene.add(ground.group);
+        this.groundScene.add(standeeManager.group);
 
-        this.scene.add(this.aiGrid.group);
+        this.leftScene.add(this.humanGrid.group);
+
+        this.rightScene.add(this.aiGrid.group);
         this.aiGrid.group.position.setX(11);
         this.aiGrid.group.position.setZ(1);
         this.aiGrid.group.rotation.y = -Math.PI / 4;
@@ -75,10 +97,14 @@ class View {
         // this.scene.add(new THREE.AmbientLight(0x404040));
 
         // TODO: Temporary
-        let spotLight = new THREE.SpotLight(0xbbbbff);
-        spotLight.position.set(-3, 0.75, 15);
-        spotLight.target = this.aiGrid.group;
-        this.scene.add(spotLight);
+        let leftSpotLight = new THREE.SpotLight(0xbbbbff);
+        leftSpotLight.position.set(-3, 0.75, 15);
+        leftSpotLight.target = this.aiGrid.group;
+        this.leftScene.add(leftSpotLight);
+        let rightSpotLight = new THREE.SpotLight(0xbbbbff);
+        rightSpotLight.position.set(0, 0.75, 15);
+        rightSpotLight.target = this.aiGrid.group;
+        this.rightScene.add(rightSpotLight);
 
         cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
         cameraWrapper.lookAt(new THREE.Vector3(5, 8, 2));
