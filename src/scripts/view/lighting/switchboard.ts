@@ -61,6 +61,11 @@ export class Switchboard {
         let yoff = (yTotalOffset / offsets.length) - 2;
         let xoff = xTotalOffset / offsets.length;
         this.lightingGrid.sendHighlighterTo(floorIdx + yoff, panelIdx + xoff, color);
+
+        if (this.playerType === PlayerType.Human) {
+            let activeShapeLightPosition = this.lightingGrid.getActiveShapeLightPosition();
+            // TODO: Have the camera look at this?
+        }
     }
 
     private handleCellChangeEvent(event: CellChangeEvent) {

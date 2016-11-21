@@ -143,6 +143,10 @@ export class LightingGrid {
         shapeLight.position.set(x, y, z);
     }
 
+    getActiveShapeLightPosition() {
+        return this.highlighter.position;
+    }
+
     sendHighlighterTo(floorIdx: number, panelIdx: number, color: number) {
         // Do not light if higher than the highest *visible* floor.
         if (floorIdx >= FLOOR_COUNT) {
