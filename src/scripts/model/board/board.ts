@@ -12,10 +12,17 @@ import {BoardFilledEvent} from '../../event/board-filled-event';
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 export const MAX_COLS = 10;
 
+const enum BoardState {
+    Paused,
+    InPlay
+}
+
 export class Board {
     private playerType: PlayerType;
     private shapeFactory: ShapeFactory;
     private eventBus: EventBus;
+
+    private boardState: BoardState;
 
     currentShape: Shape;
     readonly matrix: Cell[][];
@@ -30,6 +37,8 @@ export class Board {
         this.playerType = playerType;
         this.shapeFactory = shapeFactory;
         this.eventBus = eventBus;
+
+        this.boardState = BoardState.Paused;
 
         this.currentShape = null;
         this.matrix = [];
@@ -53,6 +62,7 @@ export class Board {
 
     start() {
         this.clear();
+        this.boardState = BoardState.InPlay; // TODO: Move this elsewhere once defined.
     }
 
     /**
@@ -68,7 +78,7 @@ export class Board {
                 this.signalFullBoard();
                 this.resetBoard();
             } else {
-                this.handleAnyFilledLines();
+                this.handleAnyFilledLinesPart1();
                 this.startShape(false);
             }
         }
@@ -451,7 +461,10 @@ export class Board {
         this.eventBus.fire(new BoardFilledEvent(this.playerType));
     }
 
-    private handleAnyFilledLines() {
+    /**
+     * Handle filled lines method 1 of 2, before animation.
+     */
+    private handleAnyFilledLinesPart1() {
         let filledRowIdxs: number[] = [];
         for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
             let row = this.matrix[rowIdx];
@@ -468,6 +481,15 @@ export class Board {
             }
         }
 
+        if (filledRowIdxs.length > 0) {
+            this.eventBus.fire(new RowsFilledEvent(filledRowIdxs.length, this.playerType));
+        }
+    }
+
+    /**
+     * * Handle filled lines method 2 of 2, after animation.
+     */
+    private handleAnyFilledLinesPart2(filledRowIdxs: number[]) {
         // Remove the rows
         let totalFilled = filledRowIdxs.length;
         for (let idx = 0; idx < filledRowIdxs.length; idx++) {
@@ -482,10 +504,6 @@ export class Board {
                 let cell = this.matrix[rowIdx][colIdx];
                 this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
-        }
-
-        if (filledRowIdxs.length > 0) {
-            this.eventBus.fire(new RowsFilledEvent(filledRowIdxs.length, this.playerType));
         }
     }
 
