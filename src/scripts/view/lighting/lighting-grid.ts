@@ -4,6 +4,7 @@ declare const TWEEN: any;
 import {Building} from './building';
 import {HpPanels} from './hp-panels';
 import {HpOrientation} from '../../domain/hp-orientation';
+import {RowClearDirection} from '../../domain/row-clear-direction';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
@@ -19,6 +20,9 @@ class EmissiveIntensity {
 export class LightingGrid {
     
     readonly group: any;
+
+    private rowClearDirection: RowClearDirection;
+
     private panelGroup: any;
     private building: Building;
     private hpPanels: HpPanels;
@@ -33,8 +37,11 @@ export class LightingGrid {
     private pulseTweenElapsed: number;
     private emissiveIntensity: EmissiveIntensity;
 
-    constructor() {
+    constructor(rowClearDirection: RowClearDirection) {
         this.group = new THREE.Object3D();
+
+        this.rowClearDirection = rowClearDirection;
+        
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
         this.hpPanels = new HpPanels();

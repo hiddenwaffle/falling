@@ -8,6 +8,7 @@ import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
 import {PlayerType} from '../domain/player-type';
 import {HpOrientation} from '../domain/hp-orientation';
+import {RowClearDirection} from '../domain/row-clear-direction';
 
 class View {
 
@@ -36,9 +37,9 @@ class View {
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
         this.renderer.autoClear = false;
 
-        this.humanGrid = new LightingGrid();
+        this.humanGrid = new LightingGrid(RowClearDirection.LeftToRight);
         this.humanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
-        this.aiGrid = new LightingGrid();
+        this.aiGrid = new LightingGrid(RowClearDirection.RightToLeft);
         this.aiSwitchboard = new Switchboard(this.aiGrid, PlayerType.Ai);
     }
 
