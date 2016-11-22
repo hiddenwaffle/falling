@@ -100,10 +100,14 @@ export class Switchboard {
         }, 1); // TODO: Actually do the animation.
     }
 
+    /**
+     * Remember that the junk rows have already been added on the board.
+     * 
+     * Do not need to fire an event at the end of this animation because the board
+     * does not need to listen for it (it listens for the clearing animation instead).
+    */
     private animateJunkRowAdding(junkRowCount: number) {
-        // TODO: Do it
-        // Do not need to fire an event at the end of this animation because the board
-        // does not need to listen for it (it listens for the clearing animation instead).
+        this.lightingGrid.startJunkRowCurtainAnimation(junkRowCount);
     }
 
     private handleHpChangedEvent(event: HpChangedEvent) {

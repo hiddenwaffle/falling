@@ -2,6 +2,7 @@ declare const THREE: any;
 declare const TWEEN: any;
 
 import {Building} from './building';
+import {JunkRowCurtain} from './junk-row-curtain';
 import {HpPanels} from './hp-panels';
 import {HpOrientation} from '../../domain/hp-orientation';
 import {RowClearDirection} from '../../domain/row-clear-direction';
@@ -25,6 +26,7 @@ export class LightingGrid {
 
     private panelGroup: any;
     private building: Building;
+    private junkRowCurtain: JunkRowCurtain;
     private hpPanels: HpPanels;
 
     private panels: any[][];
@@ -44,6 +46,7 @@ export class LightingGrid {
         
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
+        this.junkRowCurtain = new JunkRowCurtain();
         this.hpPanels = new HpPanels();
 
         this.panels = [];
@@ -82,10 +85,12 @@ export class LightingGrid {
 
     start(hpOrientation: HpOrientation) {
         this.group.add(this.building.group);
+        this.group.add(this.junkRowCurtain.group);
         this.group.add(this.hpPanels.group);
         this.group.add(this.panelGroup);
 
         this.building.start();
+        this.junkRowCurtain.start();
         this.hpPanels.start(hpOrientation);
 
         for (let floor of this.panels) {
@@ -171,6 +176,10 @@ export class LightingGrid {
 
     updateHp(hp: number) {
         this.hpPanels.updateHp(hp);
+    }
+
+    startJunkRowCurtainAnimation(rowCount: number) {
+        this.junkRowCurtain.startAnimation(rowCount);
     }
 
     private getNextShapeLight() {
