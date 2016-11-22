@@ -452,8 +452,6 @@ export class Board {
     }
 
     private handleAnyFilledLines() {
-        let highestLineFilled = 0; // "highest" as in the highest in the array, which is the lowest visually to the player.
-
         // Traverse backwards to prevent row index from becoming out of sync when removing rows.
         let totalFilled = 0;
         for (let rowIdx = this.matrix.length - 1; rowIdx >= 0; rowIdx--) {
@@ -467,16 +465,14 @@ export class Board {
             }
             if (filled) {
                 totalFilled++;
-                if (rowIdx > highestLineFilled) {
-                    highestLineFilled = rowIdx;
-                }
                 this.removeAndCollapse(rowIdx);
                 rowIdx = rowIdx + 1; // This is a really, really shaky workaround. It prevents the next row from getting skipped over on next loop.
             }
         }
 
-        // Notify for all cells from 0 to the highestLineFilled, which could be 0 if no rows were filled.
-        for (let rowIdx = 0; rowIdx <= highestLineFilled; rowIdx++) {
+        // Notify all cells
+        // TODO: Break out into own method?
+        for (let rowIdx = 0; rowIdx < MAX_ROWS; rowIdx++) {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
                 let cell = this.matrix[rowIdx][colIdx];
