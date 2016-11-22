@@ -6,6 +6,7 @@ const SPAWN_COL = 3; // Left side of matrix should correspond to this.
 export abstract class Shape {
     abstract readonly color: Color;
     abstract readonly valuesPerRow: number;
+    abstract readonly startingEligible: boolean;
 
     protected abstract matrices: ReadonlyArray<ReadonlyArray<number>>;
     protected abstract getInstance(): Shape;
@@ -18,6 +19,7 @@ export abstract class Shape {
         this.currentMatrixIndex = 0; // TODO: Ensure position 0 is the spawn position
         this.row = 0;
         this.col = SPAWN_COL;
+        this.startingEligible = false;
     }
 
     moveLeft() {
