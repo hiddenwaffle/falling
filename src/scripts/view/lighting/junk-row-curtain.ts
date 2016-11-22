@@ -80,7 +80,7 @@ export class JunkRowCurtain {
         this.curtainVertexPosition.elapsed = 0;
 
         this.pullCurtainTween = new TWEEN.Tween(this.curtainVertexPosition)
-            .to({x: xend}, 500)
+            .to({x: xend}, 333)
             .easing(TWEEN.Easing.Quartic.InOut)
             .onUpdate(() => {
                 let idx1: number, idx2: number;
