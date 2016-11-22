@@ -2,6 +2,8 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {HpChangedEvent} from '../../event/hp-changed-event';
+import {RowsFilledEvent} from '../../event/rows-filled-event';
+import {RowsClearAnimationCompletedEvent} from '../../event/rows-clear-animation-completed-event';
 import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
@@ -28,6 +30,12 @@ export class Switchboard {
             if (this.playerType === event.playerType) {
                 this.handleCellChangeEvent(event);
             }
+        });
+
+        eventBus.register(EventType.RowsFilledEventType, (event: RowsFilledEvent) => {
+            setTimeout(() => {
+                eventBus.fire(new RowsClearAnimationCompletedEvent(event.filledRowIdxs, event.playerType));
+            }, 1); // TODO: Actually do the animation.
         });
 
         eventBus.register(EventType.HpChangedEventType, (event: HpChangedEvent) => {

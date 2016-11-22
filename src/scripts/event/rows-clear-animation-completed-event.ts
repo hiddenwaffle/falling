@@ -1,7 +1,7 @@
 import {EventType, AbstractEvent} from './event-bus';
 import {PlayerType} from '../domain/player-type';
 
-export class RowsFilledEvent extends AbstractEvent {
+export class RowsClearAnimationCompletedEvent extends AbstractEvent {
     
     readonly filledRowIdxs: number[];
     readonly playerType: PlayerType;
@@ -13,6 +13,6 @@ export class RowsFilledEvent extends AbstractEvent {
     }
 
     getType() {
-        return EventType.RowsFilledEventType;
+        return EventType.RowsClearAnimationCompletedEventType;
     }
 }

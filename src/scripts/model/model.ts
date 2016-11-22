@@ -7,6 +7,7 @@ import {PlayerMovement} from '../domain/player-movement';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
+import {RowsClearAnimationCompletedEvent} from '../event/rows-clear-animation-completed-event';
 import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
@@ -41,6 +42,10 @@ class Model {
 
         eventBus.register(EventType.RowsFilledEventType, (event: RowsFilledEvent) => {
             this.handleRowsFilledEvent(event);
+        });
+
+        eventBus.register(EventType.RowsClearAnimationCompletedEventType, (event: RowsClearAnimationCompletedEvent) => {
+            this.handleRowClearAnimationCompletedEvent(event);
         });
 
         eventBus.register(EventType.BoardFilledEventType, (event: BoardFilledEvent) => {
@@ -103,7 +108,12 @@ class Model {
      */
     private handleRowsFilledEvent(event: RowsFilledEvent) {
         let board = this.determineBoardForOppositeOf(event.playerType);
-        board.addJunkRows(event.totalFilled);
+        board.addJunkRows(event.filledRowIdxs.length);
+    }
+
+    private handleRowClearAnimationCompletedEvent(event: RowsClearAnimationCompletedEvent) {
+        let board = this.determineBoardFor(event.playerType);
+        board.handleAnyFilledLinesPart2(event.filledRowIdxs);
     }
 
     /**

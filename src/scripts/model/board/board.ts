@@ -503,7 +503,7 @@ export class Board {
         }
 
         if (filledRowIdxs.length > 0) {
-            this.eventBus.fire(new RowsFilledEvent(filledRowIdxs.length, this.playerType));
+            this.eventBus.fire(new RowsFilledEvent(filledRowIdxs, this.playerType));
             this.boardState = BoardState.Paused; // Standby until animation is finished.
         } else {
             // Don't need to do anything if there are no filled lines.
@@ -513,9 +513,10 @@ export class Board {
     }
 
     /**
-     * * Handle filled lines method 2 of 2, after animation.
+     * Handle filled lines method 2 of 2, after animation.
+     * This is public so that the Model can call it.
      */
-    private handleAnyFilledLinesPart2(filledRowIdxs: number[]) {
+    handleAnyFilledLinesPart2(filledRowIdxs: number[]) {
         // Remove the rows
         let totalFilled = filledRowIdxs.length;
         for (let idx = 0; idx < filledRowIdxs.length; idx++) {
