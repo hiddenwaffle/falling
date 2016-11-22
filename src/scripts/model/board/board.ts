@@ -452,9 +452,8 @@ export class Board {
     }
 
     private handleAnyFilledLines() {
-        // Traverse backwards to prevent row index from becoming out of sync when removing rows.
-        let totalFilled = 0;
-        for (let rowIdx = this.matrix.length - 1; rowIdx >= 0; rowIdx--) {
+        let filledRowIdxs: number[] = [];
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
             let row = this.matrix[rowIdx];
             let filled = true;
             for (let cell of row) {
@@ -464,10 +463,15 @@ export class Board {
                 }
             }
             if (filled) {
-                totalFilled++;
-                this.removeAndCollapse(rowIdx);
-                rowIdx = rowIdx + 1; // This is a really, really shaky workaround. It prevents the next row from getting skipped over on next loop.
+                this.matrix[rowIdx] = null; // This is handled in the next section.
+                filledRowIdxs.push(rowIdx);
             }
+        }
+
+        // Remove the rows
+        let totalFilled = filledRowIdxs.length;
+        for (let idx = 0; idx < filledRowIdxs.length; idx++) {
+            this.removeAndCollapse(filledRowIdxs[idx]);
         }
 
         // Notify all cells
@@ -480,8 +484,8 @@ export class Board {
             }
         }
 
-        if (totalFilled > 0) {
-            this.eventBus.fire(new RowsFilledEvent(totalFilled, this.playerType));
+        if (filledRowIdxs.length > 0) {
+            this.eventBus.fire(new RowsFilledEvent(filledRowIdxs.length, this.playerType));
         }
     }
 
