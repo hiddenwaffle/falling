@@ -11,6 +11,7 @@ import {BoardFilledEvent} from '../../event/board-filled-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 export const MAX_COLS = 10;
+const TEMP_DELAY_MS = 500;
 
 const enum BoardState {
     Paused,
@@ -23,6 +24,7 @@ export class Board {
     private eventBus: EventBus;
 
     private boardState: BoardState;
+    private msTillGravityTick: number;
 
     currentShape: Shape;
     readonly matrix: Cell[][];
@@ -39,6 +41,7 @@ export class Board {
         this.eventBus = eventBus;
 
         this.boardState = BoardState.Paused;
+        this.msTillGravityTick = TEMP_DELAY_MS;
 
         this.currentShape = null;
         this.matrix = [];
@@ -69,16 +72,35 @@ export class Board {
      * This gives a high level view of the main game loop.
      * This shouldn't be called by the AI.
      */
-    step() {
-        if (this.tryGravity()) {
-            this.moveShapeDown();
+    step(elapsed: number) {
+        if (this.boardState === BoardState.Paused) {
+            // This is here just to ensure that the method to runs immediately after unpausing.
+            this.msTillGravityTick = 0;
         } else {
-            this.convertShapeToCells();
-            if (this.isBoardFull()) {
-                this.signalFullBoard();
-                this.resetBoard();
+            this.msTillGravityTick -= elapsed;
+            if (this.msTillGravityTick <= 0) {
+                this.msTillGravityTick = TEMP_DELAY_MS;
+                if (this.tryGravity()) {
+                    this.moveShapeDown();
+                } else {
+                    this.handleEndOfCurrentPieceTasks();
+                }
+            }
+        }
+    }
+
+    /**
+     * Call this once a shape is known to be in its final resting position.
+     */
+    handleEndOfCurrentPieceTasks() {
+        this.convertShapeToCells();
+        if (this.isBoardFull()) {
+            this.signalFullBoard();
+            this.resetBoard();
+        } else {
+            if (this.handleAnyFilledLinesPart1()) {
+                // There were filled lines, do not start a new shape immediately.
             } else {
-                this.handleAnyFilledLinesPart1();
                 this.startShape(false);
             }
         }
@@ -464,7 +486,7 @@ export class Board {
     /**
      * Handle filled lines method 1 of 2, before animation.
      */
-    private handleAnyFilledLinesPart1() {
+    private handleAnyFilledLinesPart1(): boolean {
         let filledRowIdxs: number[] = [];
         for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
             let row = this.matrix[rowIdx];
@@ -476,14 +498,18 @@ export class Board {
                 }
             }
             if (filled) {
-                this.matrix[rowIdx] = null; // This is handled in the next section.
                 filledRowIdxs.push(rowIdx);
             }
         }
 
         if (filledRowIdxs.length > 0) {
             this.eventBus.fire(new RowsFilledEvent(filledRowIdxs.length, this.playerType));
+            this.boardState = BoardState.Paused; // Standby until animation is finished.
+        } else {
+            // Don't need to do anything if there are no filled lines.
         }
+        
+        return filledRowIdxs.length > 0;
     }
 
     /**
@@ -505,6 +531,10 @@ export class Board {
                 this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
+
+        // Animation was finished and board was updated, so resume play.
+        this.boardState = BoardState.InPlay;
+        this.startShape(false);
     }
 
     /**

@@ -12,7 +12,6 @@ import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
 
 const MAX_HP = MAX_COLS; // HP corresponds to the number of long windows on the second floor of the physical building.
-const TEMP_DELAY_MS = 500;
 
 class Model {
     private humanBoard: Board;
@@ -22,8 +21,6 @@ class Model {
     private aiHitPoints: number;
 
     private ai: Ai;
-
-    private msTillGravityTick: number;
 
     constructor() {
         let humanShapeFactory = new ShapeFactory();
@@ -35,8 +32,6 @@ class Model {
         this.aiHitPoints = MAX_HP;
 
         this.ai = new Ai(this.aiBoard);
-
-        this.msTillGravityTick = TEMP_DELAY_MS;
     }
 
     start() {
@@ -67,18 +62,14 @@ class Model {
     }
 
     step(elapsed: number) {
+        this.humanBoard.step(elapsed);
+        this.aiBoard.step(elapsed);
         this.stepBoards(elapsed);
         this.ai.step(elapsed);
         npcManager.step(elapsed);
     }
 
     private stepBoards(elapsed: number) {
-        this.msTillGravityTick -= elapsed;
-        if (this.msTillGravityTick <= 0) {
-            this.msTillGravityTick = TEMP_DELAY_MS;
-            this.humanBoard.step();
-            this.aiBoard.step();
-        }
     }
 
     private handlePlayerMovement(event: PlayerMovementEvent) {
@@ -96,7 +87,7 @@ class Model {
                 break;
             case PlayerMovement.Drop:
                 board.moveShapeDownAllTheWay();
-                board.step(); // prevent any other keystrokes till next tick
+                board.handleEndOfCurrentPieceTasks(); // Prevents any other keystrokes affecting the shape after it hits the bottom.
                 break;
             case PlayerMovement.RotateClockwise:
                 board.rotateShapeClockwise();
