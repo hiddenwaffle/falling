@@ -3,7 +3,7 @@ declare const TWEEN: any;
 
 import {Building} from './building';
 import {HpPanels} from './hp-panels';
-import {HpOrientation} from '../hp-orientation';
+import {HpOrientation} from '../../domain/hp-orientation';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;

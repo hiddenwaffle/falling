@@ -1,7 +1,7 @@
 declare const THREE: any;
 
 import {PANEL_COUNT_PER_FLOOR} from './lighting-grid';
-import {HpOrientation} from '../hp-orientation';
+import {HpOrientation} from '../../domain/hp-orientation';
 
 export class HpPanels {
 

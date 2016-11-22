@@ -7,7 +7,7 @@ import {LightingGrid} from './lighting/lighting-grid';
 import {Switchboard} from './lighting/switchboard';
 import {standeeManager} from './standee/standee-manager';
 import {PlayerType} from '../domain/player-type';
-import {HpOrientation} from './hp-orientation';
+import {HpOrientation} from '../domain/hp-orientation';
 
 class View {
 
