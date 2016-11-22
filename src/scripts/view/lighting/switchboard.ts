@@ -33,9 +33,11 @@ export class Switchboard {
         });
 
         eventBus.register(EventType.RowsFilledEventType, (event: RowsFilledEvent) => {
-            setTimeout(() => {
-                eventBus.fire(new RowsClearAnimationCompletedEvent(event.filledRowIdxs, event.playerType));
-            }, 1); // TODO: Actually do the animation.
+            if (this.playerType === event.playerType) {
+                this.animateRowClearing(event.filledRowIdxs);
+            } else {
+                this.animateJunkRowAdding(event.filledRowIdxs.length);
+            }
         });
 
         eventBus.register(EventType.HpChangedEventType, (event: HpChangedEvent) => {
@@ -89,6 +91,19 @@ export class Switchboard {
             let color = this.convertColor(event.cell.getColor());
             this.lightingGrid.switchRoomOn(floorIdx, panelIdx, color);
         }
+    }
+
+    private animateRowClearing(filledRowIdxs: number[]) {
+        // TODO: Do it
+        setTimeout(() => {
+            eventBus.fire(new RowsClearAnimationCompletedEvent(filledRowIdxs, this.playerType));
+        }, 1); // TODO: Actually do the animation.
+    }
+
+    private animateJunkRowAdding(junkRowCount: number) {
+        // TODO: Do it
+        // Do not need to fire an event at the end of this animation because the board
+        // does not need to listen for it (it listens for the clearing animation instead).
     }
 
     private handleHpChangedEvent(event: HpChangedEvent) {
