@@ -1,5 +1,5 @@
 import {Shape} from '../board/shape';
-import {MAX_COLS} from '../board/board';
+import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
 import {eventBus, EventType} from '../../event/event-bus';
@@ -7,6 +7,7 @@ import {PlayerMovement} from '../../domain/player-movement';
 import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
 
+const MAX_COLS = PANEL_COUNT_PER_FLOOR;
 const TIME_BETWEEN_MOVES = 250;
 const TIME_MAX_DEVIATION = 100;
 

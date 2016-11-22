@@ -1,9 +1,10 @@
-import {MAX_COLS, Board} from './board/board';
+import {Board} from './board/board';
 import {Ai} from './ai/ai';
 import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
 import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
+import {PANEL_COUNT_PER_FLOOR} from '../domain/constants';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
@@ -12,7 +13,7 @@ import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
 
-const MAX_HP = MAX_COLS; // HP corresponds to the number of long windows on the second floor of the physical building.
+const MAX_HP = PANEL_COUNT_PER_FLOOR; // HP corresponds to the number of long windows on the second floor of the physical building.
 
 class Model {
     private humanBoard: Board;

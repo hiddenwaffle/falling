@@ -2,6 +2,7 @@ import {Shape} from './shape';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
 import {PlayerType} from '../../domain/player-type';
+import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 import {ShapeFactory, deadShapeFactory} from './shape-factory';
 import {EventBus, deadEventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
@@ -10,7 +11,7 @@ import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {BoardFilledEvent} from '../../event/board-filled-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
-export const MAX_COLS = 10;
+const MAX_COLS = PANEL_COUNT_PER_FLOOR;
 const TEMP_DELAY_MS = 500;
 
 const enum BoardState {
