@@ -6,10 +6,10 @@ import {JunkRowCurtain} from './junk-row-curtain';
 import {HpPanels} from './hp-panels';
 import {HpOrientation} from '../../domain/hp-orientation';
 import {RowClearDirection} from '../../domain/row-clear-direction';
+import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
 export const FLOOR_COUNT = 17;
-export const PANEL_COUNT_PER_FLOOR = 10;
 
 const ACTIVE_SHAPE_LIGHT_COUNT = 4;
 const PANEL_SIZE = 0.7;
@@ -21,8 +21,6 @@ class EmissiveIntensity {
 export class LightingGrid {
     
     readonly group: any;
-
-    private rowClearDirection: RowClearDirection;
 
     private panelGroup: any;
     private building: Building;
@@ -39,15 +37,13 @@ export class LightingGrid {
     private pulseTweenElapsed: number;
     private emissiveIntensity: EmissiveIntensity;
 
-    constructor(rowClearDirection: RowClearDirection) {
+    constructor(hpOrientation: HpOrientation, rowClearDirection: RowClearDirection) {
         this.group = new THREE.Object3D();
 
-        this.rowClearDirection = rowClearDirection;
-        
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
-        this.junkRowCurtain = new JunkRowCurtain();
-        this.hpPanels = new HpPanels();
+        this.junkRowCurtain = new JunkRowCurtain(rowClearDirection);
+        this.hpPanels = new HpPanels(hpOrientation);
 
         this.panels = [];
         for (let floorIdx = 0; floorIdx < FLOOR_COUNT; floorIdx++) {
@@ -83,7 +79,7 @@ export class LightingGrid {
         this.emissiveIntensity = new EmissiveIntensity();
     }
 
-    start(hpOrientation: HpOrientation) {
+    start() {
         this.group.add(this.building.group);
         this.group.add(this.junkRowCurtain.group);
         this.group.add(this.hpPanels.group);
@@ -91,7 +87,7 @@ export class LightingGrid {
 
         this.building.start();
         this.junkRowCurtain.start();
-        this.hpPanels.start(hpOrientation);
+        this.hpPanels.start();
 
         for (let floor of this.panels) {
             for (let panel of floor) {
@@ -122,6 +118,7 @@ export class LightingGrid {
 
     step(elapsed: number) {
         this.stepPulse(elapsed);
+        this.junkRowCurtain.step(elapsed);
         this.hpPanels.step(elapsed);
     }
 

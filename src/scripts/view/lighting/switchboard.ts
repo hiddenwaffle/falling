@@ -4,7 +4,7 @@ import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {HpChangedEvent} from '../../event/hp-changed-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {RowsClearAnimationCompletedEvent} from '../../event/rows-clear-animation-completed-event';
-import {LightingGrid, FLOOR_COUNT, PANEL_COUNT_PER_FLOOR} from './lighting-grid';
+import {LightingGrid, FLOOR_COUNT} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
 import {PlayerType} from '../../domain/player-type';

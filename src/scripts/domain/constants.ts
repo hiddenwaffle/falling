@@ -1,0 +1,1 @@
+export const PANEL_COUNT_PER_FLOOR = 10;

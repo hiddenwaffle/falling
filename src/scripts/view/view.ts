@@ -37,16 +37,16 @@ class View {
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
         this.renderer.autoClear = false;
 
-        this.humanGrid = new LightingGrid(RowClearDirection.LeftToRight);
+        this.humanGrid = new LightingGrid(HpOrientation.DecreasesRightToLeft, RowClearDirection.RightToLeft);
         this.humanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
-        this.aiGrid = new LightingGrid(RowClearDirection.RightToLeft);
+        this.aiGrid = new LightingGrid(HpOrientation.DecreasesLeftToRight, RowClearDirection.LeftToRight);
         this.aiSwitchboard = new Switchboard(this.aiGrid, PlayerType.Ai);
     }
 
     start() {
-        this.humanGrid.start(HpOrientation.DecreasesRightToLeft);
+        this.humanGrid.start();
         this.humanSwitchboard.start();
-        this.aiGrid.start(HpOrientation.DecreasesLeftToRight);
+        this.aiGrid.start();
         this.aiSwitchboard.start();
 
         this.doStart();

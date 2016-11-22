@@ -1,6 +1,6 @@
 declare const THREE: any;
 
-import {PANEL_COUNT_PER_FLOOR} from './lighting-grid';
+import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 import {HpOrientation} from '../../domain/hp-orientation';
 
 export class HpPanels {
@@ -10,7 +10,7 @@ export class HpPanels {
     private panels: any[];
     private hpOrientation: HpOrientation;
 
-    constructor() {
+    constructor(hpOrientation: HpOrientation) {
         this.group = new THREE.Object3D();
         
         this.panels = [];
@@ -30,11 +30,11 @@ export class HpPanels {
 
             this.panels.push(panel);
         }
+
+        this.hpOrientation = hpOrientation;
     }
 
-    start(hpOrientation: HpOrientation) {
-        this.hpOrientation = hpOrientation;
-
+    start() {
         for (let panel of this.panels) {
             this.group.add(panel);
         }
