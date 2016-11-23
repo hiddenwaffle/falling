@@ -534,11 +534,25 @@ export class Board {
         this.startShape(false);
     }
 
-    removeBottomLine() {
+    /**
+     * Removes only the bottom row and uses its replacement to see if the board is clear.
+     */
+    removeBottomLine(): boolean {
         this.removeAndCollapse(MAX_ROWS - 1);
 
         // Have to send cell change notifications because removeAndCollapse() does not.
         this.notifyAllCells();
+
+        // See if that was the last row to clear
+        let empty: boolean = true;
+        let row = this.matrix[MAX_ROWS - 1];
+        for (let cell of row) {
+            if (cell.getColor() !== Color.Empty) {
+                empty = false;
+                break;
+            }
+        }
+        return empty;
     }
 
     private notifyAllCells() {

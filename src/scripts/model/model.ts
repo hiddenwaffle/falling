@@ -12,14 +12,17 @@ import {RowsClearAnimationCompletedEvent} from '../event/rows-clear-animation-co
 import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
+import {FallingSequencer} from './board/falling-sequencer';
 
 const MAX_HP = PANEL_COUNT_PER_FLOOR; // HP corresponds to the number of long windows on the second floor of the physical building.
 
 class Model {
     private humanBoard: Board;
+    private humanFallingSequencer: FallingSequencer;
     private humanHitPoints: number;
 
     private aiBoard: Board;
+    private aiFallingSequencer: FallingSequencer;
     private aiHitPoints: number;
 
     private ai: Ai;
@@ -27,10 +30,12 @@ class Model {
     constructor() {
         let humanShapeFactory = new ShapeFactory();
         this.humanBoard = new Board(PlayerType.Human, humanShapeFactory, eventBus);
+        this.humanFallingSequencer = new FallingSequencer(this.humanBoard);
         this.humanHitPoints = MAX_HP;
 
         let aiShapeFactory = new ShapeFactory();
         this.aiBoard = new Board(PlayerType.Ai, aiShapeFactory, eventBus);
+        this.aiFallingSequencer = new FallingSequencer(this.aiBoard);
         this.aiHitPoints = MAX_HP;
 
         this.ai = new Ai(this.aiBoard);
@@ -66,8 +71,13 @@ class Model {
 
     step(elapsed: number) {
         this.humanBoard.step(elapsed);
+        this.humanFallingSequencer.step(elapsed);
+
         this.aiBoard.step(elapsed);
+        this.aiFallingSequencer.step(elapsed);
+
         this.ai.step(elapsed);
+
         npcManager.step(elapsed);
     }
 
@@ -135,28 +145,23 @@ class Model {
 
     private handleBoardFilledEvent(event: BoardFilledEvent) {
         let board: Board;
+        let fallingSequencer: FallingSequencer;
         let hp: number;
 
         if (event.playerType === PlayerType.Human) {
             board = this.humanBoard;
+            fallingSequencer = this.humanFallingSequencer;
             hp = (this.humanHitPoints -= 1);
         } else {
             board = this.aiBoard;
+            fallingSequencer = this.aiFallingSequencer;
             hp = (this.aiHitPoints -= 1);
         }
 
         eventBus.fire(new HpChangedEvent(hp, event.playerType));
         // TODO: See if one of the players has run out of HP, somewhere if not here.
 
-        let x = 0;
-        let timerHandle = setInterval(() => {
-            board.removeBottomLine();
-            x++;
-            if (x > 17) {
-                clearInterval(timerHandle);
-                board.resetAndPlay();                
-            }
-        }, 100);
+        fallingSequencer.resetAndPlay();
     }
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
