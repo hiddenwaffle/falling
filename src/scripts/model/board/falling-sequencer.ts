@@ -1,4 +1,5 @@
 interface FallingBoard {
+    calculateHighestColumn(): number;
     removeBottomLine(): void;
     resetAndPlay(): void
 }
@@ -27,7 +28,8 @@ export class FallingSequencer {
             this.currentStepTimeLeft -= elapsed;
             if (this.currentStepTimeLeft <= 0) {
                 this.currentStepTimeLeft = STEP_DELAY;
-                if (this.board.removeBottomLine()) {
+                this.board.removeBottomLine();
+                if (this.board.calculateHighestColumn() <= 0) {
                     this.finished = true;
                     this.board.resetAndPlay();
                 }

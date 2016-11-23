@@ -277,6 +277,14 @@ export class Board {
     }
 
     /**
+     * Used by the FallingSequencer.
+     */
+    calculateHighestColumn(): number {
+        let colHeights = this.calculateColumnHeights();
+        return colHeights.reduce((a, b) => { return a > b ? a : b; });
+    }
+
+    /**
      * Used by the AI.
      */
     calculateCompleteLines(): number {
@@ -535,24 +543,13 @@ export class Board {
     }
 
     /**
-     * Removes only the bottom row and uses its replacement to see if the board is clear.
+     * Removes only the bottom row.
      */
-    removeBottomLine(): boolean {
+    removeBottomLine() {
         this.removeAndCollapse(MAX_ROWS - 1);
 
         // Have to send cell change notifications because removeAndCollapse() does not.
         this.notifyAllCells();
-
-        // See if that was the last row to clear
-        let empty: boolean = true;
-        let row = this.matrix[MAX_ROWS - 1];
-        for (let cell of row) {
-            if (cell.getColor() !== Color.Empty) {
-                empty = false;
-                break;
-            }
-        }
-        return empty;
     }
 
     private notifyAllCells() {
