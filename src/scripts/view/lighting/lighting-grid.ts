@@ -2,7 +2,7 @@ declare const THREE: any;
 declare const TWEEN: any;
 
 import {Building} from './building';
-import {JunkRowCurtain} from './junk-row-curtain';
+import {Curtain} from './curtain';
 import {HpPanels} from './hp-panels';
 import {HpOrientation} from '../../domain/hp-orientation';
 import {RowClearDirection} from '../../domain/row-clear-direction';
@@ -24,7 +24,7 @@ export class LightingGrid {
 
     private panelGroup: any;
     private building: Building;
-    private junkRowCurtain: JunkRowCurtain;
+    private junkRowCurtain: Curtain;
     private hpPanels: HpPanels;
 
     private panels: any[][];
@@ -42,7 +42,7 @@ export class LightingGrid {
 
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
-        this.junkRowCurtain = new JunkRowCurtain(rowClearDirection);
+        this.junkRowCurtain = new Curtain(rowClearDirection);
         this.hpPanels = new HpPanels(hpOrientation);
 
         this.panels = [];

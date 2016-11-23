@@ -21,7 +21,7 @@ class CurtainVertexPosition {
  * console.log('vertices 0 and 2 x: ' + this.curtain.geometry.vertices[0].x, this.curtain.geometry.vertices[2].x);
  * console.log('---');
  */
-export class JunkRowCurtain {
+export class Curtain {
 
     readonly group: any;
 
