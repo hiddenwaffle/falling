@@ -97,10 +97,9 @@ export class Board {
         this.convertShapeToCells();
         if (this.isBoardFull()) {
             this.signalFullBoard();
-            this.resetBoard();
         } else {
             if (this.handleAnyFilledLinesPart1()) {
-                // There were filled lines, do not start a new shape immediately.
+                // There were filled lines -- starting a new shape was delegated to later by handleAnyFilledLinesPart1().
             } else {
                 this.startShape(false);
             }

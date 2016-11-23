@@ -140,12 +140,18 @@ class Model {
     }
 
     private handleBoardFilledEvent(event: BoardFilledEvent) {
+        let board: Board;
         let hp: number;
+        
         if (event.playerType === PlayerType.Human) {
+            board = this.humanBoard;
             hp = (this.humanHitPoints -= 1);
         } else {
+            board = this.aiBoard;
             hp = (this.aiHitPoints -= 1);
         }
+        
+        board.resetBoard();
         eventBus.fire(new HpChangedEvent(hp, event.playerType));
 
         // TODO: See if one of the players has run out of HP.
