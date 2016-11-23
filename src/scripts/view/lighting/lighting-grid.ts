@@ -6,6 +6,7 @@ import {Curtain} from './curtain';
 import {HpPanels} from './hp-panels';
 import {HpOrientation} from '../../domain/hp-orientation';
 import {RowClearDirection} from '../../domain/row-clear-direction';
+import {CurtainDirection} from './curtain';
 import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 
 // TODO: Only the 3rd floor from the top and below are visible. Also, see board.ts.
@@ -24,7 +25,11 @@ export class LightingGrid {
 
     private panelGroup: any;
     private building: Building;
+
+    private rowClearDirection: RowClearDirection
+    private rowClearCurtain: Curtain;
     private junkRowCurtain: Curtain;
+    
     private hpPanels: HpPanels;
 
     private panels: any[][];
@@ -42,7 +47,11 @@ export class LightingGrid {
 
         this.panelGroup = new THREE.Object3D();
         this.building = new Building();
-        this.junkRowCurtain = new Curtain(rowClearDirection);
+
+        this.rowClearDirection = rowClearDirection;
+        this.rowClearCurtain = new Curtain();
+        this.junkRowCurtain = new Curtain();
+
         this.hpPanels = new HpPanels(hpOrientation);
 
         this.panels = [];
@@ -81,11 +90,13 @@ export class LightingGrid {
 
     start() {
         this.group.add(this.building.group);
+        this.group.add(this.rowClearCurtain.group);
         this.group.add(this.junkRowCurtain.group);
         this.group.add(this.hpPanels.group);
         this.group.add(this.panelGroup);
 
         this.building.start();
+        this.rowClearCurtain.start();
         this.junkRowCurtain.start();
         this.hpPanels.start();
 
@@ -118,6 +129,7 @@ export class LightingGrid {
 
     step(elapsed: number) {
         this.stepPulse(elapsed);
+        this.rowClearCurtain.step(elapsed);
         this.junkRowCurtain.step(elapsed);
         this.hpPanels.step(elapsed);
     }
@@ -175,8 +187,22 @@ export class LightingGrid {
         this.hpPanels.updateHp(hp);
     }
 
-    startJunkRowCurtainAnimation(rowCount: number) {
-        this.junkRowCurtain.startAnimation(rowCount);
+    startJunkRowCurtainAnimation(floorCount: number) {
+        if (floorCount > 4) {
+            floorCount = 4;
+        } else if (floorCount < 0) {
+            floorCount = 0;
+        }
+        let floorIdxs = [0, 1, 2, 3].slice(0, floorCount);
+
+        let curtainDirection: CurtainDirection;
+        if (this.rowClearDirection === RowClearDirection.LeftToRight) {
+            curtainDirection = CurtainDirection.CloseLeftToRight;
+        } else {
+            curtainDirection = CurtainDirection.CloseRightToLeft;
+        }
+
+        this.junkRowCurtain.startAnimation(floorIdxs, curtainDirection);
     }
 
     private getNextShapeLight() {
