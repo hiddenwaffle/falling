@@ -1,6 +1,6 @@
 declare const TWEEN: any;
 
-const FALL_TIME_MS = 1000;
+const FALL_TIME_MS = 1250;
 
 interface FallingBoard {
     calculateHighestColumn(): number;
@@ -33,7 +33,7 @@ export class FallingSequencer {
 
         this.fallTween = new TWEEN.Tween(this.fallGuide)
             .to({tweenedHeight: 0}, FALL_TIME_MS)
-            .easing(TWEEN.Easing.Cubic.In)
+            .easing(TWEEN.Easing.Sinusoidal.Out)
             .onComplete(() => {
                 this.fallTween = null;
                 this.board.resetAndPlay();
