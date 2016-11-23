@@ -3,7 +3,7 @@ interface FallingBoard {
     resetAndPlay(): void
 }
 
-const STEP_DELAY = 100;
+const STEP_DELAY = 50;
 
 export class FallingSequencer {
 
@@ -26,7 +26,7 @@ export class FallingSequencer {
         if (this.finished === false) {
             this.currentStepTimeLeft -= elapsed;
             if (this.currentStepTimeLeft <= 0) {
-                this.currentStepTimeLeft = 0;
+                this.currentStepTimeLeft = STEP_DELAY;
                 if (this.board.removeBottomLine()) {
                     this.finished = true;
                     this.board.resetAndPlay();
