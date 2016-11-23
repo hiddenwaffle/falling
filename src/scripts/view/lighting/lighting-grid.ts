@@ -216,6 +216,13 @@ export class LightingGrid {
         this.junkRowCurtain.startAnimation(floorIdxs, curtainDirection);
     }
 
+    showShapeLightsAndHighlighter(visible: boolean) {
+        for (let shapeLight of this.shapeLights) {
+            shapeLight.visible = visible;
+        }
+        this.highlighter.visible = visible;
+    }
+
     private getNextShapeLight() {
         let shapeLight = this.shapeLights[this.currentShapeLightIdx];
         this.currentShapeLightIdx++;

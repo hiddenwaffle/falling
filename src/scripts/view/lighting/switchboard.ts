@@ -4,6 +4,7 @@ import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {HpChangedEvent} from '../../event/hp-changed-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {RowsClearAnimationCompletedEvent} from '../../event/rows-clear-animation-completed-event';
+import {FallingSequencerEvent} from '../../event/falling-sequencer-event';
 import {LightingGrid, FLOOR_COUNT} from './lighting-grid';
 import {Color} from '../../domain/color';
 import {CellOffset} from '../../domain/cell';
@@ -43,6 +44,12 @@ export class Switchboard {
         eventBus.register(EventType.HpChangedEventType, (event: HpChangedEvent) => {
             if (this.playerType === event.playerType) {
                 this.handleHpChangedEvent(event);
+            }
+        });
+
+        eventBus.register(EventType.FallingSequencerEventType, (event: FallingSequencerEvent) => {
+            if (this.playerType === event.playerType) {
+                this.handleFallingSequencerEvent(event);
             }
         });
     }
@@ -117,6 +124,11 @@ export class Switchboard {
 
     private handleHpChangedEvent(event: HpChangedEvent) {
         this.lightingGrid.updateHp(event.hp);
+    }
+
+    private handleFallingSequencerEvent(event: FallingSequencerEvent){
+        let visible = !event.falling;
+        this.lightingGrid.showShapeLightsAndHighlighter(visible);
     }
 
     /**
