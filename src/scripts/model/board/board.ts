@@ -64,9 +64,10 @@ export class Board {
         this.junkRowColorIdx = 0;
     }
 
-    start() {
+    resetAndPlay() {
         this.clear();
-        this.boardState = BoardState.InPlay; // TODO: Move this elsewhere once defined.
+        this.boardState = BoardState.InPlay;
+        this.startShape(true);
     }
 
     /**
@@ -95,8 +96,8 @@ export class Board {
      */
     handleEndOfCurrentPieceTasks() {
         this.convertShapeToCells();
-        if (this.isBoardFull()) {
-            this.signalFullBoard();
+        if (this.handleFullBoard()) {
+            // Board is full -- starting a new shape was delegated to later by handleFullBoard().
         } else {
             if (this.handleAnyFilledLinesPart1()) {
                 // There were filled lines -- starting a new shape was delegated to later by handleAnyFilledLinesPart1().
@@ -104,11 +105,6 @@ export class Board {
                 this.startShape(false);
             }
         }
-    }
-
-    resetBoard() {
-        this.clear();
-        this.startShape(true);
     }
 
     /**
@@ -228,24 +224,14 @@ export class Board {
         }
     }
 
-    // getMatrixWithCurrentShapeAdded(): boolean[][] {
-    //     let copy = [];
-    //     for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
-    //         let row = this.matrix[rowIdx];
-    //         let rowCopy = [];
-    //         for (let colIdx = 0; colIdx < row.length; colIdx++) {
-    //             rowCopy.push(row[colIdx].getColor() !== Color.Empty);
-    //         }
-    //         copy.push(rowCopy);
-    //     }
-    //     return copy;
-    // }
-
     /**
      * Very hacky method just so the AI has a temp copy of the board to experiment with.
      */
     cloneZombie(): Board {
         let copy = new Board(this.playerType, deadShapeFactory, deadEventBus);
+
+        // Allow the AI to move and rotate the current shape
+        copy.boardState = BoardState.InPlay;
         
         // Copy the current shape and the matrix. Shouldn't need anything else.
         copy.currentShape = this.currentShape.cloneSimple();
@@ -463,6 +449,16 @@ export class Board {
         return collision;
     }
 
+    private handleFullBoard(): boolean {
+        let full = this.isBoardFull();
+        if (full) {
+            this.boardState = BoardState.Paused; // Standby until sequence is finished.
+            this.eventBus.fire(new BoardFilledEvent(this.playerType));
+            full = true;
+        }
+        return full;
+    }
+
     /**
      * It is considered full if the two obscured rows at the top have colored cells in them.
      */
@@ -475,12 +471,7 @@ export class Board {
                 }
             }
         }
-
         return false;
-    }
-
-    private signalFullBoard() {
-        this.eventBus.fire(new BoardFilledEvent(this.playerType));
     }
 
     /**
@@ -512,8 +503,22 @@ export class Board {
             this.removeAndCollapse(filledRowIdx);
         }
 
-        // Notify all cells
-        // TODO: Break out into own method?
+        // Have to send cell change notifications because removeAndCollapse() does not.
+        this.notifyAllCells();
+
+        // Animation was finished and board was updated, so resume play.
+        this.boardState = BoardState.InPlay;
+        this.startShape(false);
+    }
+
+    removeBottomLine() {
+        this.removeAndCollapse(MAX_ROWS - 1);
+
+        // Have to send cell change notifications because removeAndCollapse() does not.
+        this.notifyAllCells();
+    }
+
+    private notifyAllCells() {
         for (let rowIdx = 0; rowIdx < MAX_ROWS; rowIdx++) {
             let row = this.matrix[rowIdx];
             for (let colIdx = 0; colIdx < row.length; colIdx++) {
@@ -521,10 +526,6 @@ export class Board {
                 this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
-
-        // Animation was finished and board was updated, so resume play.
-        this.boardState = BoardState.InPlay;
-        this.startShape(false);
     }
 
     /**

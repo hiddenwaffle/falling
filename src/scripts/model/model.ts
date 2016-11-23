@@ -56,26 +56,19 @@ class Model {
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
             this.handleActiveShapeChangedEvent(event);
         });
-
-        this.humanBoard.start();
-        this.aiBoard.start();
         this.ai.start();
         npcManager.start();
 
-        // TODO: Instead, start game when player hits a key first.
-        this.humanBoard.resetBoard();
-        this.aiBoard.resetBoard();
+        // TODO: Instead of here, start game when player hits a key first.
+        this.humanBoard.resetAndPlay();
+        this.aiBoard.resetAndPlay();
     }
 
     step(elapsed: number) {
         this.humanBoard.step(elapsed);
         this.aiBoard.step(elapsed);
-        this.stepBoards(elapsed);
         this.ai.step(elapsed);
         npcManager.step(elapsed);
-    }
-
-    private stepBoards(elapsed: number) {
     }
 
     private handlePlayerMovement(event: PlayerMovementEvent) {
@@ -142,7 +135,7 @@ class Model {
     private handleBoardFilledEvent(event: BoardFilledEvent) {
         let board: Board;
         let hp: number;
-        
+
         if (event.playerType === PlayerType.Human) {
             board = this.humanBoard;
             hp = (this.humanHitPoints -= 1);
@@ -150,11 +143,19 @@ class Model {
             board = this.aiBoard;
             hp = (this.aiHitPoints -= 1);
         }
-        
-        board.resetBoard();
-        eventBus.fire(new HpChangedEvent(hp, event.playerType));
 
-        // TODO: See if one of the players has run out of HP.
+        eventBus.fire(new HpChangedEvent(hp, event.playerType));
+        // TODO: See if one of the players has run out of HP, somewhere if not here.
+
+        let x = 0;
+        let timerHandle = setInterval(() => {
+            board.removeBottomLine();
+            x++;
+            if (x > 17) {
+                clearInterval(timerHandle);
+                board.resetAndPlay();                
+            }
+        }, 100);
     }
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
