@@ -116,49 +116,68 @@ export class Board {
 
     moveShapeLeft(): boolean {
         let success: boolean;
-        this.currentShape.moveLeft();
-        if (this.collisionDetected()) {
-            this.currentShape.moveRight();
-            success = false;
+        if (this.boardState === BoardState.InPlay) {
+            this.currentShape.moveLeft();
+            if (this.collisionDetected()) {
+                this.currentShape.moveRight();
+                success = false;
+            } else {
+                this.fireActiveShapeChangedEvent();
+                success = true;
+            }
         } else {
-            this.fireActiveShapeChangedEvent();
-            success = true;
+            success = false;
         }
         return success;
     }
 
     moveShapeRight(): boolean {
         let success: boolean;
-        this.currentShape.moveRight();
-        if (this.collisionDetected()) {
-            this.currentShape.moveLeft();
-            success = false;
+        if (this.boardState === BoardState.InPlay) {
+            this.currentShape.moveRight();
+            if (this.collisionDetected()) {
+                this.currentShape.moveLeft();
+                success = false;
+            } else {
+                this.fireActiveShapeChangedEvent();
+                success = true;
+            }
         } else {
-            this.fireActiveShapeChangedEvent();
-            success = true;
+            success = false;
         }
         return success;
     }
 
     moveShapeDown(): boolean {
         let success: boolean;
-        this.currentShape.moveDown();
-        if (this.collisionDetected()) {
-            this.currentShape.moveUp();
-            success = false;
+        if (this.boardState === BoardState.InPlay) {
+            this.currentShape.moveDown();
+            if (this.collisionDetected()) {
+                this.currentShape.moveUp();
+                success = false;
+            } else {
+                this.fireActiveShapeChangedEvent();
+                success = true;
+            }
         } else {
-            this.fireActiveShapeChangedEvent();
-            success = true;
+            success = false;
         }
         return success;
     }
 
-    moveShapeDownAllTheWay() {
-        do {
-            this.currentShape.moveDown();
-        } while (!this.collisionDetected());
-        this.currentShape.moveUp();
-        this.fireActiveShapeChangedEvent();
+    moveShapeDownAllTheWay(): boolean {
+        let success: boolean;
+        if (this.boardState === BoardState.InPlay) {
+            do {
+                this.currentShape.moveDown();
+            } while (!this.collisionDetected()); // TODO: Add upper bound.
+            this.currentShape.moveUp();
+            this.fireActiveShapeChangedEvent();
+            success = true;
+        } else {
+            success = false;
+        }
+        return success;
     }
 
     /**
@@ -170,13 +189,17 @@ export class Board {
 
     rotateShapeClockwise(): boolean {
         let success: boolean;
-        this.currentShape.rotateClockwise();
-        if (this.collisionDetected()) {
-            this.currentShape.rotateCounterClockwise();
-            success = false;
+        if (this.boardState === BoardState.InPlay) {
+            this.currentShape.rotateClockwise();
+            if (this.collisionDetected()) {
+                this.currentShape.rotateCounterClockwise();
+                success = false;
+            } else {
+                this.fireActiveShapeChangedEvent();
+                success = true;
+            }
         } else {
-            this.fireActiveShapeChangedEvent();
-            success = true;
+            success = false;
         }
         return success;
     }

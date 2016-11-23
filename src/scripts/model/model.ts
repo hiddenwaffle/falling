@@ -85,8 +85,9 @@ class Model {
                 board.moveShapeDown();
                 break;
             case PlayerMovement.Drop:
-                board.moveShapeDownAllTheWay();
-                board.handleEndOfCurrentPieceTasks(); // Prevents any other keystrokes affecting the shape after it hits the bottom.
+                if (board.moveShapeDownAllTheWay()) {       // Check that we are in a position to move the shape down before executing the next line. 
+                    board.handleEndOfCurrentPieceTasks();   // Prevents any other keystrokes affecting the shape after it hits the bottom.
+                }
                 break;
             case PlayerMovement.RotateClockwise:
                 board.rotateShapeClockwise();
