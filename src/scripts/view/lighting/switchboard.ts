@@ -101,7 +101,7 @@ export class Switchboard {
         }
 
         this.lightingGrid.startRowClearingAnimation(floorIdxs, () => {
-            eventBus.fire(new RowsClearAnimationCompletedEvent(filledRowIdxs, this.playerType));
+            eventBus.fire(new RowsClearAnimationCompletedEvent(this.playerType));
         });
     }
 

@@ -114,7 +114,7 @@ class Model {
 
     private handleRowClearAnimationCompletedEvent(event: RowsClearAnimationCompletedEvent) {
         let board = this.determineBoardFor(event.playerType);
-        board.handleAnyFilledLinesPart2(event.filledRowIdxs);
+        board.handleAnyFilledLinesPart2();
     }
 
     /**

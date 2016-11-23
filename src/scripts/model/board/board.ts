@@ -488,28 +488,13 @@ export class Board {
      * Handle filled lines method 1 of 2, before animation.
      */
     private handleAnyFilledLinesPart1(): boolean {
-        let filledRowIdxs: number[] = [];
-        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
-            let row = this.matrix[rowIdx];
-            let filled = true;
-            for (let cell of row) {
-                if (cell.getColor() === Color.Empty) {
-                    filled = false;
-                    break;
-                }
-            }
-            if (filled) {
-                filledRowIdxs.push(rowIdx);
-            }
-        }
-
+        let filledRowIdxs = this.determineFilledRowIdxs();
         if (filledRowIdxs.length > 0) {
             this.eventBus.fire(new RowsFilledEvent(filledRowIdxs, this.playerType));
             this.boardState = BoardState.Paused; // Standby until animation is finished.
         } else {
             // Don't need to do anything if there are no filled lines.
         }
-        
         return filledRowIdxs.length > 0;
     }
 
@@ -517,11 +502,15 @@ export class Board {
      * Handle filled lines method 2 of 2, after animation.
      * This is public so that the Model can call it.
      */
-    handleAnyFilledLinesPart2(filledRowIdxs: number[]) {
-        // Remove the rows
-        let totalFilled = filledRowIdxs.length;
-        for (let idx = 0; idx < filledRowIdxs.length; idx++) {
-            this.removeAndCollapse(filledRowIdxs[idx]);
+    handleAnyFilledLinesPart2() {
+        // Have to check this again because there is a slight chance that rows shifted during the animation.
+        let filledRowIdxs = this.determineFilledRowIdxs();
+
+        // Remove the filled rows.
+        // I think this only works because determineFilledRowIdxs() returns an array sorted ascending from 0.
+        // If it wasn't sorted then it could end up skipping rows.
+        for (let filledRowIdx of filledRowIdxs) {
+            this.removeAndCollapse(filledRowIdx);
         }
 
         // Notify all cells
@@ -537,6 +526,27 @@ export class Board {
         // Animation was finished and board was updated, so resume play.
         this.boardState = BoardState.InPlay;
         this.startShape(false);
+    }
+
+    /**
+     * Returns a list of numbers, ascending, that correspond to filled rows.
+     */
+    private determineFilledRowIdxs(): number[] {
+        let filledRowIdxs: number[] = [];
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            let filled = true;
+            for (let cell of row) {
+                if (cell.getColor() === Color.Empty) {
+                    filled = false;
+                    break;
+                }
+            }
+            if (filled) {
+                filledRowIdxs.push(rowIdx);
+            }
+        }
+        return filledRowIdxs;
     }
 
     /**
