@@ -83,7 +83,7 @@ export class Curtain {
         if (direction === CurtainDirection.CloseLeftToRight) {
             this.curtainVertexPosition.x = -CURTAIN_WIDTH / 2;
             xend = CURTAIN_WIDTH / 2;
-        } else {
+        } else if (direction === CurtainDirection.CloseRightToLeft) {
             this.curtainVertexPosition.x =  CURTAIN_WIDTH / 2;
             xend = -CURTAIN_WIDTH / 2;
         }
@@ -97,7 +97,7 @@ export class Curtain {
                 if (direction === CurtainDirection.CloseLeftToRight) {
                     idx1 = 0;
                     idx2 = 2;
-                } else {
+                } else if (direction === CurtainDirection.CloseRightToLeft) {
                     idx1 = 1;
                     idx2 = 3;
                 }
