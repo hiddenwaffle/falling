@@ -13,6 +13,6 @@ export class FallingSequencerEvent extends AbstractEvent {
     }
 
     getType() {
-        return EventType.HpChangedEventType;
+        return EventType.FallingSequencerEventType;
     }
 }
