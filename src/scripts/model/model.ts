@@ -13,6 +13,7 @@ import {BoardFilledEvent} from '../event/board-filled-event';
 import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
 import {FallingSequencer} from './board/falling-sequencer';
+import {FallingSequencerEvent} from '../event/falling-sequencer-event';
 
 const MAX_HP = PANEL_COUNT_PER_FLOOR; // HP corresponds to the number of long windows on the second floor of the physical building.
 
@@ -161,7 +162,10 @@ class Model {
         eventBus.fire(new HpChangedEvent(hp, event.playerType));
         // TODO: See if one of the players has run out of HP, somewhere if not here.
 
-        fallingSequencer.resetAndPlay();
+        eventBus.fire(new FallingSequencerEvent(true, event.playerType));
+        fallingSequencer.resetAndPlay(() => {
+            eventBus.fire(new FallingSequencerEvent(false, event.playerType));
+        });
     }
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {

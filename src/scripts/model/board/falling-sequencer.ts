@@ -27,16 +27,17 @@ export class FallingSequencer {
         this.fallGuide = new FallGuide();
     }
 
-    resetAndPlay() {
+    resetAndPlay(callback: () => void) {
         this.fallGuide.lastHeight = this.fallGuide.tweenedHeight = this.board.calculateHighestColumn();
         this.fallGuide.elapsed = 0;
 
         this.fallTween = new TWEEN.Tween(this.fallGuide)
             .to({tweenedHeight: 0}, FALL_TIME_MS)
-            .easing(TWEEN.Easing.Sinusoidal.Out)
+            .easing(TWEEN.Easing.Linear.None) // Surprisingly, linear is the one that looks most "right".
             .onComplete(() => {
                 this.fallTween = null;
                 this.board.resetAndPlay();
+                callback();
             })
             .start(this.fallGuide.elapsed);
     }
