@@ -162,9 +162,9 @@ class Model {
         eventBus.fire(new HpChangedEvent(hp, event.playerType));
         // TODO: See if one of the players has run out of HP, somewhere if not here.
 
-        eventBus.fire(new FallingSequencerEvent(true, event.playerType));
+        eventBus.fire(new FallingSequencerEvent(event.playerType));
         fallingSequencer.resetAndPlay(() => {
-            eventBus.fire(new FallingSequencerEvent(false, event.playerType));
+            // TODO: I don't know, maybe nothing.
         });
     }
 

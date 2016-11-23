@@ -127,8 +127,7 @@ export class Switchboard {
     }
 
     private handleFallingSequencerEvent(event: FallingSequencerEvent){
-        let visible = !event.falling;
-        this.lightingGrid.showShapeLightsAndHighlighter(visible);
+        this.lightingGrid.hideShapeLightsAndHighlighter();
     }
 
     /**
