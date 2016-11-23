@@ -187,6 +187,17 @@ export class LightingGrid {
         this.hpPanels.updateHp(hp);
     }
 
+    startRowClearingAnimation(floorIdxs: number[], callback: () => void) {
+        let curtainDirection: CurtainDirection;
+        if (this.rowClearDirection === RowClearDirection.LeftToRight) {
+            curtainDirection = CurtainDirection.OpenLeftToRight;
+        } else {
+            curtainDirection = CurtainDirection.OpenRightToLeft;
+        }
+
+        this.rowClearCurtain.startAnimation(floorIdxs, curtainDirection, callback);
+    }
+
     startJunkRowCurtainAnimation(floorCount: number) {
         if (floorCount > 4) {
             floorCount = 4;
@@ -197,9 +208,9 @@ export class LightingGrid {
 
         let curtainDirection: CurtainDirection;
         if (this.rowClearDirection === RowClearDirection.LeftToRight) {
-            curtainDirection = CurtainDirection.CloseLeftToRight;
-        } else {
             curtainDirection = CurtainDirection.CloseRightToLeft;
+        } else {
+            curtainDirection = CurtainDirection.CloseLeftToRight;
         }
 
         this.junkRowCurtain.startAnimation(floorIdxs, curtainDirection);

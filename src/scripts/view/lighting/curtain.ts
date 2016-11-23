@@ -5,13 +5,16 @@ import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 
 const MAX_CURTAIN_COUNT = 4;
 const CURTAIN_WIDTH = PANEL_COUNT_PER_FLOOR;
-const CURTAIN_MOVE_TIME = 333;
+const CURTAIN_MOVE_TIME = 1000;
 
 class CurtainVertexPosition {
     x = 0;
     elapsed = 0;
 }
 
+/**
+ * I might have some of these backwards...
+ */
 export enum CurtainDirection {
     OpenLeftToRight,
     OpenRightToLeft,
@@ -71,7 +74,7 @@ export class Curtain {
         }
     }
 
-    startAnimation(floorIdxs: number[], direction: CurtainDirection) {
+    startAnimation(floorIdxs: number[], direction: CurtainDirection, callback?: () => void) {
         // Prevent multiple animations at the same time.
         if (this.curtainTween != null) {
             return;
@@ -80,12 +83,12 @@ export class Curtain {
         this.dropCurtain(floorIdxs);
 
         let xend: number;
-        if (direction === CurtainDirection.CloseLeftToRight) {
-            this.curtainVertexPosition.x = -CURTAIN_WIDTH / 2;
-            xend = CURTAIN_WIDTH / 2;
-        } else if (direction === CurtainDirection.CloseRightToLeft) {
-            this.curtainVertexPosition.x =  CURTAIN_WIDTH / 2;
+        if (direction === CurtainDirection.CloseLeftToRight || direction === CurtainDirection.OpenLeftToRight) {
+            this.curtainVertexPosition.x = CURTAIN_WIDTH / 2;
             xend = -CURTAIN_WIDTH / 2;
+        } else if (direction === CurtainDirection.CloseRightToLeft || direction === CurtainDirection.OpenRightToLeft) {
+            this.curtainVertexPosition.x = -CURTAIN_WIDTH / 2;
+            xend =  CURTAIN_WIDTH / 2;
         }
         this.curtainVertexPosition.elapsed = 0;
 
@@ -93,11 +96,12 @@ export class Curtain {
             .to({x: xend}, CURTAIN_MOVE_TIME)
             .easing(TWEEN.Easing.Quartic.InOut)
             .onUpdate(() => {
+                // See note at top about why idx1 and idx2 are what they are.
                 let idx1: number, idx2: number;
-                if (direction === CurtainDirection.CloseLeftToRight) {
+                if (direction === CurtainDirection.CloseRightToLeft || direction === CurtainDirection.OpenLeftToRight) {
                     idx1 = 0;
                     idx2 = 2;
-                } else if (direction === CurtainDirection.CloseRightToLeft) {
+                } else if (direction === CurtainDirection.CloseLeftToRight || direction === CurtainDirection.OpenRightToLeft) {
                     idx1 = 1;
                     idx2 = 3;
                 }
@@ -107,7 +111,7 @@ export class Curtain {
                     curtain.geometry.verticesNeedUpdate = true;
                 }
             })
-            .onComplete(() => { this.completeAnimation(); })
+            .onComplete(() => { this.completeAnimation(callback); })
             .start(this.curtainVertexPosition.elapsed);
     }
 
@@ -139,8 +143,12 @@ export class Curtain {
         this.group.visible = true;
     }
 
-    private completeAnimation() {
+    private completeAnimation(callback?: () => void) {
         this.group.visible = false;
         this.curtainTween = null;
+        
+        if (callback) {
+            callback();
+        }
     }
 }

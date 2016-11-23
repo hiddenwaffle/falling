@@ -94,10 +94,15 @@ export class Switchboard {
     }
 
     private animateRowClearing(filledRowIdxs: number[]) {
-        // TODO: Do it
-        setTimeout(() => {
+        let floorIdxs: number[] = [];
+        for (let filledRowIdx of filledRowIdxs) {
+            let floorIdx = this.convertRowToFloor(filledRowIdx);
+            floorIdxs.push(floorIdx);
+        }
+
+        this.lightingGrid.startRowClearingAnimation(floorIdxs, () => {
             eventBus.fire(new RowsClearAnimationCompletedEvent(filledRowIdxs, this.playerType));
-        }, 1); // TODO: Actually do the animation.
+        });
     }
 
     /**
