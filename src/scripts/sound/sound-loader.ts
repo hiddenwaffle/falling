@@ -1,6 +1,6 @@
 declare const Howl: any;
 
-const TOTAL_TO_PRELOAD = 1;
+const TOTAL_TO_PRELOAD = 2;
 
 class SoundLoader {
 
@@ -20,6 +20,12 @@ class SoundLoader {
             loop: true
         });
         ambienceNight.on('load', () => this.preloadCheckIfFinished());
+
+        let musicOpening = new Howl({
+            src: ['music-opening.m4a'],
+            loop: true
+        });
+        musicOpening.on('load', () => this.preloadCheckIfFinished());
     }
 
     private preloadCheckIfFinished() {
