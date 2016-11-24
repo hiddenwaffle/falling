@@ -1,5 +1,9 @@
 declare const Howl: any;
 
+import {soundManager} from './sound-manager';
+
+// 1) Ambience - Night
+// 2) Music - Opening
 const TOTAL_TO_PRELOAD = 2;
 
 class SoundLoader {
@@ -19,13 +23,13 @@ class SoundLoader {
             src: ['ambience-night.m4a'],
             loop: true
         });
-        ambienceNight.on('load', () => this.preloadCheckIfFinished());
+        ambienceNight.once('load', () => this.preloadCheckIfFinished());
 
         let musicOpening = new Howl({
             src: ['music-opening.m4a'],
             loop: true
         });
-        musicOpening.on('load', () => this.preloadCheckIfFinished());
+        musicOpening.once('load', () => this.preloadCheckIfFinished());
     }
 
     private preloadCheckIfFinished() {
