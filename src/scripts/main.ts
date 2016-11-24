@@ -6,7 +6,9 @@ import {GameStateType, gameState} from './game-state';
 
 document.addEventListener('DOMContentLoaded', (event: any) => {
     gameState.setCurrent(GameStateType.Initializing);
-    preloader.preload(main);
+    preloader.preload(() => {
+        main();
+    });
 });
 
 function main() {
