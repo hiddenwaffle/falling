@@ -1,7 +1,11 @@
 import {standeeAnimationTextureBase} from './view/standee/standee-animation-texture-base';
 import {buildingPreloader} from './view/lighting/building-preloader';
+import {soundLoader} from './sound/sound-loader';
 
-const TOTAL_TO_PRELOAD = 2;
+// 1) Standee Textures
+// 2) Building
+// 3) Sound
+const TOTAL_TO_PRELOAD = 3;
 
 class Preloader {
     
@@ -21,6 +25,10 @@ class Preloader {
         });
 
         buildingPreloader.preload(() => {
+            this.checkIfFinished();
+        });
+
+        soundLoader.preload(() => {
             this.checkIfFinished();
         });
     }
