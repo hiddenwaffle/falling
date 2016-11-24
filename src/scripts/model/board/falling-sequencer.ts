@@ -1,6 +1,6 @@
 declare const TWEEN: any;
 
-const FALL_TIME_MS = 1250;
+const FALL_TIME_MS = 1750;
 
 interface FallingBoard {
     calculateHighestColumn(): number;
