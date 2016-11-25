@@ -28,15 +28,31 @@ class SoundManager {
     }
 
     /**
-     * Done off the main execution path in case the user has client-side storage turned off,
-     * to prevent any sort of native exception, if those still exist these days.
+     * Part 2 is done off the main execution path, in case the user has client-side storage turned off.
      */    
     private updateSoundSetting(mute?: boolean) {
+        // Part 1: Update Howler
+        if (mute == null) {
+            // Default to sound on, in case the second part fails.
+            this.soundToggleElement.checked = true;
+        } else {
+            let soundValue: string;
+            if (mute) {
+                soundValue = 'off';
+            } else {
+                soundValue = 'on';
+            }
+            Howler.mute(mute);            
+        }
+
+        // Part 2: Update session storage
         setTimeout(() => {
             if (mute == null) {
                 let soundValue = sessionStorage.getItem(SOUND_KEY);
-                mute = soundValue === 'off';
-                this.soundToggleElement.checked = !mute;
+                if (soundValue === 'off') {
+                    this.soundToggleElement.checked = false;
+                    Howler.mute(true);
+                }
             } else {
                 let soundValue: string;
                 if (mute) {
@@ -46,8 +62,7 @@ class SoundManager {
                 }
                 sessionStorage.setItem(SOUND_KEY, soundValue);
             }
-            Howler.mute(mute);
-        }, 1);
+        }, 0);
     }
 }
 export const soundManager = new SoundManager();

@@ -21,12 +21,14 @@ class SoundLoader {
 
         let ambienceNight = new Howl({
             src: ['ambience-night.m4a'],
+            autoplay: true,
             loop: true
         });
         ambienceNight.once('load', () => this.preloadCheckIfFinished());
 
         let musicOpening = new Howl({
             src: ['music-opening.m4a'],
+            autoplay: true,
             loop: true
         });
         musicOpening.once('load', () => this.preloadCheckIfFinished());
