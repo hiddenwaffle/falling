@@ -43,7 +43,7 @@ export class HpPanels {
         this.group.position.set(1.85, 3.55, -1.5);
         this.group.scale.set(0.7, 1.9, 1);
 
-        this.updateHp(PANEL_COUNT_PER_FLOOR);
+        this.updateHp(PANEL_COUNT_PER_FLOOR, false);
     }
 
     step(elapsed: number) {
@@ -52,8 +52,9 @@ export class HpPanels {
 
     /**
      * HP bar can go from right-to-left or left-to-right, like a fighting game HP bar.
+     * "blinkPlusOne" means to animate the removal of the HP panel above the given one.
      */
-    updateHp(hp: number) {
+    updateHp(hp: number, blinkPlusOne: boolean) {
         if (hp > PANEL_COUNT_PER_FLOOR) {
             hp = PANEL_COUNT_PER_FLOOR;
         }

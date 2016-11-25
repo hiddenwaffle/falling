@@ -183,8 +183,8 @@ export class LightingGrid {
         this.highlighter.position.set(x, y, z);
     }
 
-    updateHp(hp: number) {
-        this.hpPanels.updateHp(hp);
+    updateHp(hp: number, blinkPlusOne: boolean) {
+        this.hpPanels.updateHp(hp, blinkPlusOne);
     }
 
     startRowClearingAnimation(floorIdxs: number[], callback: () => void) {
