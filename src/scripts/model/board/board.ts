@@ -245,6 +245,14 @@ export class Board {
                 this.eventBus.fire(new CellChangeEvent(cell, rowIdx, colIdx, this.playerType));
             }
         }
+
+        // Prevent active shape from getting buried in as many as 4 rows.
+        for (let count = 0; count < 4; count++) {
+            if (this.currentShape.getRow() > 0 && this.collisionDetected() === true) {
+                this.currentShape.moveUp();
+                this.fireActiveShapeChangedEvent();
+            }
+        }
     }
 
     /**
