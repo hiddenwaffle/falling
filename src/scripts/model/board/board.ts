@@ -214,50 +214,50 @@ export class Board {
 
         if (this.collisionDetected() === false) {
             success = true; // Didn't need to do any jiggling at all.
-        }
+        } else {
+            // Jiggle it left.
+            if (success !== true) {
+                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                    this.currentShape.moveLeft();
+                });
+            }
 
-        // If still unsuccessful, move it left, up to 4 times.
-        if (success !== true) {
-            this.currentShape.setRow(originalRow);
-            this.currentShape.setCol(originalCol);
+            // If still unsuccessful, jiggle it right.
+            if (success !== true) {
+                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                    this.currentShape.moveRight();
+                });
+            };
 
-            for (let count = 0; count < 4; count++) {
-                this.currentShape.moveLeft();
-                if (this.collisionDetected() === false) {
-                    success = true;
-                    break;
-                }
+            // If still unsuccessful, move it up, up to 4 times.
+            if (success !== true) {
+                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                    this.currentShape.moveUp();
+                });
             }
         }
 
-        // If still unsuccessful, move it right, up to 4 times.
-        if (success !== true) {
-            this.currentShape.setRow(originalRow);
-            this.currentShape.setCol(originalCol);
+        return success;
+    }
+    
+    /**
+     * Used by jiggleRotatedShapeAround().
+     * 
+     * Sets the current shape to the given original coordinates.
+     * Then, runs the given lambda up to 4 times to see if any produce a non-collision state.
+     */
+    private doUpToFourTimes(originalRow: number, originalCol: number, thing: () => void): boolean {
+        this.currentShape.setRow(originalRow);
+        this.currentShape.setCol(originalCol);
 
-            for (let count = 0; count < 4; count++) {
-                this.currentShape.moveRight();
-                if (this.collisionDetected() === false) {
-                    success = true;
-                    break;
-                }
+        let success = false;
+        for (let count = 0; count < 4; count++) {
+            thing();
+            if (this.collisionDetected() === false) {
+                success = true;
+                break;
             }
         }
-
-        // If still unsuccessful, move it up, up to 4 times.
-        if (success !== true) {
-            this.currentShape.setRow(originalRow);
-            this.currentShape.setCol(originalCol);
-
-            for (let count = 0; count < 4; count++) {
-                this.currentShape.moveUp();
-                if (this.collisionDetected() === false) {
-                    success = true;
-                    break;
-                }
-            }
-        }
-
         return success;
     }
 
