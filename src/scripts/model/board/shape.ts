@@ -59,8 +59,16 @@ export abstract class Shape {
         return this.row;
     }
 
+    setRow(row: number) {
+        this.row = row;
+    }
+
     getCol() {
         return this.col;
+    }
+
+    setCol(col: number) {
+        this.col = col;
     }
 
     getRowCount() {

@@ -191,7 +191,7 @@ export class Board {
         let success: boolean;
         if (this.boardState === BoardState.InPlay) {
             this.currentShape.rotateClockwise();
-            if (this.collisionDetected()) {
+            if (this.jiggleRotatedShapeAround() === false) {
                 this.currentShape.rotateCounterClockwise();
                 success = false;
             } else {
@@ -201,6 +201,63 @@ export class Board {
         } else {
             success = false;
         }
+        return success;
+    }
+
+    /**
+     * Returns true if able to successfully rotate the shape alongside anything, if any.
+     */
+    private jiggleRotatedShapeAround(): boolean {
+        let success = false;
+        let originalRow = this.currentShape.getRow();
+        let originalCol = this.currentShape.getCol();
+
+        if (this.collisionDetected() === false) {
+            success = true; // Didn't need to do any jiggling at all.
+        }
+
+        // If still unsuccessful, move it left, up to 4 times.
+        if (success !== true) {
+            this.currentShape.setRow(originalRow);
+            this.currentShape.setCol(originalCol);
+
+            for (let count = 0; count < 4; count++) {
+                this.currentShape.moveLeft();
+                if (this.collisionDetected() === false) {
+                    success = true;
+                    break;
+                }
+            }
+        }
+
+        // If still unsuccessful, move it right, up to 4 times.
+        if (success !== true) {
+            this.currentShape.setRow(originalRow);
+            this.currentShape.setCol(originalCol);
+
+            for (let count = 0; count < 4; count++) {
+                this.currentShape.moveRight();
+                if (this.collisionDetected() === false) {
+                    success = true;
+                    break;
+                }
+            }
+        }
+
+        // If still unsuccessful, move it up, up to 4 times.
+        if (success !== true) {
+            this.currentShape.setRow(originalRow);
+            this.currentShape.setCol(originalCol);
+
+            for (let count = 0; count < 4; count++) {
+                this.currentShape.moveUp();
+                if (this.collisionDetected() === false) {
+                    success = true;
+                    break;
+                }
+            }
+        }
+
         return success;
     }
 
