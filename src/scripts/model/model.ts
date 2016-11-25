@@ -159,7 +159,7 @@ class Model {
             hp = (this.aiHitPoints -= 1);
         }
 
-        eventBus.fire(new HpChangedEvent(hp, event.playerType));
+        eventBus.fire(new HpChangedEvent(hp, event.playerType, true));
         // TODO: See if one of the players has run out of HP, somewhere if not here.
 
         eventBus.fire(new FallingSequencerEvent(event.playerType));

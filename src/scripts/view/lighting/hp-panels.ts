@@ -8,17 +8,23 @@ export class HpPanels {
     readonly group: any;
 
     private panels: any[];
-    private hpOrientation: HpOrientation;
 
     constructor(hpOrientation: HpOrientation) {
         this.group = new THREE.Object3D();
         
         this.panels = [];
+
         for (let idx = 0; idx < PANEL_COUNT_PER_FLOOR; idx++) {
             let geometry = new THREE.PlaneGeometry(0.6, 0.6);
             let material = new THREE.MeshPhongMaterial();
             let panel = new THREE.Mesh(geometry, material);
-            let x = idx;
+
+            let x: number;
+            if (hpOrientation === HpOrientation.DecreasesRightToLeft) {
+                x = idx;
+            } else {
+                x = PANEL_COUNT_PER_FLOOR - idx - 1;
+            }
             let y = 0;
             let z = 0;
             panel.position.set(x, y, z);
@@ -30,8 +36,6 @@ export class HpPanels {
 
             this.panels.push(panel);
         }
-
-        this.hpOrientation = hpOrientation;
     }
 
     start() {
@@ -52,7 +56,7 @@ export class HpPanels {
 
     /**
      * HP bar can go from right-to-left or left-to-right, like a fighting game HP bar.
-     * "blinkPlusOne" means to animate the removal of the HP panel above the given one.
+     * "blinkPlusOne" means to animate the removal of the HP panel that is one above the current HP.
      */
     updateHp(hp: number, blinkPlusOne: boolean) {
         if (hp > PANEL_COUNT_PER_FLOOR) {
@@ -61,19 +65,18 @@ export class HpPanels {
 
         for (let idx = 0; idx < this.panels.length; idx++) {
             let panel = this.panels[idx];
-            if (this.hpOrientation === HpOrientation.DecreasesRightToLeft) {
-                if (idx < hp) {
-                    panel.visible = true;
-                } else {
-                    panel.visible = false;
-                }
+
+            if (idx < hp) {
+                panel.visible = true;
             } else {
-                if (idx >= PANEL_COUNT_PER_FLOOR - hp) {
-                    panel.visible = true;
-                } else {
-                    panel.visible = false;
-                }
+                panel.visible = false;
             }
+        }
+
+        if (blinkPlusOne === true && hp < this.panels.length) {
+            let blinkIdx: number;
+            blinkIdx = hp; // As in the next index up from the current HP index.
+            console.log('blink off: ' + blinkIdx);
         }
 
         // TODO: Handle update to HP = full as different from HP < full.
