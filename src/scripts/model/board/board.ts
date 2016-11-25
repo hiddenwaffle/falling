@@ -217,21 +217,21 @@ export class Board {
         } else {
             // Jiggle it left.
             if (success !== true) {
-                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                success = this.doUpToThreeTimes(originalRow, originalCol, () => {
                     this.currentShape.moveLeft();
                 });
             }
 
             // If still unsuccessful, jiggle it right.
             if (success !== true) {
-                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                success = this.doUpToThreeTimes(originalRow, originalCol, () => {
                     this.currentShape.moveRight();
                 });
             };
 
             // If still unsuccessful, move it up, up to 4 times.
             if (success !== true) {
-                success = this.doUpToFourTimes(originalRow, originalCol, () => {
+                success = this.doUpToThreeTimes(originalRow, originalCol, () => {
                     this.currentShape.moveUp();
                 });
             }
@@ -244,14 +244,14 @@ export class Board {
      * Used by jiggleRotatedShapeAround().
      * 
      * Sets the current shape to the given original coordinates.
-     * Then, runs the given lambda up to 4 times to see if any produce a non-collision state.
+     * Then, runs the given lambda a few times to see if any produce a non-collision state.
      */
-    private doUpToFourTimes(originalRow: number, originalCol: number, thing: () => void): boolean {
+    private doUpToThreeTimes(originalRow: number, originalCol: number, thing: () => void): boolean {
         this.currentShape.setRow(originalRow);
         this.currentShape.setCol(originalCol);
 
         let success = false;
-        for (let count = 0; count < 4; count++) {
+        for (let count = 0; count < 3; count++) {
             thing();
             if (this.collisionDetected() === false) {
                 success = true;
