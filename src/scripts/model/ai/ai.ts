@@ -86,7 +86,6 @@ export class Ai {
                 zombie.convertShapeToCells();
 
                 let fitness = this.calculateFitness(zombie);
-                // console.log('fitness: ' + fitness + ', rotation: ' + rotation + ', col: ' + colIdx);
                 if (fitness > bestFitness) {
                     bestFitness = fitness;
                     bestRotation = rotation;
@@ -102,7 +101,6 @@ export class Ai {
             }
             zombie.rotateShapeClockwise();
         }
-        // console.log('bestFitness: %f, %d, %d', bestFitness, bestRotation, bestColIdx);
 
         // Finally, set the values that will let the AI advance towards the target.
         this.targetRotation = bestRotation;
@@ -150,32 +148,6 @@ export class Ai {
             }
         }
     }
-
-    // private performNewMovement() {
-        // let matrix = this.visual.matrix;
-        // let shape = this.visual.currentShape;
-
-        // let rand = Math.floor(Math.random() * 5);
-
-        // if (rand === 0) {
-        //     eventBus.fire(new PlayerMovementEvent(PlayerMovement.RotateClockwise, PlayerType.Ai));
-        // } else if (rand === 1) {
-        //     eventBus.fire(new PlayerMovementEvent(PlayerMovement.Left, PlayerType.Ai));
-        // } else if (rand === 2) {
-        //     eventBus.fire(new PlayerMovementEvent(PlayerMovement.Right, PlayerType.Ai));
-        // } else if (rand === 3) {
-        //     eventBus.fire(new PlayerMovementEvent(PlayerMovement.Down, PlayerType.Ai));
-        // } else if (rand === 4) {
-        //     let dropChance = Math.floor(Math.random() * 100); // Is this called Monte-Carlo?
-        //     if (dropChance < 10) {
-        //         eventBus.fire(new PlayerMovementEvent(PlayerMovement.Drop, PlayerType.Ai));
-        //     } else {
-        //         // Do nothing this round; maybe considered a hesitation.
-        //     }
-        // } else {
-        //     console.log('should not get here');
-        // }
-    // }
 
     private calculateTimeUntilNextMove() {
         return Math.floor(TIME_BETWEEN_MOVES + ((Math.random() * TIME_MAX_DEVIATION) - (TIME_MAX_DEVIATION / 2)));
