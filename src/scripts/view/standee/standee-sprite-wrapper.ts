@@ -144,7 +144,7 @@ export class StandeeSpriteWrapper {
         this.sprite.getWorldPosition(scratchVector1);
         cameraWrapper.camera.getWorldPosition(scratchVector2);
         let distanceSquared: number = scratchVector1.distanceToSquared(scratchVector2);
-        let value = 1.0 - (Math.min(1.0, distanceSquared / 225));
+        let value = Math.max(0.20, 1.0 - (Math.min(1.0, distanceSquared / 225)));
         this.sprite.material.color.setRGB(value, value, value);
     }
 
