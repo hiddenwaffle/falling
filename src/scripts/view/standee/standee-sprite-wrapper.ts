@@ -2,6 +2,7 @@
 
 declare const THREE: any;
 
+import {cameraWrapper} from '../camera-wrapper';
 import {
     SPRITESHEET_WIDTH,
     SPRITESHEET_HEIGHT,
@@ -13,6 +14,9 @@ from './standee-animation-texture-base';
 
 const STANDARD_DELAY = 225;
 const WALK_UP_OR_DOWN_DELAY = Math.floor(STANDARD_DELAY * (2/3)); // Because up/down walk cycles have more frames. 
+
+const scratchVector1: any = new THREE.Vector3();
+const scratchVector2: any = new THREE.Vector3();
 
 class StandeeAnimationFrame {
 
@@ -136,7 +140,12 @@ export class StandeeSpriteWrapper {
 
     private adjustLighting(elapsed: number) {
         // TODO: Not yet sure if I'll need to use the elapsed variable here.
-        this.sprite.material.color.set(0xaaaaaa);
+        // TODO: Move magic numbers into same equations as the NPC
+        this.sprite.getWorldPosition(scratchVector1);
+        cameraWrapper.camera.getWorldPosition(scratchVector2);
+        let distanceSquared: number = scratchVector1.distanceToSquared(scratchVector2);
+        let value = 1.0 - (Math.min(1.0, distanceSquared / 225));
+        this.sprite.material.color.setRGB(value, value, value);
     }
 
     private stepAnimation(elapsed: number) {
