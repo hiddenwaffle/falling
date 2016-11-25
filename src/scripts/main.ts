@@ -2,10 +2,12 @@ import {preloader} from './preloader';
 import {model} from './model/model';
 import {view} from './view/view';
 import {controller} from './controller/controller';
+import {soundManager} from './sound/sound-manager';
 import {GameStateType, gameState} from './game-state';
 
 document.addEventListener('DOMContentLoaded', (event: any) => {
     gameState.setCurrent(GameStateType.Initializing);
+    soundManager.attach();
     preloader.preload(() => {
         main();
     });
@@ -28,6 +30,7 @@ function main() {
         controller.step(elapsed);
         view.step(elapsed);
         model.step(elapsed);
+        soundManager.step(elapsed);
     };
     step();
 }
