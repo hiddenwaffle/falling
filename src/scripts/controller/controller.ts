@@ -13,6 +13,8 @@ class Controller {
     }
 
     step(elapsed: number) {
+        input.step(elapsed);
+
         if (input.isDownAndUnhandled(Key.Up)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.RotateClockwise, PlayerType.Human));
         }
