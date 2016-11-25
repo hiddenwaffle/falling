@@ -18,7 +18,7 @@ export class Building {
 
         // Quick hack to prevent building from being see-through.
         let geometry = new THREE.PlaneGeometry(9, 3);
-        let material = new THREE.MeshLambertMaterial({color: 0x939189});
+        let material = new THREE.MeshLambertMaterial({color: 0x343330});
         let wall = new THREE.Mesh(geometry, material);
         wall.position.set(5, 2, -2.5);
 
