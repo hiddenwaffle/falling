@@ -73,10 +73,21 @@ export class HpPanels {
             }
         }
 
-        if (blinkPlusOne === true && hp < this.panels.length) {
-            let blinkIdx: number;
-            blinkIdx = hp; // As in the next index up from the current HP index.
-            console.log('blink off: ' + blinkIdx);
+        // Blink the lost panel, if any, to give the player the impression that they lost something.
+        if (blinkPlusOne === true && hp >= 0 && hp < this.panels.length) {
+            let idx = hp; // As in the next index up from the current HP index, since array start at 0.
+            let panel = this.panels[idx];
+
+            let count = 0;
+            let blinkHandle = setInterval(() => {
+                count++;
+                if (count > 9) {
+                    panel.visible = false;
+                    clearInterval(blinkHandle);
+                } else {
+                    panel.visible = !panel.visible;
+                }
+            }, 200);
         }
 
         // TODO: Handle update to HP = full as different from HP < full.
