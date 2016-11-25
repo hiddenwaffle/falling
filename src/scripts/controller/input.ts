@@ -5,9 +5,12 @@ export const enum Key {
     Up,
     Down,
     Right,
-    Space,
+    Drop,
     Pause,
-    Other
+    // Rest of these are special directives
+    Other,
+    Ignore,
+    Prevent
 }
 
 const enum State {
@@ -63,7 +66,8 @@ class Input {
             }
 
             if (updateState === true) {
-                this.keyCodeToState(this.currentKeyCode, State.Down);
+                let key = this.keyCodeToKey(this.currentKeyCode);
+                this.setState(key, State.Down, true);
             }
         } else {
             this.keyHeldElapsed = 0;
@@ -114,49 +118,42 @@ class Input {
             this.previousKeyCode = -1;
        }
 
-       this.keyCodeToState(event.keyCode, state, event);
+       let key = this.keyCodeToKey(event.keyCode);
+       this.keyToState(key, state, event);
     }
 
-    private keyCodeToState(keyCode: number, state: State, event?: KeyboardEvent) {
-        let preventDefault = false;
+    private keyCodeToKey(keyCode: number): Key {
+        let key = Key.Other;
 
         switch (keyCode) {
             // Directionals --------------------------------------------------
             case 65: // 'a'
             case 37: // left
-                this.setState(Key.Left, state);
-                preventDefault = true;
+                key = Key.Left;
                 break;
             case 87: // 'w'
             case 38: // up
-                this.setState(Key.Up, state);
-                // event.preventDefault() - commented for if the user wants to cmd+w or ctrl+w
+                key = Key.Up;
                 break;
             case 68: // 'd'
             case 39: // right
-                this.setState(Key.Right, state);
-                preventDefault = true;
+                key = Key.Right;
                 break;
             case 83: // 's'
             case 40: // down
-                this.setState(Key.Down, state);
-                preventDefault = true;
+                key = Key.Down;
                 break;
             case 32: // space
-                this.setState(Key.Space, state);
-                preventDefault = true;
+                key = Key.Drop;
                 break;
-            
+
             // Pause ---------------------------------------------------------
             case 80: // 'p'
             case 27: // esc
             case 13: // enter key
-                this.setState(Key.Pause, state);
-                preventDefault = true;
+                key = Key.Pause;
                 break;
-            
-            // TODO: Maybe add a debug key here ('f')
-
+                
             // Ignore certain keys -------------------------------------------
             case 82:    // 'r'
             case 18:    // alt
@@ -168,16 +165,59 @@ class Input {
             case 78:    // 'n' (i.e., open a new window)
             case 219:   // left brackets
             case 221:   // right brackets
+                key = Key.Ignore;
                 break;
-            
+
             // Prevent some unwanted behaviors -------------------------------
             case 191:   // forward slash (page find)
             case 9:     // tab (can lose focus)
             case 16:    // shift
-                preventDefault = true;
+                key = Key.Prevent;
                 break;
 
             // All other keys ------------------------------------------------
+            default:
+                key = Key.Other;
+        }
+
+        return key;
+    }
+
+    private keyToState(key: Key, state: State, event: KeyboardEvent) {
+        let preventDefault = false;
+
+        switch (key) {
+            case Key.Left:
+                this.setState(Key.Left, state);
+                preventDefault = true;
+                break;
+            case Key.Up:
+                this.setState(Key.Up, state);
+                // event.preventDefault() - commented for if the user wants to cmd+w or ctrl+w
+                break;
+            case Key.Right:
+                this.setState(Key.Right, state);
+                preventDefault = true;
+                break;
+            case Key.Down:
+                this.setState(Key.Down, state);
+                preventDefault = true;
+                break;
+            case Key.Drop:
+                this.setState(Key.Drop, state);
+                preventDefault = true;
+                break;
+            case Key.Pause:
+                this.setState(Key.Pause, state);
+                preventDefault = true;
+                break;
+            // TODO: Maybe add a debug key here ('f')
+            case Key.Ignore:
+                break;
+            case Key.Prevent:
+                preventDefault = true;
+                break;
+            case Key.Other:
             default:
                 this.setState(Key.Other, state);
                 break;
@@ -188,13 +228,13 @@ class Input {
         }
     }
 
-    private setState(key: Key, state: State) {
+    private setState(key: Key, state: State, force = false) {
         // Always set 'up'
         if (state === State.Up) {
             this.keyState.set(key, state);
         // Only set 'down' if it is not already handled
         } else if (state === State.Down) {
-            if (this.keyState.get(key) !== State.Handling) {
+            if (this.keyState.get(key) !== State.Handling || force === true) {
                 this.keyState.set(key, state);
             }
         }

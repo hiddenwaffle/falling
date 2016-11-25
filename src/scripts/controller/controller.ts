@@ -31,7 +31,7 @@ class Controller {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Down, PlayerType.Human));
         }
 
-        if (input.isDownAndUnhandled(Key.Space)) {
+        if (input.isDownAndUnhandled(Key.Drop)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Drop, PlayerType.Human));
         }
     }
