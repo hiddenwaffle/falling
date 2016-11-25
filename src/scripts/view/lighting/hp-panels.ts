@@ -81,7 +81,7 @@ export class HpPanels {
             let count = 0;
             let blinkHandle = setInterval(() => {
                 count++;
-                if (count > 9) {
+                if (count > 13) {
                     panel.visible = false;
                     clearInterval(blinkHandle);
                 } else {
