@@ -8,7 +8,7 @@ import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {PlayerMovement} from '../../domain/player-movement';
 import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
-import {vitals} from '../vitals';
+import {MAX_HP, vitals} from '../vitals';
 
 const MAX_COLS = PANEL_COUNT_PER_FLOOR;
 
@@ -23,8 +23,9 @@ const TIME_DELAY = 500;
 const TIME_BETWEEN_MOVES = 200;
 
 // These constants are for timing how long to wait before dropping shape, since the start of the shape.
-const TIME_FASTEST_TILL_DROP = 1700;
-const TIME_SLOWEST_TILL_DROP = 4000;
+const TIME_FASTEST_TILL_DROP = 2850;
+const TIME_SLOWEST_TILL_DROP = 4850;
+const RANGE_TIME_TILL_DROP = TIME_SLOWEST_TILL_DROP - TIME_FASTEST_TILL_DROP;
 
 /**
  * Adds some variation to TIME_BETWEEN_MOVES
@@ -109,8 +110,10 @@ export class Ai {
     strategize() {
         // Part 1 - Determine how long this move should be, based on current score.
         {
-            this.timeTillDrop = TIME_SLOWEST_TILL_DROP;
-            // TODO: Do it
+            // Higher means human is winning.
+            let diff = vitals.humanHitPoints - vitals.aiHitPoints;
+            let pct = (MAX_HP - diff) / (MAX_HP * 2); 
+            this.timeTillDrop = TIME_FASTEST_TILL_DROP + (pct * RANGE_TIME_TILL_DROP);
         }
 
         // Part 2 - Determine how to fit the given shape.
@@ -191,7 +194,6 @@ export class Ai {
                 this.moveCompleted = true;
             } else {
                 // Still have time to wait before dropping the shape.
-                console.log('waiting: ' + this.timeTillDrop);
             }
         } else {
             if (this.currentRotation < this.targetRotation) {
