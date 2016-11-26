@@ -3,6 +3,8 @@ import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 import {Cell} from '../../domain/cell';
 import {Color} from '../../domain/color';
 import {eventBus, EventType} from '../../event/event-bus';
+import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {PlayerMovement} from '../../domain/player-movement';
 import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
@@ -39,6 +41,8 @@ export class Ai {
     private realBoard: RealBoard;
     private timeUntilNextMove: number;
 
+    private humanLastMoveElapsed: number;
+
     // 0 = no rotation, 1 = one rotation, 2 = two rotations, 3 = three rotations.
     private targetRotation: number;
     private currentRotation: number;
@@ -48,7 +52,9 @@ export class Ai {
 
     constructor(realBoard: RealBoard) {
         this.realBoard = realBoard;
-        this.timeUntilNextMove = TIME_BETWEEN_MOVES;
+        this.timeUntilNextMove = this.calculateTimeUntilNextMove();
+
+        this.humanLastMoveElapsed = 0;
 
         this.targetRotation = 0;
         this.currentRotation = 0;
@@ -57,13 +63,21 @@ export class Ai {
     }
 
     start() {
-        //
+        eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
+            this.handleActiveShapeChangedEvent(event);
+        });
+
+        eventBus.register(EventType.ActiveShapeEndedEventType, (event: ActiveShapeEndedEvent) => {
+            this.handleActiveShapeEndedEvent(event);
+        });
     }
 
     step(elapsed: number) {
+        this.humanLastMoveElapsed += elapsed;
+
         this.timeUntilNextMove -= elapsed;
         if (this.timeUntilNextMove <= 0) {
-            this.timeUntilNextMove = TIME_BETWEEN_MOVES;
+            this.timeUntilNextMove = this.calculateTimeUntilNextMove();
             this.advanceTowardsTarget();
         }
     }
@@ -109,6 +123,25 @@ export class Ai {
         this.moveCompleted = false;
     }
 
+    private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
+        if (event.playerType === PlayerType.Ai) {
+            return; // ignore AI's own shapes.
+        }
+
+        if (event.starting === true) {
+            this.humanLastMoveElapsed = 0;
+        }
+    }
+
+    private handleActiveShapeEndedEvent(event: ActiveShapeEndedEvent) {
+        if (event.playerType === PlayerType.Ai) {
+            return; // ignore AI's own shapes.
+        }
+
+        let finalHumanLastMoveElapsed = this.humanLastMoveElapsed;
+        console.log('Elapsed: ' + finalHumanLastMoveElapsed + 'ms');
+    }
+
     /**
      * Based on https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/
      */
@@ -149,7 +182,7 @@ export class Ai {
         }
     }
 
-    private calculateTimeUntilNextMove() {
+    private calculateTimeUntilNextMove(): number {
         return Math.floor(TIME_BETWEEN_MOVES + ((Math.random() * TIME_MAX_DEVIATION) - (TIME_MAX_DEVIATION / 2)));
     }
 }

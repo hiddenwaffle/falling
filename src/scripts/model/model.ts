@@ -62,6 +62,7 @@ class Model {
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
             this.handleActiveShapeChangedEvent(event);
         });
+        
         this.ai.start();
         npcManager.start();
 

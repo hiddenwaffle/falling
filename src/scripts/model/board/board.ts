@@ -8,6 +8,7 @@ import {EventBus, deadEventBus} from '../../event/event-bus';
 import {CellChangeEvent} from '../../event/cell-change-event';
 import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
+import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {BoardFilledEvent} from '../../event/board-filled-event';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
@@ -95,6 +96,8 @@ export class Board {
      * Call this once a shape is known to be in its final resting position.
      */
     handleEndOfCurrentPieceTasks() {
+        this.eventBus.fire(new ActiveShapeEndedEvent(this.playerType, this.currentShape.getRow()));
+        
         this.convertShapeToCells();
         if (this.handleFullBoard()) {
             // Board is full -- starting a new shape was delegated to later by handleFullBoard().
