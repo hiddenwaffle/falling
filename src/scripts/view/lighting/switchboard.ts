@@ -123,7 +123,7 @@ export class Switchboard {
     }
 
     private handleHpChangedEvent(event: HpChangedEvent) {
-        this.lightingGrid.updateHp(event.hp, event.blinkPlusOne);
+        this.lightingGrid.updateHp(event.hp, event.blinkLost);
     }
 
     private handleFallingSequencerEvent(event: FallingSequencerEvent){

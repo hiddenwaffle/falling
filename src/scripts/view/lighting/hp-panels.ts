@@ -56,9 +56,9 @@ export class HpPanels {
 
     /**
      * HP bar can go from right-to-left or left-to-right, like a fighting game HP bar.
-     * "blinkPlusOne" means to animate the removal of the HP panel that is one above the current HP.
+     * "blinkLost" means to animate the loss of the HP panels directly above.
      */
-    updateHp(hp: number, blinkPlusOne: boolean) {
+    updateHp(hp: number, blinkLost: boolean) {
         if (hp > PANEL_COUNT_PER_FLOOR) {
             hp = PANEL_COUNT_PER_FLOOR;
         }
@@ -73,19 +73,22 @@ export class HpPanels {
             }
         }
 
-        // Blink the lost panel, if any, to give the player the impression that they lost something.
-        if (blinkPlusOne === true && hp >= 0 && hp < this.panels.length) {
+        // Blink the lost panels, if any, to give the player the impression that they lost something.
+        if (blinkLost === true && hp >= 0 && hp < this.panels.length - 1) {
             let idx = hp; // As in the next index up from the current HP index, since array start at 0.
-            let panel = this.panels[idx];
+            let panel1 = this.panels[idx];
+            let panel2 = this.panels[idx + 1];
 
             let count = 0;
             let blinkHandle = setInterval(() => {
                 count++;
-                if (count > 13) {
-                    panel.visible = false;
+                if (count > 15) {
+                    panel1.visible = false;
+                    panel2.visible = false;
                     clearInterval(blinkHandle);
                 } else {
-                    panel.visible = !panel.visible;
+                    panel1.visible = !panel1.visible;
+                    panel2.visible = !panel2.visible;
                 }
             }, 200);
         }

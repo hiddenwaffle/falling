@@ -5,13 +5,13 @@ export class HpChangedEvent extends AbstractEvent {
 
     readonly hp: number;
     readonly playerType: PlayerType;
-    readonly blinkPlusOne: boolean;
+    readonly blinkLost: boolean;
 
-    constructor(hp: number, playerType: PlayerType, blinkPlusOne=false) {
+    constructor(hp: number, playerType: PlayerType, blinkLost=false) {
         super();
         this.hp = hp;
         this.playerType = playerType;
-        this.blinkPlusOne = blinkPlusOne;
+        this.blinkLost = blinkLost;
     }
 
     getType() {

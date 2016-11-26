@@ -147,11 +147,11 @@ class Model {
         if (event.playerType === PlayerType.Human) {
             board = this.humanBoard;
             fallingSequencer = this.humanFallingSequencer;
-            hp = (vitals.humanHitPoints -= 1);
+            hp = (vitals.humanHitPoints -= 2);
         } else {
             board = this.aiBoard;
             fallingSequencer = this.aiFallingSequencer;
-            hp = (vitals.aiHitPoints -= 1);
+            hp = (vitals.aiHitPoints -= 2);
         }
 
         eventBus.fire(new HpChangedEvent(hp, event.playerType, true));
