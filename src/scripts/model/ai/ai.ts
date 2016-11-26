@@ -22,6 +22,10 @@ const TIME_DELAY = 500;
  */
 const TIME_BETWEEN_MOVES = 200;
 
+// These constants are for timing how long to wait before dropping shape, since the start of the shape.
+const TIME_FASTEST_TILL_DROP = 1700;
+const TIME_SLOWEST_TILL_DROP = 4000;
+
 /**
  * Adds some variation to TIME_BETWEEN_MOVES
  */
@@ -56,6 +60,9 @@ export class Ai {
     private timeUntilNextMove: number;
     private delayTtl: number;
 
+    // How long the current shape should last, if possible, till AI hits the space bar.
+    private timeTillDrop: number;
+
     // 0 = no rotation, 1 = one rotation, 2 = two rotations, 3 = three rotations.
     private targetRotation: number;
     private currentRotation: number;
@@ -67,6 +74,8 @@ export class Ai {
         this.realBoard = realBoard;
         this.timeUntilNextMove = this.calculateTimeUntilNextMove();
         this.delayTtl = 0;
+
+        this.timeTillDrop = TIME_SLOWEST_TILL_DROP;
 
         this.targetRotation = 0;
         this.currentRotation = 0;
@@ -81,6 +90,8 @@ export class Ai {
     }
 
     step(elapsed: number) {
+        this.timeTillDrop -= elapsed;
+
         if (this.delayTtl > 0) {
             this.delayTtl -= elapsed;
         } else {
@@ -96,8 +107,9 @@ export class Ai {
      * This method provides a high-level view of the AI's thought process.
      */
     strategize() {
-        // Part 1 - Determine how fast to go based on current score.
+        // Part 1 - Determine how long this move should be, based on current score.
         {
+            this.timeTillDrop = TIME_SLOWEST_TILL_DROP;
             // TODO: Do it
         }
 
@@ -172,11 +184,15 @@ export class Ai {
         }
 
         if (this.currentRotation === this.targetRotation && this.realBoard.getCurrentShapeColIdx() === this.targetColIdx) {
-            // TODO: Drop shape should be on a timer or something.
-            this.realBoard.moveShapeDownAllTheWay();
-            this.currentRotation = 0;
-            this.targetColIdx = 0;
-            this.moveCompleted = true;
+            if (this.timeTillDrop <= 0) {
+                this.realBoard.moveShapeDownAllTheWay();
+                this.currentRotation = 0;
+                this.targetColIdx = 0;
+                this.moveCompleted = true;
+            } else {
+                // Still have time to wait before dropping the shape.
+                console.log('waiting: ' + this.timeTillDrop);
+            }
         } else {
             if (this.currentRotation < this.targetRotation) {
                 this.realBoard.rotateShapeClockwise();
