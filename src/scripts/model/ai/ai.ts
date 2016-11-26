@@ -10,6 +10,7 @@ import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
 
 const MAX_COLS = PANEL_COUNT_PER_FLOOR;
+const TIME_DELAY = 500;
 const TIME_BETWEEN_MOVES = 250;
 const TIME_MAX_DEVIATION = 100;
 
@@ -40,8 +41,7 @@ export class Ai {
 
     private realBoard: RealBoard;
     private timeUntilNextMove: number;
-
-    private humanLastMoveElapsed: number;
+    private delayTtl: number;
 
     // 0 = no rotation, 1 = one rotation, 2 = two rotations, 3 = three rotations.
     private targetRotation: number;
@@ -53,8 +53,7 @@ export class Ai {
     constructor(realBoard: RealBoard) {
         this.realBoard = realBoard;
         this.timeUntilNextMove = this.calculateTimeUntilNextMove();
-
-        this.humanLastMoveElapsed = 0;
+        this.delayTtl = 0;
 
         this.targetRotation = 0;
         this.currentRotation = 0;
@@ -66,19 +65,17 @@ export class Ai {
         eventBus.register(EventType.ActiveShapeChangedEventType, (event: ActiveShapeChangedEvent) => {
             this.handleActiveShapeChangedEvent(event);
         });
-
-        eventBus.register(EventType.ActiveShapeEndedEventType, (event: ActiveShapeEndedEvent) => {
-            this.handleActiveShapeEndedEvent(event);
-        });
     }
 
     step(elapsed: number) {
-        this.humanLastMoveElapsed += elapsed;
-
-        this.timeUntilNextMove -= elapsed;
-        if (this.timeUntilNextMove <= 0) {
-            this.timeUntilNextMove = this.calculateTimeUntilNextMove();
-            this.advanceTowardsTarget();
+        if (this.delayTtl > 0) {
+            this.delayTtl -= elapsed;
+        } else {
+            this.timeUntilNextMove -= elapsed;
+            if (this.timeUntilNextMove <= 0) {
+                this.timeUntilNextMove = this.calculateTimeUntilNextMove();
+                this.advanceTowardsTarget();
+            }
         }
     }
 
@@ -125,21 +122,12 @@ export class Ai {
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
         if (event.playerType === PlayerType.Ai) {
-            return; // ignore AI's own shapes.
+            if (event.starting === true) {
+                this.delayTtl = TIME_DELAY;
+            }
+        } else {
+            // Do not need to react to human's shape movements.
         }
-
-        if (event.starting === true) {
-            this.humanLastMoveElapsed = 0;
-        }
-    }
-
-    private handleActiveShapeEndedEvent(event: ActiveShapeEndedEvent) {
-        if (event.playerType === PlayerType.Ai) {
-            return; // ignore AI's own shapes.
-        }
-
-        let finalHumanLastMoveElapsed = this.humanLastMoveElapsed;
-        console.log('Elapsed: ' + finalHumanLastMoveElapsed + 'ms');
     }
 
     /**
