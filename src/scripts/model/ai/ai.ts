@@ -8,11 +8,24 @@ import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {PlayerMovement} from '../../domain/player-movement';
 import {PlayerType} from '../../domain/player-type';
 import {PlayerMovementEvent} from '../../event/player-movement-event';
+import {vitals} from '../vitals';
 
 const MAX_COLS = PANEL_COUNT_PER_FLOOR;
+
+/**
+ * How long to wait before manipulating a shape that has just come into play.
+ */
 const TIME_DELAY = 500;
-const TIME_BETWEEN_MOVES = 250;
-const TIME_MAX_DEVIATION = 100;
+
+/**
+ * How long to wait before manipulating the shape that is in play.
+ */
+const TIME_BETWEEN_MOVES = 200;
+
+/**
+ * Adds some variation to TIME_BETWEEN_MOVES
+ */
+const TIME_MAX_ADDITIONAL_TIME_BETWEEN_MOVES = 100;
 
 interface ZombieBoard {
     // Ways to interact with it.
@@ -83,41 +96,49 @@ export class Ai {
      * This method provides a high-level view of the AI's thought process.
      */
     strategize() {
-        let zombie = this.realBoard.cloneZombie();
-
-        // Iterate through all possible rotations and columns
-        let bestFitness = Number.MIN_SAFE_INTEGER;
-        let bestRotation = 0;
-        let bestColIdx = 0;
-        for (let rotation = 0; rotation < 4; rotation++) {
-            while(zombie.moveShapeLeft());
-
-            for (let idx = 0; idx < MAX_COLS; idx++) {
-                zombie.moveShapeDownAllTheWay();
-                zombie.convertShapeToCells();
-
-                let fitness = this.calculateFitness(zombie);
-                if (fitness > bestFitness) {
-                    bestFitness = fitness;
-                    bestRotation = rotation;
-                    bestColIdx = zombie.getCurrentShapeColIdx(); // Use this rather than idx in case it was off because of whatever reason (obstruction, wall, etc...)
-                }
-
-                zombie.undoConvertShapeToCells();
-                zombie.moveToTop();
-                let canMoveRight = zombie.moveShapeRight();
-                if (canMoveRight === false) {
-                    break;
-                }
-            }
-            zombie.rotateShapeClockwise();
+        // Part 1 - Determine how fast to go based on current score.
+        {
+            // TODO: Do it
         }
 
-        // Finally, set the values that will let the AI advance towards the target.
-        this.targetRotation = bestRotation;
-        this.currentRotation = 0;
-        this.targetColIdx = bestColIdx;
-        this.moveCompleted = false;
+        // Part 2 - Determine how to fit the given shape.
+        {
+            let zombie = this.realBoard.cloneZombie();
+
+            // Iterate through all possible rotations and columns
+            let bestFitness = Number.MIN_SAFE_INTEGER;
+            let bestRotation = 0;
+            let bestColIdx = 0;
+            for (let rotation = 0; rotation < 4; rotation++) {
+                while(zombie.moveShapeLeft());
+
+                for (let idx = 0; idx < MAX_COLS; idx++) {
+                    zombie.moveShapeDownAllTheWay();
+                    zombie.convertShapeToCells();
+
+                    let fitness = this.calculateFitness(zombie);
+                    if (fitness > bestFitness) {
+                        bestFitness = fitness;
+                        bestRotation = rotation;
+                        bestColIdx = zombie.getCurrentShapeColIdx(); // Use this rather than idx in case it was off because of whatever reason (obstruction, wall, etc...)
+                    }
+
+                    zombie.undoConvertShapeToCells();
+                    zombie.moveToTop();
+                    let canMoveRight = zombie.moveShapeRight();
+                    if (canMoveRight === false) {
+                        break;
+                    }
+                }
+                zombie.rotateShapeClockwise();
+            }
+
+            // Finally, set the values that will let the AI advance towards the target.
+            this.targetRotation = bestRotation;
+            this.currentRotation = 0;
+            this.targetColIdx = bestColIdx;
+            this.moveCompleted = false;
+        }
     }
 
     private handleActiveShapeChangedEvent(event: ActiveShapeChangedEvent) {
@@ -171,6 +192,6 @@ export class Ai {
     }
 
     private calculateTimeUntilNextMove(): number {
-        return Math.floor(TIME_BETWEEN_MOVES + ((Math.random() * TIME_MAX_DEVIATION) - (TIME_MAX_DEVIATION / 2)));
+        return Math.floor(TIME_BETWEEN_MOVES + (Math.random() * TIME_MAX_ADDITIONAL_TIME_BETWEEN_MOVES));
     }
 }

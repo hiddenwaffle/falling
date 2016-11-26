@@ -4,7 +4,6 @@ import {npcManager} from './npc/npc-manager';
 import {eventBus, EventType} from '../event/event-bus';
 import {PlayerType} from '../domain/player-type';
 import {PlayerMovement} from '../domain/player-movement';
-import {PANEL_COUNT_PER_FLOOR} from '../domain/constants';
 import {PlayerMovementEvent} from '../event/player-movement-event';
 import {ActiveShapeChangedEvent} from '../event/active-shape-changed-event';
 import {RowsFilledEvent} from '../event/rows-filled-event';
@@ -14,17 +13,14 @@ import {HpChangedEvent} from '../event/hp-changed-event';
 import {ShapeFactory} from './board/shape-factory';
 import {FallingSequencer} from './board/falling-sequencer';
 import {FallingSequencerEvent} from '../event/falling-sequencer-event';
-
-const MAX_HP = PANEL_COUNT_PER_FLOOR; // HP corresponds to the number of long windows on the second floor of the physical building.
+import {vitals} from './vitals';
 
 class Model {
     private humanBoard: Board;
     private humanFallingSequencer: FallingSequencer;
-    private humanHitPoints: number;
 
     private aiBoard: Board;
     private aiFallingSequencer: FallingSequencer;
-    private aiHitPoints: number;
 
     private ai: Ai;
 
@@ -32,12 +28,10 @@ class Model {
         let humanShapeFactory = new ShapeFactory();
         this.humanBoard = new Board(PlayerType.Human, humanShapeFactory, eventBus);
         this.humanFallingSequencer = new FallingSequencer(this.humanBoard);
-        this.humanHitPoints = MAX_HP;
 
         let aiShapeFactory = new ShapeFactory();
         this.aiBoard = new Board(PlayerType.Ai, aiShapeFactory, eventBus);
         this.aiFallingSequencer = new FallingSequencer(this.aiBoard);
-        this.aiHitPoints = MAX_HP;
 
         this.ai = new Ai(this.aiBoard);
     }
@@ -153,11 +147,11 @@ class Model {
         if (event.playerType === PlayerType.Human) {
             board = this.humanBoard;
             fallingSequencer = this.humanFallingSequencer;
-            hp = (this.humanHitPoints -= 1);
+            hp = (vitals.humanHitPoints -= 1);
         } else {
             board = this.aiBoard;
             fallingSequencer = this.aiFallingSequencer;
-            hp = (this.aiHitPoints -= 1);
+            hp = (vitals.aiHitPoints -= 1);
         }
 
         eventBus.fire(new HpChangedEvent(hp, event.playerType, true));
