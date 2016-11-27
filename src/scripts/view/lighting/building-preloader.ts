@@ -1,5 +1,8 @@
 declare const THREE: any;
 
+// mtl and obj = 2 files.
+const FILES_TO_PRELOAD = 2;
+
 class BuildingPreloader {
     
     private instances: any[];
@@ -10,19 +13,23 @@ class BuildingPreloader {
         this.instancesRequested = 0;
     }
 
-    preload(callback: () => void) {
+    preload(signalOneFileLoaded: (success: boolean) => void): number {
         let mtlLoader = new THREE.MTLLoader();
         mtlLoader.setPath('');
         mtlLoader.load('green-building.mtl', (materials: any) => {
             materials.preload();
+            signalOneFileLoaded(true);
+
             let objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath('');
             objLoader.load('green-building.obj', (obj: any) => {
                 this.instances.push(obj);
-                callback();
-            }, () => { }, () => { console.log('error while loading :(') });
-        });
+                signalOneFileLoaded(true);
+            }, undefined, () => { signalOneFileLoaded(false); });
+        }, undefined, () => { signalOneFileLoaded(false); });
+
+        return FILES_TO_PRELOAD;
     }
     
     getInstance(): any {

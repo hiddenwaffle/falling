@@ -50,8 +50,6 @@ class SoundManager {
 
         // Part 2: Update session storage
         setTimeout(() => {
-            this.soundToggleSection.style.display = 'block';
-            
             if (mute == null) {
                 let soundValue = sessionStorage.getItem(SOUND_KEY);
                 if (soundValue === 'off') {

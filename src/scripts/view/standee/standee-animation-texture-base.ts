@@ -8,7 +8,7 @@ export const SPRITESHEET_HEIGHT  = 512;
 export const FRAME_WIDTH   = 48;
 export const FRAME_HEIGHT  = 72;
 
-const TOTAL_DIFFERENT_TEXTURES = 3;
+const FILES_TO_PRELOAD = 3;
 
 export class StandeeAnimationTextureWrapper {
 
@@ -31,7 +31,7 @@ class StandeeAnimationTextureBase {
         this.currentTextureIdx = 0;
     }
 
-    preload(callback: () => any) {
+    preload(signalThatOneTextureWasLoaded: (result: boolean) => any): number {
         let textureLoadedHandler = (texture: any) => {
             // Have it show only one frame at a time:
             texture.repeat.set(
@@ -40,15 +40,19 @@ class StandeeAnimationTextureBase {
             );
             this.textures.push(texture);
             this.loadedCount++;
-            if (this.loadedCount >= TOTAL_DIFFERENT_TEXTURES) {
-                callback();
-            }
-        }
+            signalThatOneTextureWasLoaded(true);
+        };
+
+        let errorHandler = () => {
+            signalThatOneTextureWasLoaded(false);
+        };
 
         let textureLoader = new THREE.TextureLoader();
-        textureLoader.load('fall-student.png', textureLoadedHandler);
-        textureLoader.load('fall-student2.png', textureLoadedHandler);
-        textureLoader.load('fall-student3.png', textureLoadedHandler);
+        textureLoader.load('fall-student.png', textureLoadedHandler, undefined, errorHandler);
+        textureLoader.load('fall-student2.png', textureLoadedHandler, undefined, errorHandler);
+        textureLoader.load('fall-student3.png', textureLoadedHandler, undefined, errorHandler);
+
+        return FILES_TO_PRELOAD;
     }
 
     newInstance(): StandeeAnimationTextureWrapper {
@@ -59,7 +63,7 @@ class StandeeAnimationTextureBase {
 
     private getNextTextureIdx() {
         this.currentTextureIdx++;
-        if (this.currentTextureIdx >= TOTAL_DIFFERENT_TEXTURES) {
+        if (this.currentTextureIdx >= FILES_TO_PRELOAD) {
             this.currentTextureIdx = 0;
         }
         return this.currentTextureIdx;
