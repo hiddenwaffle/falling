@@ -1,22 +1,18 @@
 import {GameStateType, gameState} from '../game-state';
+import {introActivity} from './intro-activity';
 import {playingActivity} from './playing-activity';
-
-interface Activity {
-    start(): void;
-    step(elapsed: number): void;
-}
 
 class Model {
 
     start() {
+        introActivity.start();
         playingActivity.start();
     }
 
     step(elapsed: number) {
         switch (gameState.getCurrent()) {
             case GameStateType.Intro:
-                // TODO: Do stuff
-                gameState.setCurrent(GameStateType.Playing);
+                introActivity.step(elapsed);
                 break;
             case GameStateType.Playing:
                 playingActivity.step(elapsed);

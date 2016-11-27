@@ -1,11 +1,6 @@
 import {GameStateType, gameState} from '../game-state';
 import {playingHandler} from './playing-handler';
 
-interface Handler {
-    start(): void;
-    step(elapsed: number): void;
-}
-
 class Controller {
 
     start() {
