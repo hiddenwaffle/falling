@@ -4,9 +4,12 @@ const SOUND_KEY = '129083190-falling-sound';
 
 class SoundManager {
 
+    private soundToggleSection: HTMLDivElement;
     private soundToggleElement: HTMLInputElement;
 
     constructor() {
+        this.soundToggleSection = <HTMLDivElement> document.getElementById('sound-toggle-section');
+
         this.soundToggleElement = <HTMLInputElement> document.getElementById('sound-toggle');
         this.soundToggleElement.onclick = () => {
             this.updateSoundSetting(!this.soundToggleElement.checked);
@@ -47,6 +50,8 @@ class SoundManager {
 
         // Part 2: Update session storage
         setTimeout(() => {
+            this.soundToggleSection.style.display = 'block';
+            
             if (mute == null) {
                 let soundValue = sessionStorage.getItem(SOUND_KEY);
                 if (soundValue === 'off') {
