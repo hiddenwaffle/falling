@@ -91,7 +91,7 @@ class View {
         spotLight.target = this.aiGrid.group;
         this.scene.add(spotLight);
 
-        cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
+        cameraWrapper.setPosition(-3, 0.5, 15); // More or less eye-level with the NPCs.
         cameraWrapper.lookAt(new THREE.Vector3(5, 8, 2));
 
         cameraWrapper.updateRendererSize(this.renderer);

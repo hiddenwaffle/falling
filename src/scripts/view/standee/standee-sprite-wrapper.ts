@@ -115,6 +115,10 @@ export class StandeeSpriteWrapper {
         this.sprite.scale.set(1, 1.5); // Adjust aspect ratio for 48 x 72 size frames. 
         this.group.add(this.sprite);
 
+        // Half size them and position their feet on the ground.
+        this.group.scale.set(0.5, 0.5, 0.5);
+        this.group.position.set(0, -0.4, 0);
+
         // Initialize default animation to standing facing down:
         this.currentAnimation = createStandDown();
     }
