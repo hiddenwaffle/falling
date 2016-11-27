@@ -58,6 +58,7 @@ class StandeeAnimationTextureBase {
     newInstance(): StandeeAnimationTextureWrapper {
         let idx = this.getNextTextureIdx();
         let texture = this.textures[idx].clone(); // Cloning textures in the version of ThreeJS that I am currently using will duplicate them :(
+        texture.needsUpdate = true;
         return new StandeeAnimationTextureWrapper(texture);
     }
 
