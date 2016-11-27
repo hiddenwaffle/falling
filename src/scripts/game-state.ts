@@ -12,7 +12,7 @@ export const enum GameStateType {
     /**
      * This is after initial objects start() and likely where the game is waiting on the player's first input.
      */
-    Started,
+    Intro,
 
     /**
      * This is the main game loop of controlling pieces.

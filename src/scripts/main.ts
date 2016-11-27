@@ -21,7 +21,7 @@ function main() {
     view.start();
     model.start();
     
-    gameState.setCurrent(GameStateType.Started);
+    gameState.setCurrent(GameStateType.Intro);
 
     let step = () => {
         requestAnimationFrame(step);
