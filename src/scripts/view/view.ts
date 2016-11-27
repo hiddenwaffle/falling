@@ -87,7 +87,7 @@ class View {
         spotLight.target = this.aiGrid.group;
         this.scene.add(spotLight);
 
-        cameraWrapper.camera.position.set(4.0, 0.5, 15);
+        cameraWrapper.camera.position.set(4.0, 0.4, 15);
         cameraWrapper.camera.lookAt(new THREE.Vector3(5.0, 7, 2));
 
         cameraWrapper.updateRendererSize(this.renderer);
