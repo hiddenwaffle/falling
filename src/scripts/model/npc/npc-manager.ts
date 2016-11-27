@@ -5,9 +5,7 @@ import {NpcState} from '../../domain/npc-state';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
-
-// Starting position counts used in initialization.
-const TOTAL_NPCS = 20;
+import {TOTAL_NPCS, crowdStats} from './crowd-stats';
 
 class NpcManager {
 
@@ -28,22 +26,17 @@ class NpcManager {
 
         this.npcs.forEach((npc: Npc) => {
             // Place them out of view.
-            {
-                let x = -5
-                let y = 15
-                npc.start(x, y);
-            }
-
-            // TODO: Move this elsewhere:
-            // {
-            //     let x = (Math.random() * 7);
-            //     let y = (Math.random() * 15);
-            //     npc.beginWalkingTo(x, y);
-            // }
+            let x = -5
+            let y = 15
+            npc.start(x, y);
         });
+
+        crowdStats.start();
     }
 
     step(elapsed: number) {
+        crowdStats.step(elapsed);
+
         this.npcs.forEach((npc: Npc) => {
             npc.step(elapsed);
         });
@@ -52,17 +45,9 @@ class NpcManager {
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
         let npc = this.npcs.get(event.npcId);
         if (npc != null) {
-            {
-                let x = event.x;
-                let y = event.z;
-                npc.updatePosition(x, y);
-            }
-            
-            {
-                let x = (Math.random() * 7);
-                let y = (Math.random() * 15);
-                npc.beginWalkingTo(x, y);
-            }
+            let x = event.x;
+            let y = event.z;
+            npc.updatePosition(x, y);
         }
     }
 }

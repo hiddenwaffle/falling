@@ -29,19 +29,12 @@ export class Npc {
         eventBus.fire(new NpcPlacedEvent(this.id, this.state, x, y));
     }
 
-    /**
-     * This should be called by the NPC manager rather than tracks that reference them.
-     */
     step(elapsed: number) {
         this.timeInState += elapsed;
     }
 
-    transitionTo(state: NpcState) {
-        this.state = state;
-        this.timeInState = 0;
-    }
-
     beginWalkingTo(x: number, y: number) {
+        this.transitionTo(NpcState.Walking);
         eventBus.fire(new NpcMovementChangedEvent(this.id, x, y));
     }
 
@@ -56,5 +49,10 @@ export class Npc {
 
     getState(): NpcState {
         return this.state;
+    }
+
+    private transitionTo(state: NpcState) {
+        this.state = state;
+        this.timeInState = 0;
     }
 }
