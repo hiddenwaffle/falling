@@ -31,8 +31,8 @@ export class HpPanels {
             panel.visible = false;
 
             // TODO: Make this pulse at all?
-            panel.material.emissive.setHex(0xffffff);
-            panel.material.emissiveIntensity = 0.25;
+            panel.material.emissive.setHex(0xeeee00);
+            panel.material.emissiveIntensity = 0.5;
 
             this.panels.push(panel);
         }
