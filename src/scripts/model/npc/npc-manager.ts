@@ -27,18 +27,19 @@ class NpcManager {
         });
 
         this.npcs.forEach((npc: Npc) => {
+            // Place them out of view.
             {
-                let x = (Math.random() * 7);
-                let y = (Math.random() * 15);
+                let x = -5
+                let y = 15
                 npc.start(x, y);
             }
 
             // TODO: Move this elsewhere:
-            {
-                let x = (Math.random() * 7);
-                let y = (Math.random() * 15);
-                npc.beginWalkingTo(x, y);
-            }
+            // {
+            //     let x = (Math.random() * 7);
+            //     let y = (Math.random() * 15);
+            //     npc.beginWalkingTo(x, y);
+            // }
         });
     }
 
