@@ -1,3 +1,4 @@
+import {GameStateType} from '../game-state';
 import {Board} from './board/board';
 import {Ai} from './ai/ai';
 import {npcManager} from './npc/npc-manager';
@@ -75,6 +76,8 @@ class PlayingActivity {
         this.ai.step(elapsed);
 
         npcManager.step(elapsed);
+
+        return GameStateType.Playing;
     }
 
     private handlePlayerMovement(event: PlayerMovementEvent) {

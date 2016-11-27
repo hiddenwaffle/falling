@@ -9,17 +9,25 @@ class Model {
         playingActivity.start();
     }
 
+    /**
+     * Delegate step() to activities.
+     * Determine next state from activities.
+     */
     step(elapsed: number) {
-        switch (gameState.getCurrent()) {
+        let current = gameState.getCurrent();
+
+        switch (current) {
             case GameStateType.Intro:
-                introActivity.step(elapsed);
+                current = introActivity.step(elapsed);
                 break;
             case GameStateType.Playing:
-                playingActivity.step(elapsed);
+                current = playingActivity.step(elapsed);
                 break;
             default:
                 console.log('should not get here');
         }
+
+        gameState.setCurrent(current);
     }
 }
 export const model = new Model();

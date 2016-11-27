@@ -1,4 +1,4 @@
-import {GameStateType, gameState} from '../game-state';
+import {GameStateType} from '../game-state';
 
 class IntroActivity {
     
@@ -6,8 +6,8 @@ class IntroActivity {
         //
     }
 
-    step(elapsed: number) {
-        gameState.setCurrent(GameStateType.Playing);
+    step(elapsed: number): GameStateType {
+        return GameStateType.Playing; // TODO: Return this only after intro has completed.
     }
 }
 export const introActivity = new IntroActivity();
