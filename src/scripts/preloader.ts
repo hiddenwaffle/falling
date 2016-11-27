@@ -52,6 +52,9 @@ class Preloader {
     private fadeOut() {
         this.loadingDiv.style.opacity = '0';
         this.loadingDiv.style.transition = 'opacity 1s';
+        setTimeout(() => {
+            this.loadingDiv.style.display = 'none';
+        }, 1250); // Just a little bit longer than transition time.
     }
 }
 export const preloader = new Preloader();
