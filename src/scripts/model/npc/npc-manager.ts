@@ -5,7 +5,7 @@ import {NpcState} from '../../domain/npc-state';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
-import {TOTAL_NPCS, crowdStats} from './crowd-stats';
+import {TOTAL_NPCS, crowdTimer} from './crowd-timer';
 
 class NpcManager {
 
@@ -31,11 +31,11 @@ class NpcManager {
             npc.start(x, y);
         });
 
-        crowdStats.start();
+        crowdTimer.start();
     }
 
     step(elapsed: number) {
-        crowdStats.step(elapsed);
+        let expectedInterested = crowdTimer.step(elapsed);
 
         this.npcs.forEach((npc: Npc) => {
             npc.step(elapsed);
