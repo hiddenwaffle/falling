@@ -28,13 +28,5 @@ class CameraWrapper {
         // this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
     }
-
-    setPosition(x: number, y: number, z: number) {
-        this.camera.position.set(x, y, z);
-    }
-
-    lookAt(vec3: any) {
-        this.camera.lookAt(vec3);
-    }
 }
 export const cameraWrapper = new CameraWrapper();

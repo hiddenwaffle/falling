@@ -77,22 +77,18 @@ class View {
         this.scene.add(this.humanGrid.group);
 
         this.scene.add(this.aiGrid.group);
-        this.aiGrid.group.position.setX(11);
-        this.aiGrid.group.position.setZ(1);
-        this.aiGrid.group.rotation.y = -Math.PI / 4;
+        this.aiGrid.group.position.setX(12);
+        this.aiGrid.group.position.setZ(-2);
+        this.aiGrid.group.rotation.y = -Math.PI / 3.5;
 
-        // TODO: Temporary for debugging?
-        // this.scene.add(new THREE.AmbientLight(0x404040));
-
-        // TODO: Temporary?
         let spotLightColor = 0x9999ee;
         let spotLight = new THREE.SpotLight(spotLightColor);
         spotLight.position.set(-3, 0.75, 20);
         spotLight.target = this.aiGrid.group;
         this.scene.add(spotLight);
 
-        cameraWrapper.setPosition(-3, 0.5, 15); // More or less eye-level with the NPCs.
-        cameraWrapper.lookAt(new THREE.Vector3(5, 8, 2));
+        cameraWrapper.camera.position.set(4.0, 0.5, 15);
+        cameraWrapper.camera.lookAt(new THREE.Vector3(5.0, 7, 2));
 
         cameraWrapper.updateRendererSize(this.renderer);
         window.addEventListener('resize', () => {
