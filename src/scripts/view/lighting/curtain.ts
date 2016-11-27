@@ -5,7 +5,7 @@ import {PANEL_COUNT_PER_FLOOR} from '../../domain/constants';
 
 const MAX_CURTAIN_COUNT = 4;
 const CURTAIN_WIDTH = PANEL_COUNT_PER_FLOOR;
-const CURTAIN_MOVE_TIME = 400;
+const CURTAIN_MOVE_TIME = 750;
 
 class CurtainVertexPosition {
     x = 0;
