@@ -20,7 +20,7 @@ export class Building {
         let geometry = new THREE.PlaneGeometry(9, 3);
         let material = new THREE.MeshLambertMaterial({color: 0x343330});
         let wall = new THREE.Mesh(geometry, material);
-        wall.position.set(5, 2, -2.5);
+        wall.position.set(5, 1, -3.5);
 
         this.group.add(wall);
     }

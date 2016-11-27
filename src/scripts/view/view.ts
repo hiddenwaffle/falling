@@ -14,10 +14,7 @@ class View {
 
     private canvas: HTMLCanvasElement;
 
-    private skyScene: any;
-    private leftScene: any;
-    private rightScene: any;
-    private groundScene: any;
+    private scene: any;
 
     private renderer: any;
 
@@ -29,13 +26,9 @@ class View {
     constructor() {
         this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
 
-        this.skyScene = new THREE.Scene();
-        this.leftScene = new THREE.Scene();
-        this.rightScene = new THREE.Scene();
-        this.groundScene = new THREE.Scene();
+        this.scene = new THREE.Scene();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true, canvas: this.canvas});
-        this.renderer.autoClear = false;
 
         this.humanGrid = new LightingGrid(HpOrientation.DecreasesRightToLeft, RowClearDirection.RightToLeft);
         this.humanSwitchboard = new Switchboard(this.humanGrid, PlayerType.Human);
@@ -72,25 +65,18 @@ class View {
 
         standeeManager.step(elapsed);
 
-        this.renderer.clear();
-        this.renderer.render(this.skyScene, cameraWrapper.camera);
-        this.renderer.clearDepth();
-        this.renderer.render(this.leftScene, cameraWrapper.camera);
-        this.renderer.clearDepth();
-        this.renderer.render(this.rightScene, cameraWrapper.camera);
-        this.renderer.clearDepth();
-        this.renderer.render(this.groundScene, cameraWrapper.camera);
+        this.renderer.render(this.scene, cameraWrapper.camera);
     }
 
     private doStart() {
-        this.skyScene.add(sky.group);
+        this.scene.add(sky.group);
 
-        this.groundScene.add(ground.group);
-        this.groundScene.add(standeeManager.group);
+        this.scene.add(ground.group);
+        this.scene.add(standeeManager.group);
 
-        this.leftScene.add(this.humanGrid.group);
+        this.scene.add(this.humanGrid.group);
 
-        this.rightScene.add(this.aiGrid.group);
+        this.scene.add(this.aiGrid.group);
         this.aiGrid.group.position.setX(11);
         this.aiGrid.group.position.setZ(1);
         this.aiGrid.group.rotation.y = -Math.PI / 4;
@@ -100,14 +86,10 @@ class View {
 
         // TODO: Temporary?
         let spotLightColor = 0x9999ee;
-        let leftSpotLight = new THREE.SpotLight(spotLightColor);
-        leftSpotLight.position.set(-3, 0.75, 20);
-        leftSpotLight.target = this.aiGrid.group;
-        this.leftScene.add(leftSpotLight);
-        let rightSpotLight = new THREE.SpotLight(spotLightColor);
-        rightSpotLight.position.set(0, 0.75, 20);
-        rightSpotLight.target = this.aiGrid.group;
-        this.rightScene.add(rightSpotLight);
+        let spotLight = new THREE.SpotLight(spotLightColor);
+        spotLight.position.set(-3, 0.75, 20);
+        spotLight.target = this.aiGrid.group;
+        this.scene.add(spotLight);
 
         cameraWrapper.setPosition(-3, 0.75, 15); // More or less eye-level with the NPCs.
         cameraWrapper.lookAt(new THREE.Vector3(5, 8, 2));
