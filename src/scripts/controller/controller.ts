@@ -1,4 +1,4 @@
-import {input, Key} from './input';
+import {keyboard, Key} from './keyboard';
 import {eventBus} from '../event/event-bus';
 import {PlayerMovement} from '../domain/player-movement';
 import {PlayerType} from '../domain/player-type';
@@ -9,29 +9,29 @@ import {PlayerMovementEvent} from '../event/player-movement-event';
 class Controller {
 
     start() {
-        input.start();
+        keyboard.start();
     }
 
     step(elapsed: number) {
-        input.step(elapsed);
+        keyboard.step(elapsed);
 
-        if (input.isDownAndUnhandled(Key.Up)) {
+        if (keyboard.isDownAndUnhandled(Key.Up)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.RotateClockwise, PlayerType.Human));
         }
 
-        if (input.isDownAndUnhandled(Key.Left)) {
+        if (keyboard.isDownAndUnhandled(Key.Left)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Left, PlayerType.Human));
         }
 
-        if (input.isDownAndUnhandled(Key.Right)) {
+        if (keyboard.isDownAndUnhandled(Key.Right)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Right, PlayerType.Human));
         }
 
-        if (input.isDownAndUnhandled(Key.Down)) {
+        if (keyboard.isDownAndUnhandled(Key.Down)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Down, PlayerType.Human));
         }
 
-        if (input.isDownAndUnhandled(Key.Drop)) {
+        if (keyboard.isDownAndUnhandled(Key.Drop)) {
             eventBus.fire(new PlayerMovementEvent(PlayerMovement.Drop, PlayerType.Human));
         }
     }

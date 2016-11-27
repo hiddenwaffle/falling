@@ -22,7 +22,7 @@ const enum State {
 const KEY_REPEAT_DELAY_INITIAL  = 550;
 const KEY_REPEAT_DELAY_CONTINUE = 200;
 
-class Input {
+class Keyboard {
     private keyState: Map<Key,State>;
 
     private previousKeyCode: number;
@@ -241,4 +241,4 @@ class Input {
     }
 }
 
-export const input = new Input();
+export const keyboard = new Keyboard();
