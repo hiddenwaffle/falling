@@ -56,7 +56,8 @@ class View {
         standeeManager.start();
 
         // The canvas should have been hidden until setup is complete.
-        this.canvas.style.display = 'inline';
+        this.canvas.style.opacity = '1';      
+        this.canvas.style.transition = 'opacity 2s';
     }
 
     step(elapsed: number) {

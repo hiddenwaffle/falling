@@ -25,6 +25,7 @@ class Preloader {
                 count++;
                 this.loadingMessage.textContent = 'Loaded ' + count + ' of ' + total + ' fixtures...';
                 if (count >= total) {
+                    this.fadeOut();
                     signalPreloadingComplete();
                 }
                 this.loadingBar.setAttribute('value', String(count));
@@ -46,6 +47,11 @@ class Preloader {
         });
 
         this.loadingBar.setAttribute('max', String(total));
+    }
+
+    private fadeOut() {
+        this.loadingDiv.style.opacity = '0';
+        this.loadingDiv.style.transition = 'opacity 2s';
     }
 }
 export const preloader = new Preloader();
