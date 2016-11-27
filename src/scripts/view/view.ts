@@ -88,7 +88,7 @@ class View {
         this.scene.add(spotLight);
 
         cameraWrapper.camera.position.set(5, 0.4, 15);
-        cameraWrapper.camera.lookAt(new THREE.Vector3(6, 7, 2));
+        cameraWrapper.camera.lookAt(new THREE.Vector3(6, 6.5, 2));
 
         cameraWrapper.updateRendererSize(this.renderer);
         window.addEventListener('resize', () => {
