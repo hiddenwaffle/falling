@@ -46,7 +46,7 @@ export class Curtain {
 
         for (let idx = 0; idx < MAX_CURTAIN_COUNT; idx++) {
             let geometry = new THREE.PlaneGeometry(CURTAIN_WIDTH, 1);
-            let material = new THREE.MeshPhongMaterial({color: 0x101030}); // Midnight Blue
+            let material = new THREE.MeshPhongMaterial({color: 0x070716}); // Midnight Blue
             let curtain = new THREE.Mesh(geometry, material);
             this.curtains.push(curtain);
         }
