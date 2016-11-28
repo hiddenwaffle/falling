@@ -4,7 +4,6 @@ export const enum NpcLocation {
     OffRight,
     BuildingLeft,
     BuildingRight,
-    Middle,
-    WalkwayLeft,
-    WalkwayRight
+    BuildingMiddle,
+    Middle
 }

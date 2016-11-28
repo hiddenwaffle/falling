@@ -3,6 +3,7 @@ export const TOTAL_NPCS = 40;
 
 const TIME_UNTIL_FULL_INTEREST = 2 * 60 * 1000;
 const NPCS_PER_SECOND = TIME_UNTIL_FULL_INTEREST / TOTAL_NPCS;
+const STARTING_COUNT = 2;
 
 class CrowdTimer {
 
@@ -19,7 +20,7 @@ class CrowdTimer {
     step(elapsed: number): number {
         this.playTimeElapsed += elapsed;
 
-        let expected = Math.floor(this.playTimeElapsed / NPCS_PER_SECOND);
+        let expected = STARTING_COUNT + Math.floor(this.playTimeElapsed / NPCS_PER_SECOND);
         if (expected > TOTAL_NPCS) {
             expected = TOTAL_NPCS;
         }
