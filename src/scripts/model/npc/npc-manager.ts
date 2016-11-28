@@ -109,7 +109,7 @@ class NpcManager {
                 [x, y] = this.randomWithinRange(10, 1, 2);
                 break;
             case NpcLocation.Middle:
-                [x, y] = this.randomWithinRange(5, 13, 2);
+                [x, y] = this.randomWithinRange(5, 11, 2);
                 break;
             default:
                 console.log('should not get here');
