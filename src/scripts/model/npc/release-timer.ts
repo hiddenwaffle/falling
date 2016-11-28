@@ -5,7 +5,7 @@ const TIME_UNTIL_EVERYONE_ON_SCREEN = 0.5 * 60 * 1000; // TODO: Set that to 2 mi
 const NPCS_PER_SECOND = TIME_UNTIL_EVERYONE_ON_SCREEN / TOTAL_NPCS;
 const STARTING_COUNT = 2;
 
-class CrowdTimer {
+class ReleaseTimer {
 
     private playTimeElapsed: number;
 
@@ -28,4 +28,4 @@ class CrowdTimer {
         return expectedInPlay;
     }
 }
-export const crowdTimer = new CrowdTimer();
+export const releaseTimer = new ReleaseTimer();

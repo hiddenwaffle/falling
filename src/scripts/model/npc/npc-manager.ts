@@ -5,7 +5,7 @@ import {NpcLocation, FocusPoint} from './npc-location';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
-import {TOTAL_NPCS, crowdTimer} from './crowd-timer';
+import {TOTAL_NPCS, releaseTimer} from './release-timer';
 
 class NpcManager {
 
@@ -39,11 +39,11 @@ class NpcManager {
             this.npcsOffscreen.push(npc);
         }
 
-        crowdTimer.start();
+        releaseTimer.start();
     }
 
     step(elapsed: number) {
-        let expectedInPlay = crowdTimer.step(elapsed);
+        let expectedInPlay = releaseTimer.step(elapsed);
         this.ensureInPlayNpcCount(expectedInPlay);
 
         this.npcsInPlay.forEach((npc: Npc) => {
