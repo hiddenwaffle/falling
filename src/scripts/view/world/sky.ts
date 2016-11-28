@@ -2,7 +2,7 @@ declare const THREE: any;
 
 const START_Z_ANGLE = -(Math.PI / 30);
 const END_Z_ANGLE   =   Math.PI / 30;
-const ROTATION_SPEED = 0.0001;
+const ROTATION_SPEED = 0.0005;
 
 class Sky {
 
