@@ -7,6 +7,7 @@ import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 
 const Y_OFFSET = 0.75; // Sets their feet on the ground plane.
+const STANDEE_SPEED = 0.5;
 
 class StandeeManager {
 
@@ -71,7 +72,7 @@ class StandeeManager {
         if (standee != null) {
             let x = event.x;
             let z = event.y;
-            standee.walkTo(x, z, 1);
+            standee.walkTo(x, z, STANDEE_SPEED);
         }
     }
 }
