@@ -33,12 +33,8 @@ class NpcManager {
             let npc = new Npc(() => {
                 crowdStats.giveNpcDirection(npc);
             });
-            
-            // Place out of view.
-            let x = -5
-            let y = 15
-            npc.start(x, y);
 
+            npc.start();
             this.npcs.set(npc.id, npc);
             this.npcsOffscreen.push(npc);
         }
@@ -69,18 +65,7 @@ class NpcManager {
         let npc = this.npcsOffscreen.pop();
         if (npc != null) {
             this.npcsInPlay.push(npc);
-
-            // Move it to one of the off screen locations.
-            {
-                let offscreen = Math.floor(Math.random() * 2);
-                if (offscreen == 0) {
-                    npc.teleportTo(NpcLocation.OffLeft);
-                } else {
-                    npc.teleportTo(NpcLocation.OffRight);
-                }
-            }
-
-            crowdStats.giveNpcDirection(npc, true);
+            crowdStats.giveNpcInitialDirection(npc);
         }
     }
 

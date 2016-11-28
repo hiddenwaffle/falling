@@ -34,10 +34,11 @@ export class Npc {
         this.readyForCommandCallback = readyForCommandCallback;
     }
 
-    start(x: number, y: number) {
-        this.xlast = x;
-        this.ylast = y;
-        eventBus.fire(new NpcPlacedEvent(this.id, x, y));
+    start() {
+        // Place it out of view somewhere.
+        this.xlast = -5;
+        this.ylast =  15;
+        eventBus.fire(new NpcPlacedEvent(this.id, this.xlast, this.ylast));
     }
 
     step(elapsed: number) {

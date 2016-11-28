@@ -1,5 +1,6 @@
 import {Npc} from './npc';
 import {NpcLocation, FocusPoint} from './npc-location';
+import {gameState} from '../../game-state';
 
 class CrowdStats {
 
@@ -12,16 +13,28 @@ class CrowdStats {
     }
 
     /**
-     * Tell a waiting NPC what to do.
+     * Teleport the NPC somewhere, depending on gameState.
      */
-    giveNpcDirection(npc: Npc, first=false) {
-        if (first) {
-            // TODO: NPC is offscreen at this point
-            npc.addWaypoint(NpcLocation.BuildingMiddle);
-        } else {
-            // TODO: Determine what the npc should do now.
-            npc.standFacing(FocusPoint.BuildingRight, 20000);
+    giveNpcInitialDirection(npc: Npc) {
+        {
+            let offscreen = Math.floor(Math.random() * 2);
+            if (offscreen == 0) {
+                npc.teleportTo(NpcLocation.OffLeft);
+            } else {
+                npc.teleportTo(NpcLocation.OffRight);
+            }
         }
+
+        // TODO: Have it walk somewhere
+        npc.addWaypoint(NpcLocation.BuildingMiddle);
+    }
+
+    /**
+     * Tell a waiting NPC what to do, depending on gameState.
+     */
+    giveNpcDirection(npc: Npc) {
+        // TODO: Determine what the npc should do now.
+        npc.standFacing(FocusPoint.BuildingRight, 20000);
     }
 }
 export const crowdStats = new CrowdStats();
