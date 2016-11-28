@@ -26,9 +26,6 @@ class CrowdStats {
             default:
                 console.log('should not get here');
         }
-
-        // TODO: Have it walk somewhere
-        npc.addWaypoint(NpcLocation.BuildingMiddle);
     }
 
     private moveNpcOffScreen(npc: Npc) {
@@ -95,10 +92,10 @@ class CrowdStats {
     giveDirection(npc: Npc) {
         switch (gameState.getCurrent()) {
             case GameStateType.Intro:
-                this.giveIntroDirection(npc);
+                this.giveDirectionIntro(npc);
                 break;
             case GameStateType.Playing:
-                this.givePlayingDirection(npc);
+                this.giveDirectionPlaying(npc);
                 break;
             default:
                 console.log('should not get here');
@@ -108,7 +105,7 @@ class CrowdStats {
     /**
      * Have an offscreen NPC walk to the middle and them back offscreen.
      */
-    giveIntroDirection(npc: Npc) {
+    private giveDirectionIntro(npc: Npc) {
         let side = Math.floor(Math.random() * 2);
         if (side === 0) {
             npc.addWaypoint(NpcLocation.BuildingMiddle);
@@ -119,9 +116,18 @@ class CrowdStats {
         }
     }
 
-    givePlayingDirection(npc: Npc) {
-        // TODO: Determine what the NPC should do now.
-        npc.standFacing(FocusPoint.BuildingRight, 20000);
+    private giveDirectionPlaying(npc: Npc) {
+        // TODO: Use probability to determine what to do next.
+        
+        // let side = Math.floor(Math.random() * 2);
+        // if (side === 0) {
+        //     npc.standFacing(FocusPoint.BuildingRight, 10000);
+        // } else {
+        //     npc.standFacing(FocusPoint.BuildingLeft, 10000);
+        // }
+
+        // TODO: Have it walk somewhere
+        // npc.addWaypoint(NpcLocation.BuildingMiddle);
     }
 }
 export const crowdStats = new CrowdStats();
