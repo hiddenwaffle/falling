@@ -94,6 +94,16 @@ class View {
         window.addEventListener('resize', () => {
             cameraWrapper.updateRendererSize(this.renderer);
         });
+
+        // this.addDebugBox();
     }
+
+    // private addDebugBox() {
+    //     let geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    //     let material = new THREE.MeshLambertMaterial({emissive: 0xff00ff});
+    //     let mesh = new THREE.Mesh(geometry, material);
+    //     mesh.position.set(5, 0.25, 13);
+    //     this.scene.add(mesh);
+    // }
 }
 export const view = new View();

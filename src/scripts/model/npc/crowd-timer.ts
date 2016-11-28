@@ -1,7 +1,7 @@
 // Starting position counts used in initialization.
 export const TOTAL_NPCS = 40;
 
-const TIME_UNTIL_EVERYONE_ON_SCREEN = 3 * 60 * 1000;
+const TIME_UNTIL_EVERYONE_ON_SCREEN = 0.5 * 60 * 1000;
 const NPCS_PER_SECOND = TIME_UNTIL_EVERYONE_ON_SCREEN / TOTAL_NPCS;
 const STARTING_COUNT = 2;
 

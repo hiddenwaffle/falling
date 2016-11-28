@@ -100,13 +100,16 @@ class NpcManager {
                 [x, y] = this.randomWithinRange(10, 15, 2);
                 break;
             case NpcLocation.BuildingLeft:
+                [x, y] = this.randomWithinRange(5, 4.5, 2);
                 break;
             case NpcLocation.BuildingRight:
+                [x, y] = this.randomWithinRange(9, 7.5, 2);
                 break;
             case NpcLocation.BuildingMiddle:
                 [x, y] = this.randomWithinRange(10, 1, 2);
                 break;
             case NpcLocation.Middle:
+                [x, y] = this.randomWithinRange(5, 13, 2);
                 break;
             default:
                 console.log('should not get here');
