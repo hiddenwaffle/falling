@@ -47,10 +47,6 @@ class NpcManager {
         this.npcsInPlay.forEach((npc: Npc) => {
             npc.step(elapsed);
         });
-
-        // this.npcs.forEach((npc: Npc) => {
-        //     npc.step(elapsed);
-        // });
     }
 
     private ensureInPlayNpcCount(expectedInPlay: number) {
