@@ -79,8 +79,12 @@ class NpcManager {
                 npc.teleportTo(x, y);
             }
 
-            // TODO: Set its path
-            npc.beginWalkingTo(10, 1);
+            // Set its target
+            {
+                let x: number, y: number;
+                [x, y] = this.generateRandomCoordinates(NpcLocation.BuildingMiddle);
+                npc.beginWalkingTo(x, y);
+            }
         }
     }
 
@@ -90,18 +94,17 @@ class NpcManager {
 
         switch (location) {
             case NpcLocation.OffLeft:
-                x = -5;
-                y = 5;
+                [x, y] = this.randomWithinRange(-5, 5, 2);
                 break;
             case NpcLocation.OffRight:
-                x = 10;
-                y = 15;
+                [x, y] = this.randomWithinRange(10, 15, 2);
                 break;
             case NpcLocation.BuildingLeft:
                 break;
             case NpcLocation.BuildingRight:
                 break;
             case NpcLocation.BuildingMiddle:
+                [x, y] = this.randomWithinRange(10, 1, 2);
                 break;
             case NpcLocation.Middle:
                 break;
@@ -110,6 +113,12 @@ class NpcManager {
         }
 
         return [x, y];
+    }
+
+    private randomWithinRange(x: number, y: number, variance: number): [number, number] {
+        let xresult = x - (variance / 2) + (Math.random() * variance);
+        let yresult = y - (variance / 2) + (Math.random() * variance);
+        return [xresult, yresult];
     }
 
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
