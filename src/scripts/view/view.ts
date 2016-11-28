@@ -102,7 +102,7 @@ class View {
     //     let geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
     //     let material = new THREE.MeshLambertMaterial({emissive: 0xff00ff});
     //     let mesh = new THREE.Mesh(geometry, material);
-    //     mesh.position.set(5, 0.25, 13);
+    //     mesh.position.set(15.5, 0, 2.0);
     //     this.scene.add(mesh);
     // }
 }

@@ -93,7 +93,6 @@ class NpcManager {
 
     private determineNewCommand(npc: Npc) {
         // TODO: Determine what the npc should do now.
-        console.log('determine new command for NPC ID: ' + npc.id);
         npc.standFacing(FocusPoint.BuildingLeft, 20000);
     }
 }

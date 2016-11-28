@@ -81,6 +81,8 @@ export class Npc {
         this.standingTtl = standingTtl;
 
         // TODO: Move NPC slightly in the direction of focusPoint to get it to look at it.
+        // BuildingLeft:    ( 5,    0.25,  -3)
+        // BuildingRight:   (15.5,  0,      2)
     }
 
     addWaypoint(location: NpcLocation) {
