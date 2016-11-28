@@ -31,7 +31,7 @@ class NpcManager {
 
         for (let npcIdx = 0; npcIdx < TOTAL_NPCS; npcIdx++) {
             let npc = new Npc(() => {
-                crowdStats.giveNpcDirection(npc);
+                crowdStats.giveDirection(npc);
             });
 
             npc.start();
@@ -65,7 +65,7 @@ class NpcManager {
         let npc = this.npcsOffscreen.pop();
         if (npc != null) {
             this.npcsInPlay.push(npc);
-            crowdStats.giveNpcInitialDirection(npc);
+            crowdStats.giveInitialDirection(npc);
         }
     }
 
