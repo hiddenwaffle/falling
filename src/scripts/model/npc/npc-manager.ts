@@ -1,6 +1,7 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
+import {NpcLocation} from './npc-location';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
@@ -66,10 +67,49 @@ class NpcManager {
         if (npc != null) {
             this.npcsInPlay.push(npc);
 
-            // TODO: Stuff
-            npc.teleportTo(5, 1);
+            // Move it to one of the off screen locations.
+            {
+                let offscreen = Math.floor(Math.random() * 2);
+                let x: number, y: number;
+                if (offscreen == 0) {
+                    [x, y] = this.generateRandomCoordinates(NpcLocation.OffLeft);
+                } else {
+                    [x, y] = this.generateRandomCoordinates(NpcLocation.OffRight);
+                }
+                npc.teleportTo(x, y);
+            }
+
+            // TODO: Set its path
             npc.beginWalkingTo(10, 1);
         }
+    }
+
+    private generateRandomCoordinates(location: NpcLocation): [number, number] {
+        let x = 0;
+        let y = 0;
+
+        switch (location) {
+            case NpcLocation.OffLeft:
+                x = -5;
+                y = 5;
+                break;
+            case NpcLocation.OffRight:
+                x = 10;
+                y = 15;
+                break;
+            case NpcLocation.BuildingLeft:
+                break;
+            case NpcLocation.BuildingRight:
+                break;
+            case NpcLocation.BuildingMiddle:
+                break;
+            case NpcLocation.Middle:
+                break;
+            default:
+                console.log('should not get here');
+        }
+
+        return [x, y];
     }
 
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
