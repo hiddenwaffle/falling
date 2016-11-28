@@ -66,58 +66,18 @@ class NpcManager {
             // Move it to one of the off screen locations.
             {
                 let offscreen = Math.floor(Math.random() * 2);
-                let x: number, y: number;
                 if (offscreen == 0) {
-                    [x, y] = this.generateRandomCoordinates(NpcLocation.OffLeft);
+                    npc.teleportTo(NpcLocation.OffLeft);
                 } else {
-                    [x, y] = this.generateRandomCoordinates(NpcLocation.OffRight);
+                    npc.teleportTo(NpcLocation.OffRight);
                 }
-                npc.teleportTo(x, y);
             }
 
             // Set its target
             {
-                let x: number, y: number;
-                [x, y] = this.generateRandomCoordinates(NpcLocation.BuildingMiddle);
-                npc.beginWalkingTo(x, y);
+                npc.addWaypoint(NpcLocation.BuildingMiddle);
             }
         }
-    }
-
-    private generateRandomCoordinates(location: NpcLocation): [number, number] {
-        let x = 0;
-        let y = 0;
-
-        switch (location) {
-            case NpcLocation.OffLeft:
-                [x, y] = this.randomWithinRange(-5, 5, 2);
-                break;
-            case NpcLocation.OffRight:
-                [x, y] = this.randomWithinRange(10, 15, 2);
-                break;
-            case NpcLocation.BuildingLeft:
-                [x, y] = this.randomWithinRange(5, 4.5, 2);
-                break;
-            case NpcLocation.BuildingRight:
-                [x, y] = this.randomWithinRange(9, 7.5, 2);
-                break;
-            case NpcLocation.BuildingMiddle:
-                [x, y] = this.randomWithinRange(10, 1, 2);
-                break;
-            case NpcLocation.Middle:
-                [x, y] = this.randomWithinRange(5, 11, 2);
-                break;
-            default:
-                console.log('should not get here');
-        }
-
-        return [x, y];
-    }
-
-    private randomWithinRange(x: number, y: number, variance: number): [number, number] {
-        let xresult = x - (variance / 2) + (Math.random() * variance);
-        let yresult = y - (variance / 2) + (Math.random() * variance);
-        return [xresult, yresult];
     }
 
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {
