@@ -1,7 +1,6 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
-import {NpcState} from '../../domain/npc-state';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';

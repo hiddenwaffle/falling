@@ -2,14 +2,13 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
-import {NpcState} from '../../domain/npc-state';
+import {NpcMovementType} from '../../domain/npc-movement-type';
 import {NpcLocation} from './npc-location';
 
 export class Npc {
     readonly id: number;
 
-    private state: NpcState;
-    private timeInState: number;
+    private movementType: NpcMovementType;
 
     private currentLocation: NpcLocation;
     private nextLocation: NpcLocation;
@@ -22,8 +21,7 @@ export class Npc {
     constructor() {
         this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
-        this.state = NpcState.Idle;
-        this.timeInState = 0;
+        this.movementType = NpcMovementType.Idle;
 
         this.currentLocation = NpcLocation.None;
         this.nextLocation = NpcLocation.None;
@@ -36,15 +34,15 @@ export class Npc {
     start(x: number, y: number) {
         this.xlast = x;
         this.ylast = y;
-        eventBus.fire(new NpcPlacedEvent(this.id, this.state, x, y));
+        eventBus.fire(new NpcPlacedEvent(this.id, x, y));
     }
 
     step(elapsed: number) {
-        this.timeInState += elapsed;
+        //
     }
 
     beginWalkingTo(x: number, y: number) {
-        this.transitionTo(NpcState.Walking);
+        this.movementType = NpcMovementType.Walking;
         eventBus.fire(new NpcMovementChangedEvent(this.id, x, y));
     }
 
@@ -54,7 +52,7 @@ export class Npc {
     updatePosition(x: number, y: number) {
         this.xlast = x;
         this.ylast = y;
-        this.transitionTo(NpcState.Idle);
+        this.movementType = NpcMovementType.Idle;
     }
 
     /**
@@ -65,14 +63,5 @@ export class Npc {
         this.xlast = x;
         this.ylast = y;
         eventBus.fire(new NpcTeleportedEvent(this.id, x, y));
-    }
-
-    getState(): NpcState {
-        return this.state;
-    }
-
-    private transitionTo(state: NpcState) {
-        this.state = state;
-        this.timeInState = 0;
     }
 }
