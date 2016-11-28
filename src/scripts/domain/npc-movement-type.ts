@@ -1,4 +1,4 @@
-export const enum NpcMovementType {
+export const enum NpcState {
     /**
      * NPC is in-transit to a waypoint.
      */

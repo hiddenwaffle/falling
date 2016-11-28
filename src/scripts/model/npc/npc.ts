@@ -2,31 +2,35 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
-import {NpcMovementType} from '../../domain/npc-movement-type';
-import {NpcLocation} from './npc-location';
+import {NpcState} from '../../domain/npc-movement-type';
+import {NpcLocation, FocusPoint} from './npc-location';
 
 export class Npc {
     readonly id: number;
 
-    private movementType: NpcMovementType;
-    private standingElapsed: number;
+    private state: NpcState;
+    private standingTtl: number;
+
+    private waypoints: NpcLocation[];
 
     // "Last" as in the last known coordinate, because it could be currently in-motion.
     private xlast: number;
     private ylast: number;
 
-    private waypoints: NpcLocation[];
+    private readyForCommandCallback: () => void;
 
-    constructor() {
+    constructor(readyForCommandCallback: () => void) {
         this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
-        this.movementType = NpcMovementType.WaitingForCommand;
-        this.standingElapsed = 0;
+        this.state = NpcState.WaitingForCommand;
+        this.standingTtl = 0;
+
+        this.waypoints = [];
 
         this.xlast = 0;
         this.ylast = 0;
 
-        this.waypoints = [];
+        this.readyForCommandCallback = readyForCommandCallback;
     }
 
     start(x: number, y: number) {
@@ -36,15 +40,47 @@ export class Npc {
     }
 
     step(elapsed: number) {
-        if (this.movementType === NpcMovementType.WaitingForCommand && this.waypoints.length > 0) {
+        switch (this.state) {
+            case NpcState.Walking:
+                this.stepWalking();
+                break;
+            case NpcState.Standing:
+                this.stepStanding(elapsed);
+                break;
+            case NpcState.WaitingForCommand:
+                this.stepWaitingForCommand();
+                break;
+            default:
+                console.log('should not get here');
+        }
+    }
+
+    private stepWalking() {
+        // Maybe nothing here.
+    }
+
+    private stepStanding(elapsed: number) {
+        this.standingTtl -= elapsed;
+
+        if (this.standingTtl <= 0) {
+            this.readyForCommandCallback();
+        }
+    }
+
+    private stepWaitingForCommand() {
+        if (this.waypoints.length > 0) {
             let nextLocation = this.waypoints.shift();
             this.beginWalkingTo(nextLocation);
+        } else {
+            this.readyForCommandCallback();
         }
-        
-        if (this.movementType === NpcMovementType.Standing) {
-            this.standingElapsed += elapsed;
-            // TODO: Do something if enough time has elapsed.
-        }
+    }
+
+    standFacing(focusPoint: FocusPoint, standingTtl: number) {
+        this.state = NpcState.Standing;
+        this.standingTtl = standingTtl;
+
+        // TODO: Move NPC slightly in the direction of focusPoint to get it to look at it.
     }
 
     addWaypoint(location: NpcLocation) {
@@ -58,7 +94,7 @@ export class Npc {
         this.xlast = x;
         this.ylast = y;
 
-        this.movementType = NpcMovementType.WaitingForCommand;
+        this.state = NpcState.WaitingForCommand;
     }
 
     /**
@@ -78,7 +114,7 @@ export class Npc {
     private beginWalkingTo(location: NpcLocation) {
         let x: number, y: number;
         [x, y] = this.generateRandomCoordinates(location);
-        this.movementType = NpcMovementType.Walking;
+        this.state = NpcState.Walking;
         eventBus.fire(new NpcMovementChangedEvent(this.id, x, y));
     }
 

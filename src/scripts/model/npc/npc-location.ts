@@ -7,3 +7,8 @@ export const enum NpcLocation {
     BuildingMiddle,
     Middle
 }
+
+export const enum FocusPoint {
+    BuildingLeft,
+    BuildingRight
+}

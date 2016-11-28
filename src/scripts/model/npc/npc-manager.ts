@@ -1,7 +1,7 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
 import {Npc} from './npc'
-import {NpcLocation} from './npc-location';
+import {NpcLocation, FocusPoint} from './npc-location';
 import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
@@ -27,7 +27,9 @@ class NpcManager {
         });
 
         for (let npcIdx = 0; npcIdx < TOTAL_NPCS; npcIdx++) {
-            let npc = new Npc();
+            let npc = new Npc(() => {
+                this.determineNewCommand(npc);
+            });
             // Place out of view.
             let x = -5
             let y = 15
@@ -87,6 +89,12 @@ class NpcManager {
             let y = event.z;
             npc.updatePosition(x, y);
         }
+    }
+
+    private determineNewCommand(npc: Npc) {
+        // TODO: Determine what the npc should do now.
+        console.log('determine new command for NPC ID: ' + npc.id);
+        npc.standFacing(FocusPoint.BuildingLeft, 20000);
     }
 }
 export const npcManager = new NpcManager();
