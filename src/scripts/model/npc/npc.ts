@@ -141,7 +141,7 @@ export class Npc {
                 [x, y] = this.randomWithinRange(9, 7.5, 2);
                 break;
             case NpcLocation.BuildingMiddle:
-                [x, y] = this.randomWithinRange(10, 1, 2);
+                [x, y] = this.randomWithinRange(10, 2.5, 2);
                 break;
             case NpcLocation.Middle:
                 [x, y] = this.randomWithinRange(6, 10, 3);
