@@ -3,16 +3,11 @@ import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcMovementType} from '../../domain/npc-movement-type';
-import {NpcLocation} from './npc-location';
 
 export class Npc {
     readonly id: number;
 
     private movementType: NpcMovementType;
-
-    private currentLocation: NpcLocation;
-    private nextLocation: NpcLocation;
-    private timeInLocation: number;
 
     // "Last" as in the last known coordinate, because it could be currently in-motion.
     private xlast: number;
@@ -22,10 +17,6 @@ export class Npc {
         this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
         this.movementType = NpcMovementType.Idle;
-
-        this.currentLocation = NpcLocation.None;
-        this.nextLocation = NpcLocation.None;
-        this.timeInLocation = 0;
 
         this.xlast = 0;
         this.ylast = 0;
