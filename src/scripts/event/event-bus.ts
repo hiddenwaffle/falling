@@ -8,6 +8,7 @@ export enum EventType {
     NpcMovementChangedEventType,
     NpcPlacedEventType,
     NpcStateChagedEventType,
+    NpcTeleportedEventType,
     PlayerMovementEventType,
     RowsClearAnimationCompletedEventType,
     RowsFilledEventType,

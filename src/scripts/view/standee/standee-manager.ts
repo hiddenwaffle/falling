@@ -3,6 +3,7 @@ declare const THREE: any;
 import {Standee} from './standee';
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
+import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
 
 const Y_OFFSET = 0.75; // Sets their feet on the ground plane.
@@ -26,6 +27,10 @@ class StandeeManager {
             this.handleNpcPlacedEvent(event);
         });
 
+        eventBus.register(EventType.NpcTeleportedEventType, (event: NpcTeleportedEvent) => {
+            this.handleNpcTeleportedEvent(event);
+        });
+
         eventBus.register(EventType.NpcMovementChangedEventType, (event: NpcMovementChangedEvent) => {
             this.handleNpcMovementChangedEvent(event);
         });
@@ -45,11 +50,19 @@ class StandeeManager {
 
         let x = event.x;
         let z = event.y;
-        this.moveToInitialPosition(standee, x, z);
+        this.moveToPosition(standee, x, z);
     }
 
-    private moveToInitialPosition(standee: Standee, x: number, z: number) {
-        // TODO: Use event.x, event.y with scaling to determine destination
+    private handleNpcTeleportedEvent(event: NpcTeleportedEvent) {
+        let standee = this.standees.get(event.npcId);
+        if (standee != null) {
+            let x = event.x;
+            let z = event.y;
+            this.moveToPosition(standee, x, z);
+        }
+    }
+
+    private moveToPosition(standee: Standee, x: number, z: number) {
         standee.moveTo(x,z);
     }
 

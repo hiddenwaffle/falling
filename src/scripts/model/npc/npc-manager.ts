@@ -11,12 +11,14 @@ class NpcManager {
 
     private npcs: Map<number, Npc>;
 
+    private npcsOffscreen: Npc[];
+    private npcsInPlay: Npc[];
+
     constructor() {
         this.npcs = new Map<number, Npc>();
-        for (let npcIdx = 0; npcIdx < TOTAL_NPCS; npcIdx++) {
-            let npc = new Npc();
-            this.npcs.set(npc.id, npc);
-        }
+
+        this.npcsOffscreen = [];
+        this.npcsInPlay = [];
     }
 
     start() {
@@ -24,22 +26,51 @@ class NpcManager {
             this.handleStandeeMovementEndedEvent(event);
         });
 
-        this.npcs.forEach((npc: Npc) => {
-            // Place them out of view.
+        for (let npcIdx = 0; npcIdx < TOTAL_NPCS; npcIdx++) {
+            let npc = new Npc();
+            // Place out of view.
             let x = -5
             let y = 15
             npc.start(x, y);
-        });
+
+            this.npcs.set(npc.id, npc);
+            this.npcsOffscreen.push(npc);
+        }
 
         crowdTimer.start();
     }
 
     step(elapsed: number) {
-        let expectedInterested = crowdTimer.step(elapsed);
+        let expectedInPlay = crowdTimer.step(elapsed);
+        this.ensureInPlayNpcCount(expectedInPlay);
 
-        this.npcs.forEach((npc: Npc) => {
+        this.npcsInPlay.forEach((npc: Npc) => {
             npc.step(elapsed);
         });
+
+        // this.npcs.forEach((npc: Npc) => {
+        //     npc.step(elapsed);
+        // });
+    }
+
+    private ensureInPlayNpcCount(expectedInPlay: number) {
+        if (this.npcsInPlay.length < expectedInPlay) {
+            let diff = expectedInPlay - this.npcsInPlay.length;
+            for (let count = 0; count < diff; count++) {
+                this.sendAnOffscreenNpcIntoPlay();
+            }
+        }
+    }
+
+    private sendAnOffscreenNpcIntoPlay() {
+        let npc = this.npcsOffscreen.pop();
+        if (npc != null) {
+            this.npcsInPlay.push(npc);
+
+            // TODO: Stuff
+            npc.teleportTo(5, 1);
+            npc.beginWalkingTo(10, 1);
+        }
     }
 
     private handleStandeeMovementEndedEvent(event: StandeeMovementEndedEvent) {

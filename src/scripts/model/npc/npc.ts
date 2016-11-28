@@ -1,6 +1,7 @@
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
+import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcState} from '../../domain/npc-state';
 import {NpcLocation} from './npc-location';
 
@@ -48,12 +49,22 @@ export class Npc {
     }
 
     /**
-     * Signifies the end of a walk.
+     * Signifies the end of a walk. Does not send an event.
      */
     updatePosition(x: number, y: number) {
         this.xlast = x;
         this.ylast = y;
         this.transitionTo(NpcState.Idle);
+    }
+
+    /**
+     * Teleports the NPC to the given location.
+     * Sends an event so the standee can be updated.
+     */
+    teleportTo(x: number, y: number) {
+        this.xlast = x;
+        this.ylast = y;
+        eventBus.fire(new NpcTeleportedEvent(this.id, x, y));
     }
 
     getState(): NpcState {
