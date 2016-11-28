@@ -12,7 +12,7 @@ class IntroActivity {
     step(elapsed: number): GameStateType {
         this.timeInIntro += elapsed;
 
-        npcManager.step(elapsed); // This is at the point of a Game Jam where I just cross my fingers and hope some things just work.
+        npcManager.step(elapsed); // This is at the point of a game jam where I just cross my fingers and hope some things just work.
 
         // TODO: Do more in intro.
         if (this.timeInIntro >= 1000) {

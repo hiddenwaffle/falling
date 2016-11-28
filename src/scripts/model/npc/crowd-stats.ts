@@ -93,7 +93,34 @@ class CrowdStats {
      * Tell a waiting NPC what to do, depending on gameState.
      */
     giveDirection(npc: Npc) {
-        // TODO: Determine what the npc should do now.
+        switch (gameState.getCurrent()) {
+            case GameStateType.Intro:
+                this.giveIntroDirection(npc);
+                break;
+            case GameStateType.Playing:
+                this.givePlayingDirection(npc);
+                break;
+            default:
+                console.log('should not get here');
+        }
+    }
+
+    /**
+     * Have an offscreen NPC walk to the middle and them back offscreen.
+     */
+    giveIntroDirection(npc: Npc) {
+        let side = Math.floor(Math.random() * 2);
+        if (side === 0) {
+            npc.addWaypoint(NpcLocation.BuildingMiddle);
+            npc.addWaypoint(NpcLocation.OffLeft);
+        } else {
+            npc.addWaypoint(NpcLocation.BuildingMiddle);
+            npc.addWaypoint(NpcLocation.OffRight);
+        }
+    }
+
+    givePlayingDirection(npc: Npc) {
+        // TODO: Determine what the NPC should do now.
         npc.standFacing(FocusPoint.BuildingRight, 20000);
     }
 }
