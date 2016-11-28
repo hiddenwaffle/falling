@@ -72,6 +72,11 @@ export class Standee {
         this.facing.setZ(z - this.group.position.z);
     }
 
+    lookAt(x: number, z: number) {
+        this.facing.setX(x - this.group.position.x);
+        this.facing.setZ(z - this.group.position.z);
+    }
+
     private stepWalk(elapsed: number) {
         if (this.walkTween != null) {
             this.walkTweenElapsed += elapsed;

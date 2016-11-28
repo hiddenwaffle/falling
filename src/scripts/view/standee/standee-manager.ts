@@ -5,6 +5,7 @@ import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
+import {NpcFacingEvent} from '../../event/npc-facing-event';
 
 const Y_OFFSET = 0.75; // Sets their feet on the ground plane.
 const STANDEE_SPEED = 0.5;
@@ -34,6 +35,10 @@ class StandeeManager {
 
         eventBus.register(EventType.NpcMovementChangedEventType, (event: NpcMovementChangedEvent) => {
             this.handleNpcMovementChangedEvent(event);
+        });
+
+        eventBus.register(EventType.NpcFacingEventType, (event: NpcFacingEvent) => {
+            this.handleNpcFacingEvent(event);
         });
     }
 
@@ -73,6 +78,15 @@ class StandeeManager {
             let x = event.x;
             let z = event.y;
             standee.walkTo(x, z, STANDEE_SPEED);
+        }
+    }
+
+    private handleNpcFacingEvent(event: NpcFacingEvent) {
+        let standee = this.standees.get(event.npcId);
+        if (standee != null) {
+            let x = event.x;
+            let z = event.y;
+            standee.lookAt(x, z);
         }
     }
 }

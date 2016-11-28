@@ -5,6 +5,7 @@ export enum EventType {
     CellChangeEventType,
     FallingSequencerEventType,
     HpChangedEventType,
+    NpcFacingEventType,
     NpcMovementChangedEventType,
     NpcPlacedEventType,
     NpcStateChagedEventType,

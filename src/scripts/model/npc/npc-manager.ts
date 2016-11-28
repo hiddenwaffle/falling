@@ -75,7 +75,7 @@ class NpcManager {
                 }
             }
 
-            // Set its target
+            // TODO: Set its initial destination.
             {
                 npc.addWaypoint(NpcLocation.BuildingMiddle);
             }
@@ -93,7 +93,7 @@ class NpcManager {
 
     private determineNewCommand(npc: Npc) {
         // TODO: Determine what the npc should do now.
-        npc.standFacing(FocusPoint.BuildingLeft, 20000);
+        npc.standFacing(FocusPoint.BuildingRight, 20000);
     }
 }
 export const npcManager = new NpcManager();

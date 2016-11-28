@@ -1,6 +1,7 @@
 import {EventType, eventBus} from '../../event/event-bus';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {NpcMovementChangedEvent} from '../../event/npc-movement-changed-event';
+import {NpcFacingEvent} from '../../event/npc-facing-event';
 import {NpcTeleportedEvent} from '../../event/npc-teleported-event';
 import {NpcState} from '../../domain/npc-movement-type';
 import {NpcLocation, FocusPoint} from './npc-location';
@@ -80,9 +81,11 @@ export class Npc {
         this.state = NpcState.Standing;
         this.standingTtl = standingTtl;
 
-        // TODO: Move NPC slightly in the direction of focusPoint to get it to look at it.
-        // BuildingLeft:    ( 5,    0.25,  -3)
-        // BuildingRight:   (15.5,  0,      2)
+        if (focusPoint === FocusPoint.BuildingLeft) {
+            eventBus.fire(new NpcFacingEvent(this.id, 5, -3));
+        } else if (focusPoint === FocusPoint.BuildingRight) {
+            eventBus.fire(new NpcFacingEvent(this.id, 15.5, 2));
+        }
     }
 
     addWaypoint(location: NpcLocation) {
