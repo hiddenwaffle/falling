@@ -6,6 +6,7 @@ import {eventBus, EventType} from '../../event/event-bus';
 import {StandeeMovementEndedEvent} from '../../event/standee-movement-ended-event';
 import {NpcPlacedEvent} from '../../event/npc-placed-event';
 import {TOTAL_NPCS, releaseTimer} from './release-timer';
+import {crowdStats} from './crowd-stats';
 
 class NpcManager {
 
@@ -26,10 +27,13 @@ class NpcManager {
             this.handleStandeeMovementEndedEvent(event);
         });
 
+        // TODO: Register listeners for game events, like board collapse or if a shape caused holes.
+
         for (let npcIdx = 0; npcIdx < TOTAL_NPCS; npcIdx++) {
             let npc = new Npc(() => {
-                this.determineNewCommand(npc);
+                crowdStats.giveNpcDirection(npc);
             });
+            
             // Place out of view.
             let x = -5
             let y = 15
@@ -40,6 +44,7 @@ class NpcManager {
         }
 
         releaseTimer.start();
+        crowdStats.start();
     }
 
     step(elapsed: number) {
@@ -75,10 +80,7 @@ class NpcManager {
                 }
             }
 
-            // TODO: Set its initial destination.
-            {
-                npc.addWaypoint(NpcLocation.BuildingMiddle);
-            }
+            crowdStats.giveNpcDirection(npc, true);
         }
     }
 
@@ -89,11 +91,6 @@ class NpcManager {
             let y = event.z;
             npc.updatePosition(x, y);
         }
-    }
-
-    private determineNewCommand(npc: Npc) {
-        // TODO: Determine what the npc should do now.
-        npc.standFacing(FocusPoint.BuildingRight, 20000);
     }
 }
 export const npcManager = new NpcManager();
