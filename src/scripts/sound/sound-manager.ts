@@ -1,7 +1,17 @@
+/// <reference path='../../../node_modules/typescript/lib/lib.es6.d.ts'/>
+
 declare const Howler: any;
 
 import {EventType, eventBus} from '../event/event-bus';
+import {GameStateType, gameState} from '../game-state';
 import {GameStateChangedEvent} from '../event/game-state-changed-event';
+import {
+    TIME_UNTIL_EVERYONE_ON_SCREEN,
+    AMBIENCE_NIGHT,
+    MUSIC_OPENING,
+    MUSIC_MAIN,
+    MUSIC_MAIN_VOX
+} from '../domain/constants';
 
 const SOUND_KEY = '129083190-falling-sound';
 
@@ -10,6 +20,8 @@ class SoundManager {
     private soundToggleSection: HTMLDivElement;
     private soundToggleElement: HTMLInputElement;
 
+    private howls: Map<string, any>; // any = Howl
+
     constructor() {
         this.soundToggleSection = <HTMLDivElement> document.getElementById('sound-toggle-section');
 
@@ -17,6 +29,8 @@ class SoundManager {
         this.soundToggleElement.onclick = () => {
             this.updateSoundSetting(!this.soundToggleElement.checked);
         };
+
+        this.howls = new Map<string, any>();
     }
 
     /**
@@ -28,14 +42,23 @@ class SoundManager {
 
     start() {
         eventBus.register(EventType.GameStateChangedType, (event: GameStateChangedEvent) => {
-            console.log('game state changed');
-            // TODO: If Intro, start intro music and ambience loops
-            // TODO: If Playing, switch from intro to main loop asap, start chatter at lowest volume
+            switch (event.gameStateType) {
+                case GameStateType.Intro:
+                    this.cueIntroSounds();
+                    break;
+                case GameStateType.Playing:
+                    this.cuePlayingSounds();
+                    break;
+            }
         });
     }
 
     step(elapsed: number) {
         //
+    }
+
+    cacheHowl(key: string, value: any) { // any = Howl
+        this.howls.set(key, value);
     }
 
     /**
@@ -74,6 +97,47 @@ class SoundManager {
                 sessionStorage.setItem(SOUND_KEY, soundValue);
             }
         }, 0);
+    }
+
+    private cueIntroSounds() {
+        let ambienceNightHowl = this.howls.get(AMBIENCE_NIGHT);
+        ambienceNightHowl.loop(true);
+        ambienceNightHowl.play();
+
+        let musicOpeningHowl = this.howls.get(MUSIC_OPENING);
+        musicOpeningHowl.loop(true);
+        musicOpeningHowl.play();
+    }
+
+    /**
+     * Once loaded, have the main music play after the intro music completes its current loop.
+     */
+    private cuePlayingSounds() {
+        let musicMainHowl = this.howls.get(MUSIC_MAIN);
+        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+        if (musicMainHowl != null && musicMainHowlVox != null) {
+            let musicOpeningHowl = this.howls.get(MUSIC_OPENING);
+            musicOpeningHowl.loop(false);
+            musicOpeningHowl.once('end', () => {
+                musicOpeningHowl.unload();
+                this.chainMusicMain();
+            });
+        } else {
+            // Not loaded yet, try again in a second.
+            setTimeout(() => this.cuePlayingSounds(), 1000);
+        }
+    }
+
+    private chainMusicMain() {
+        let musicMainHowl = this.howls.get(MUSIC_MAIN);
+        musicMainHowl.play();
+        musicMainHowl.once('end', () => this.chainMusicMainVox());
+    }
+
+    private chainMusicMainVox() {
+        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+        musicMainHowlVox.play();
+        musicMainHowlVox.once('end', () => this.chainMusicMain());
     }
 }
 export const soundManager = new SoundManager();

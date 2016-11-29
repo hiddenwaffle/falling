@@ -1,1 +1,7 @@
 export const PANEL_COUNT_PER_FLOOR = 10;
+export const TIME_UNTIL_EVERYONE_ON_SCREEN = 60 * 1000;
+
+export const AMBIENCE_NIGHT = 'AMBIENCE_NIGHT';
+export const MUSIC_OPENING = 'MUSIC_OPENING';
+export const MUSIC_MAIN = 'MUSIC_MAIN';
+export const MUSIC_MAIN_VOX = 'MUSIC_MAIN_VOX';

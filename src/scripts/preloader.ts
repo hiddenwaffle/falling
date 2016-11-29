@@ -27,6 +27,7 @@ class Preloader {
                 if (count >= total) {
                     this.fadeOut();
                     signalPreloadingComplete();
+                    this.deferredLoad();
                 }
                 this.loadingBar.setAttribute('value', String(count));
             } else {
@@ -55,6 +56,13 @@ class Preloader {
         setTimeout(() => {
             this.loadingDiv.style.display = 'none';
         }, 1250); // Just a little bit longer than transition time.
+    }
+
+    /**
+     * Load more fixtures that will not be needed immediately.
+     */
+    private deferredLoad() {
+        soundLoader.deferredLoad();
     }
 }
 export const preloader = new Preloader();
