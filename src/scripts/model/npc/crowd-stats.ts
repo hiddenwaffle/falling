@@ -117,25 +117,80 @@ class CrowdStats {
     }
 
     private giveDirectionPlaying(npc: Npc) {
-        // TODO: Use probability to determine what to do next.
-
-        // let side = Math.floor(Math.random() * 2);
-        // if (side === 0) {
-        //     npc.standFacing(FocusPoint.BuildingRight, 10000);
-        // } else {
-        //     npc.standFacing(FocusPoint.BuildingLeft, 10000);
-        // }
-
-        // TODO: Have it walk somewhere
-        // npc.addWaypoint(NpcLocation.BuildingMiddle);
+        let action = Math.floor(Math.random() * 10);
+        switch (action) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+               this.giveDirectionPlayingStand(npc);
+               break;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                this.giveDirectionPlayingMove(npc);
+                break;
+            default:
+                console.log('should not get here');
+        }
     }
 
     private giveDirectionPlayingStand(npc: Npc) {
-        //
+        let side = Math.floor(Math.random() * 2);
+        if (side === 0) {
+            npc.standFacing(FocusPoint.BuildingRight, 15000);
+        } else {
+            npc.standFacing(FocusPoint.BuildingLeft, 15000);
+        }
     }
 
-    private gitDirectionPlayingMove(npc: Npc) {
-        //
+    private giveDirectionPlayingMove(npc: Npc) {
+        let where = Math.floor(Math.random() * 26);
+        switch (where) {
+            case 0:
+                npc.addWaypoint(NpcLocation.OffLeft);
+                break;
+            case 1:
+                npc.addWaypoint(NpcLocation.OffRight);
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                npc.addWaypoint(NpcLocation.BuildingLeft);
+                break;
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+                npc.addWaypoint(NpcLocation.BuildingRight);
+                break;
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+                npc.addWaypoint(NpcLocation.BuildingMiddle);
+                break;
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+                npc.addWaypoint(NpcLocation.Middle);
+                break;
+            default:
+                console.log('should not get here');
+        }
     }
 }
 export const crowdStats = new CrowdStats();

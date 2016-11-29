@@ -3,7 +3,7 @@ import {GameStateType, gameState} from '../../game-state';
 // Starting position counts used in initialization.
 export const TOTAL_NPCS = 40;
 
-const TIME_UNTIL_EVERYONE_ON_SCREEN = 1.25 * 60 * 1000; // 75 seconds
+const TIME_UNTIL_EVERYONE_ON_SCREEN = 1 * 60 * 1000;
 const NPCS_PER_SECOND = TIME_UNTIL_EVERYONE_ON_SCREEN / TOTAL_NPCS;
 const INTRO_STARTING_COUNT = 5;
 

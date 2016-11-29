@@ -65,7 +65,7 @@ export class Npc {
         this.standingTtl -= elapsed;
 
         if (this.standingTtl <= 0) {
-            this.readyForCommandCallback();
+            this.state = NpcState.WaitingForCommand;
         }
     }
 
@@ -85,7 +85,7 @@ export class Npc {
         if (focusPoint === FocusPoint.BuildingLeft) {
             eventBus.fire(new NpcFacingEvent(this.id, 5, -3));
         } else if (focusPoint === FocusPoint.BuildingRight) {
-            eventBus.fire(new NpcFacingEvent(this.id, 15.5, 2));
+            eventBus.fire(new NpcFacingEvent(this.id, 15.5, 5));
         }
     }
 
