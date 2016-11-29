@@ -4,6 +4,7 @@ export enum EventType {
     BoardFilledEventType,
     CellChangeEventType,
     FallingSequencerEventType,
+    GameStateChangedType,
     HpChangedEventType,
     NpcFacingEventType,
     NpcMovementChangedEventType,

@@ -1,3 +1,6 @@
+import {eventBus} from './event/event-bus';
+import {GameStateChanged} from './event/game-state-changed';
+
 export const enum GameStateType {
     /**
      * This is the state right when JavaScript starts running. Includes preloading.
@@ -38,6 +41,7 @@ class GameState {
 
     setCurrent(current: GameStateType) {
         this.current = current;
+        eventBus.fire(new GameStateChanged(current));
     }
 }
 export const gameState = new GameState();
