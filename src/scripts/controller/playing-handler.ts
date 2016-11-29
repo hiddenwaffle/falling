@@ -7,7 +7,7 @@ import {PlayerMovementEvent} from '../event/player-movement-event';
 class PlayingHandler {
 
     start() {
-        keyboard.start();
+        //
     }
 
     step(elapsed: number) {

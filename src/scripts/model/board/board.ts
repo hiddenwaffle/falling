@@ -207,6 +207,32 @@ export class Board {
         return success;
     }
 
+    generateRandomWhiteCells() {
+        for (let count = 0; count < 10; count++) {
+            let rowIdx = Math.floor(Math.random() * MAX_ROWS);
+            let colIdx = Math.floor(Math.random() * MAX_COLS);
+            this.changeCellColor(rowIdx, colIdx, Color.White);
+        }
+    }
+
+    /**
+     * Return true if a cell was found and cleared.
+     * Return false if none was found.
+     */
+    clearOneWhiteCell(): boolean {
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                if (row[colIdx].getColor() === Color.White) {
+                    this.changeCellColor(rowIdx, colIdx, Color.Empty);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Returns true if able to successfully rotate the shape alongside anything, if any.
      */

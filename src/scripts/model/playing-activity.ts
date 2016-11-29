@@ -80,6 +80,24 @@ class PlayingActivity {
         return GameStateType.Playing;
     }
 
+    /**
+     * Called by IntroActivity.
+     */
+    generateRandomWhiteCells() {
+        this.humanBoard.generateRandomWhiteCells();
+        this.aiBoard.generateRandomWhiteCells();
+    }
+
+    /**
+     * Called by IntroActivity.
+     */
+    clearWhiteCell(): boolean {
+        console.log('here');
+        let result1 = this.humanBoard.clearOneWhiteCell();
+        let result2 = this.aiBoard.clearOneWhiteCell();
+        return (result1 || result2)
+    }
+
     private handlePlayerMovement(event: PlayerMovementEvent) {
         let board = this.determineBoardFor(event.playerType);
 

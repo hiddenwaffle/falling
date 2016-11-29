@@ -6,6 +6,7 @@ export enum EventType {
     FallingSequencerEventType,
     GameStateChangedType,
     HpChangedEventType,
+    IntroKeyPressedEventType,
     NpcFacingEventType,
     NpcMovementChangedEventType,
     NpcPlacedEventType,
