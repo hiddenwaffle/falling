@@ -23,6 +23,8 @@ class SoundManager {
 
     private howls: Map<string, any>; // any = Howl
 
+    private crowdNoiseElapsed: number;
+
     constructor() {
         this.soundToggleSection = <HTMLDivElement> document.getElementById('sound-toggle-section');
 
@@ -32,6 +34,8 @@ class SoundManager {
         };
 
         this.howls = new Map<string, any>();
+
+        this.crowdNoiseElapsed = 0;
     }
 
     /**
@@ -55,7 +59,18 @@ class SoundManager {
     }
 
     step(elapsed: number) {
-        //
+        // Increase the crowd volume based on how long it has been playing, up to a little less than halfway.
+        let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
+        if (studentsTalkingHowl != null) {
+            if (studentsTalkingHowl.playing()) {
+                this.crowdNoiseElapsed += elapsed;
+                let volume = (this.crowdNoiseElapsed / TIME_UNTIL_EVERYONE_ON_SCREEN) * 0.4;
+                if (volume > 0.4) {
+                    volume = 0.4;
+                }
+                studentsTalkingHowl.volume(volume); // Seems... ok... to call this repeatedly...
+            }
+        }
     }
 
     cacheHowl(key: string, value: any) { // any = Howl
@@ -141,7 +156,6 @@ class SoundManager {
         let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
         if (studentsTalkingHowl != null) {
             studentsTalkingHowl.loop(true);
-            studentsTalkingHowl.fade(0.0, 0.4, TIME_UNTIL_EVERYONE_ON_SCREEN);
             studentsTalkingHowl.play();
         } else {
             // Not loaded yet, try again in a second.
