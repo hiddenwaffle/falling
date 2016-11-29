@@ -141,7 +141,7 @@ class SoundManager {
         let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
         if (studentsTalkingHowl != null) {
             studentsTalkingHowl.loop(true);
-            studentsTalkingHowl.fade(0.0, 0.25, TIME_UNTIL_EVERYONE_ON_SCREEN);
+            studentsTalkingHowl.fade(0.0, 0.33, TIME_UNTIL_EVERYONE_ON_SCREEN);
             studentsTalkingHowl.play();
         } else {
             // Not loaded yet, try again in a second.
