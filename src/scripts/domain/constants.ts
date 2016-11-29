@@ -5,3 +5,4 @@ export const AMBIENCE_NIGHT = 'AMBIENCE_NIGHT';
 export const MUSIC_OPENING = 'MUSIC_OPENING';
 export const MUSIC_MAIN = 'MUSIC_MAIN';
 export const MUSIC_MAIN_VOX = 'MUSIC_MAIN_VOX';
+export const STUDENTS_TALKING = 'STUDENTS_TALKING';

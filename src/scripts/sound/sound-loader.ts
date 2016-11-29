@@ -6,7 +6,8 @@ import {
     AMBIENCE_NIGHT,
     MUSIC_OPENING,
     MUSIC_MAIN,
-    MUSIC_MAIN_VOX
+    MUSIC_MAIN_VOX,
+    STUDENTS_TALKING
 } from '../domain/constants';
 
 // 1) Ambience - Night
@@ -18,7 +19,8 @@ class SoundLoader {
     preload(signalOneFileLoaded: (success: boolean) => void): number {
         {
             let ambienceNightHowl = new Howl({
-                src: ['ambience-night.m4a']
+                src: ['ambience-night.m4a'],
+                volume: 0.33
             });
             ambienceNightHowl.once('load', () => {
                 soundManager.cacheHowl(AMBIENCE_NIGHT, ambienceNightHowl);
@@ -31,7 +33,8 @@ class SoundLoader {
 
         {
             let musicOpeningHowl = new Howl({
-                src: ['music-opening.m4a']
+                src: ['music-opening.m4a'],
+                volume: 0.5
             });
             musicOpeningHowl.once('load', () => {
                 soundManager.cacheHowl(MUSIC_OPENING, musicOpeningHowl);
@@ -48,7 +51,8 @@ class SoundLoader {
     deferredLoad() {
         {
             let musicMainHowl = new Howl({
-                src: ['music-main.m4a']
+                src: ['music-main.m4a'],
+                volume: 0.7
             });
             musicMainHowl.once('load', () => {
                 soundManager.cacheHowl(MUSIC_MAIN, musicMainHowl);
@@ -57,10 +61,21 @@ class SoundLoader {
 
         {
             let musicMainVoxHowl = new Howl({
-                src: ['music-main-vox.m4a']
+                src: ['music-main-vox.m4a'],
+                volume: 0.7
             });
             musicMainVoxHowl.once('load', () => {
                 soundManager.cacheHowl(MUSIC_MAIN_VOX, musicMainVoxHowl);
+            });
+        }
+
+        {
+            let studentsTalkingHowl = new Howl({
+                src: ['students-talking.m4a'],
+                volume: 0.0
+            });
+            studentsTalkingHowl.once('load', () => {
+                soundManager.cacheHowl(STUDENTS_TALKING, studentsTalkingHowl);
             });
         }
     }

@@ -10,7 +10,8 @@ import {
     AMBIENCE_NIGHT,
     MUSIC_OPENING,
     MUSIC_MAIN,
-    MUSIC_MAIN_VOX
+    MUSIC_MAIN_VOX,
+    STUDENTS_TALKING
 } from '../domain/constants';
 
 const SOUND_KEY = '129083190-falling-sound';
@@ -81,6 +82,7 @@ class SoundManager {
 
         // Part 2: Update session storage
         setTimeout(() => {
+            this.soundToggleElement.removeAttribute('disabled');
             if (mute == null) {
                 let soundValue = sessionStorage.getItem(SOUND_KEY);
                 if (soundValue === 'off') {
@@ -111,6 +113,7 @@ class SoundManager {
 
     /**
      * Once loaded, have the main music play after the intro music completes its current loop.
+     * Also have the students talking start to play.
      */
     private cuePlayingSounds() {
         let musicMainHowl = this.howls.get(MUSIC_MAIN);
@@ -121,10 +124,28 @@ class SoundManager {
             musicOpeningHowl.once('end', () => {
                 musicOpeningHowl.unload();
                 this.chainMusicMain();
+
+                // Also start the students talking.
+                this.cueStudentsTalkingSounds();
             });
         } else {
             // Not loaded yet, try again in a second.
             setTimeout(() => this.cuePlayingSounds(), 1000);
+        }
+    }
+
+    /**
+     * Start this at a zero volume and gradually increase to about half volume.
+     */
+    private cueStudentsTalkingSounds() {
+        let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
+        if (studentsTalkingHowl != null) {
+            studentsTalkingHowl.loop(true);
+            studentsTalkingHowl.fade(0.0, 0.4, TIME_UNTIL_EVERYONE_ON_SCREEN);
+            studentsTalkingHowl.play();
+        } else {
+            // Not loaded yet, try again in a second.
+            setTimeout(() => this.cueStudentsTalkingSounds(), 1000);
         }
     }
 
