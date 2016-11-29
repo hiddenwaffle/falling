@@ -118,7 +118,7 @@ class CrowdStats {
 
     private giveDirectionPlaying(npc: Npc) {
         // TODO: Use probability to determine what to do next.
-        
+
         // let side = Math.floor(Math.random() * 2);
         // if (side === 0) {
         //     npc.standFacing(FocusPoint.BuildingRight, 10000);
@@ -128,6 +128,14 @@ class CrowdStats {
 
         // TODO: Have it walk somewhere
         // npc.addWaypoint(NpcLocation.BuildingMiddle);
+    }
+
+    private giveDirectionPlayingStand(npc: Npc) {
+        //
+    }
+
+    private gitDirectionPlayingMove(npc: Npc) {
+        //
     }
 }
 export const crowdStats = new CrowdStats();
