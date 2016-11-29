@@ -14,20 +14,23 @@ class Model {
      * Determine next state from activities.
      */
     step(elapsed: number) {
-        let current = gameState.getCurrent();
+        let oldState = gameState.getCurrent();
+        let newState: GameStateType;
 
-        switch (current) {
+        switch (oldState) {
             case GameStateType.Intro:
-                current = introActivity.step(elapsed);
+                newState = introActivity.step(elapsed);
                 break;
             case GameStateType.Playing:
-                current = playingActivity.step(elapsed);
+                newState = playingActivity.step(elapsed);
                 break;
             default:
                 console.log('should not get here');
         }
 
-        gameState.setCurrent(current);
+        if (newState !== oldState) {
+            gameState.setCurrent(newState);
+        }
     }
 }
 export const model = new Model();

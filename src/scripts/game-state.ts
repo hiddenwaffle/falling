@@ -1,5 +1,5 @@
 import {eventBus} from './event/event-bus';
-import {GameStateChanged} from './event/game-state-changed';
+import {GameStateChangedEvent} from './event/game-state-changed-event';
 
 export const enum GameStateType {
     /**
@@ -41,7 +41,7 @@ class GameState {
 
     setCurrent(current: GameStateType) {
         this.current = current;
-        eventBus.fire(new GameStateChanged(current));
+        eventBus.fire(new GameStateChangedEvent(current));
     }
 }
 export const gameState = new GameState();

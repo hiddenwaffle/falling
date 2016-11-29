@@ -1,7 +1,7 @@
 import {EventType, AbstractEvent} from './event-bus';
 import {GameStateType} from '../game-state';
 
-export class GameStateChanged extends AbstractEvent {
+export class GameStateChangedEvent extends AbstractEvent {
 
     readonly gameStateType: GameStateType;
 

@@ -17,6 +17,7 @@ function main() {
 
     // Startup in reverse MVC order to ensure that event bus handlers in the
     // controller and view receive (any) start events from model.start().
+    soundManager.start();
     controller.start();
     view.start();
     model.start();

@@ -1,5 +1,8 @@
 declare const Howler: any;
 
+import {EventType, eventBus} from '../event/event-bus';
+import {GameStateChangedEvent} from '../event/game-state-changed-event';
+
 const SOUND_KEY = '129083190-falling-sound';
 
 class SoundManager {
@@ -24,6 +27,11 @@ class SoundManager {
     }
 
     start() {
+        eventBus.register(EventType.GameStateChangedType, (event: GameStateChangedEvent) => {
+            console.log('game state changed');
+            // TODO: If Intro, start intro music and ambience loops
+            // TODO: If Playing, switch from intro to main loop asap, start chatter at lowest volume
+        });
     }
 
     step(elapsed: number) {
