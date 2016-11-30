@@ -18,7 +18,9 @@ const TEMP_DELAY_MS = 500;
 
 const enum BoardState {
     Paused,
-    InPlay
+    InPlay,
+    Win,
+    Lose
 }
 
 export class Board {
@@ -37,6 +39,9 @@ export class Board {
     private junkRowColor1: Color;
     private junkRowColor2: Color;
     private junkRowColorIdx: number;
+
+    private endedStepElapsed: number;
+    private endedOffset: number;
 
     constructor(playerType: PlayerType, shapeFactory: ShapeFactory, eventBus: EventBus) {
         this.playerType = playerType;
@@ -64,6 +69,9 @@ export class Board {
         this.junkRowColor1 = Color.White;
         this.junkRowColor2 = Color.White;
         this.junkRowColorIdx = 0;
+
+        this.endedStepElapsed = 0;
+        this.endedOffset = MAX_ROWS - 1;
     }
 
     resetAndPlay(play=true) {
@@ -83,7 +91,7 @@ export class Board {
         if (this.boardState === BoardState.Paused) {
             // This is here just to ensure that the method to runs immediately after unpausing.
             this.msTillGravityTick = 0;
-        } else {
+        } else if (this.boardState === BoardState.InPlay) {
             this.msTillGravityTick -= elapsed;
             if (this.msTillGravityTick <= 0) {
                 this.msTillGravityTick = TEMP_DELAY_MS;
@@ -93,6 +101,10 @@ export class Board {
                     this.handleEndOfCurrentPieceTasks();
                 }
             }
+        } else if (this.boardState === BoardState.Win) {
+            this.handleEnded(elapsed);
+        } else if (this.boardState === BoardState.Lose) {
+            // Nothing
         }
     }
 
@@ -238,11 +250,32 @@ export class Board {
     }
 
     displayWin() {
-        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
-            let row = this.matrix[rowIdx];
-            for (let colIdx = 0; colIdx < row.length; colIdx++) {
-                if (win.hasCell(rowIdx, colIdx)) {
-                    this.changeCellColor(rowIdx, colIdx, Color.White);
+        this.boardState = BoardState.Win;
+    }
+
+    displayLose() {
+        this.boardState = BoardState.Lose;
+    }
+
+    private handleEnded(elapsed: number) {
+        this.endedStepElapsed += elapsed;
+        if (this.endedStepElapsed > 250 && this.endedOffset > 0) {
+            this.endedStepElapsed = 0;
+            this.endedOffset -= 1;
+
+            this.clear();
+
+            for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+                let relativeRowIdx = rowIdx + this.endedOffset;
+                if (relativeRowIdx > MAX_ROWS - 1) {
+                    continue;
+                }
+
+                let row = this.matrix[rowIdx];
+                for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                    if (win.hasCell(rowIdx, colIdx)) {
+                        this.changeCellColor(relativeRowIdx, colIdx, Color.White);
+                    }
                 }
             }
         }

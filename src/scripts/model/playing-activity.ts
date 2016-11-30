@@ -81,6 +81,14 @@ class PlayingActivity {
     }
 
     /**
+     * Quick hack to get it done.
+     */
+    stepBoardsOnly(elapsed: number) {
+        this.humanBoard.step(elapsed);
+        this.aiBoard.step(elapsed);
+    }
+
+    /**
      * Called by IntroActivity.
      */
     generateRandomWhiteCells() {
@@ -104,9 +112,11 @@ class PlayingActivity {
 
     displayEnding() {
         if (vitals.aiHitPoints <= 0) {
+            this.aiBoard.displayLose();
             this.humanBoard.displayWin();
         } else if (vitals.humanHitPoints <= 0) {
             this.aiBoard.displayWin();
+            this.humanBoard.displayLose();
         }
     }
 

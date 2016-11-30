@@ -23,13 +23,12 @@ class EndedActivity {
 
     step(elapsed: number): GameStateType {
         npcManager.step(elapsed); // This is at the point of a game jam where I just cross my fingers and hope some things just work.
+        playingActivity.step(elapsed); // Ditto.
 
         if (this.endedStarted === false) {
             this.endedStarted = true;
 
             playingActivity.clearBoards();
-            eventBus.fire(new FallingSequencerEvent(PlayerType.Ai));    // Quick hack to clear the lights
-            eventBus.fire(new FallingSequencerEvent(PlayerType.Human)); // Quick hack to clear the lights
 
             // Delay for 1 second (HP is blinking at this time)
             setTimeout(() => {
@@ -42,6 +41,13 @@ class EndedActivity {
 
     private displayWinner() {
         playingActivity.displayEnding();
+
+        eventBus.fire(new FallingSequencerEvent(PlayerType.Ai));    // Quick hack to clear the lights
+        eventBus.fire(new FallingSequencerEvent(PlayerType.Human)); // Quick hack to clear the lights
+
+        setTimeout(() => {
+            // TODO: Force all NPCs to stop what they're doing and get a command?
+        }, 1000);
     }
 }
 export const endedActivity = new EndedActivity();
