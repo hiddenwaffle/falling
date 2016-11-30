@@ -7,6 +7,7 @@ import {playingActivity} from './playing-activity';
 import {PlayerType} from '../domain/player-type';
 import {HpChangedEvent} from '../event/hp-changed-event';
 import {PANEL_COUNT_PER_FLOOR} from '../domain/constants';
+import {cameraWrapper} from '../view/camera-wrapper';
 
 /**
  * Wraps playing activity to be able to show the initial office lights. 
@@ -60,6 +61,8 @@ class IntroActivity {
     }
 
     private transitionIntroToPlaying() {
+        cameraWrapper.panToPlayingFocus();
+        
         this.removeWhiteCell(() => {
             this.lightUpHpBars();
         });

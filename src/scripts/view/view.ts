@@ -44,6 +44,7 @@ class View {
 
         this.doStart();
 
+        cameraWrapper.start();
         sky.start();
         ground.start();
         standeeManager.start();
@@ -54,6 +55,7 @@ class View {
     }
 
     step(elapsed: number) {
+        cameraWrapper.step(elapsed);
         sky.step(elapsed);
         ground.step(elapsed);
 
@@ -88,7 +90,7 @@ class View {
         this.scene.add(spotLight);
 
         cameraWrapper.camera.position.set(5, 0.4, 15);
-        cameraWrapper.camera.lookAt(new THREE.Vector3(6, 6.5, 2));
+        cameraWrapper.lookAtStartingFocus();
 
         cameraWrapper.updateRendererSize(this.renderer);
         window.addEventListener('resize', () => {
