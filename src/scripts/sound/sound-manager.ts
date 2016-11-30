@@ -199,7 +199,7 @@ class SoundManager {
     private playBoardFilledReaction(playerType: PlayerType) {
         // Note: Scaling volume here to number of NPCs in play.
 
-        const maxVolume = 0.75;
+        const maxVolume = 0.9;
 
         if (playerType === PlayerType.Ai) {
             // Cheering for AI's board falling.
