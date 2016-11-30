@@ -3,6 +3,7 @@
 declare const Howler: any;
 
 import {EventType, eventBus} from '../event/event-bus';
+import {BoardFilledEvent} from '../event/board-filled-event';
 import {GameStateType, gameState} from '../game-state';
 import {GameStateChangedEvent} from '../event/game-state-changed-event';
 import {
@@ -11,8 +12,11 @@ import {
     MUSIC_OPENING,
     MUSIC_MAIN,
     MUSIC_MAIN_VOX,
-    STUDENTS_TALKING
+    STUDENTS_TALKING,
+    CHEERING,
+    CLAPPING
 } from '../domain/constants';
+import {PlayerType} from '../domain/player-type';
 
 const SOUND_KEY = '129083190-falling-sound';
 
@@ -54,6 +58,12 @@ class SoundManager {
                 case GameStateType.Playing:
                     this.cuePlayingSounds();
                     break;
+            }
+        });
+
+        eventBus.register(EventType.BoardFilledEventType, (event: BoardFilledEvent) => {
+            if (gameState.getCurrent() === GameStateType.Playing) {
+                this.playBoardFilledReaction(event.playerType);
             }
         });
     }
@@ -173,6 +183,34 @@ class SoundManager {
         let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
         musicMainHowlVox.play();
         musicMainHowlVox.once('end', () => this.chainMusicMain());
+    }
+
+    private playBoardFilledReaction(playerType: PlayerType) {
+        // Note: Scaling volume here to number of NPCs in play.
+
+        if (playerType === PlayerType.Ai) {
+            // Cheering for AI's board falling.
+            let cheeringHowl = this.howls.get(CHEERING);
+            if (cheeringHowl != null) {
+                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.65;
+                if (volume > 0.4) {
+                    volume = 0.4;
+                }
+                cheeringHowl.volume(volume);
+                cheeringHowl.play();
+            }
+        } else {
+            // Clapping for Human's board falling.
+            let clappingHowl = this.howls.get(CLAPPING);
+            if (clappingHowl != null) {
+                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.65;
+                if (volume > 0.4) {
+                    volume = 0.4;
+                }
+                clappingHowl.volume(volume);
+                clappingHowl.play();
+            }
+        }
     }
 }
 export const soundManager = new SoundManager();

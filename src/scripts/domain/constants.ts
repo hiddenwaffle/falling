@@ -6,3 +6,5 @@ export const MUSIC_OPENING = 'MUSIC_OPENING';
 export const MUSIC_MAIN = 'MUSIC_MAIN';
 export const MUSIC_MAIN_VOX = 'MUSIC_MAIN_VOX';
 export const STUDENTS_TALKING = 'STUDENTS_TALKING';
+export const CHEERING = 'CHEERING';
+export const CLAPPING = 'CLAPPING';

@@ -7,7 +7,9 @@ import {
     MUSIC_OPENING,
     MUSIC_MAIN,
     MUSIC_MAIN_VOX,
-    STUDENTS_TALKING
+    STUDENTS_TALKING,
+    CHEERING,
+    CLAPPING
 } from '../domain/constants';
 
 // 1) Ambience - Night
@@ -76,6 +78,26 @@ class SoundLoader {
             });
             studentsTalkingHowl.once('load', () => {
                 soundManager.cacheHowl(STUDENTS_TALKING, studentsTalkingHowl);
+            });
+        }
+
+        {
+            let cheeringHowl = new Howl({
+                src: ['cheering.m4a'],
+                volume: 0.0
+            });
+            cheeringHowl.once('load', () => {
+                soundManager.cacheHowl(CHEERING, cheeringHowl);
+            });
+        }
+
+        {
+            let clappingHowl = new Howl({
+                src: ['clapping.m4a'],
+                volume: 0.0
+            });
+            clappingHowl.once('load', () => {
+                soundManager.cacheHowl(CLAPPING, clappingHowl);
             });
         }
     }
