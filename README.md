@@ -11,9 +11,9 @@
 * Megan McDuffee - Music
 * Alex Sengsoury - Building Model
 * Alisa Tana - Sprites
-* Me - Design and Programming
+* Anthony Villena - Design and Programming
 * AI is based on Yiyuan Lee's research on [algorithm and weights] (https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/)
-* Sound FX are CC0 and acquired from [freesound.org] (https://www.freesound.org/) [1] (https://www.freesound.org/people/claudiooliveira2/sounds/155599/), [2] (https://www.freesound.org/people/RutgerMuller/sounds/364860/), [3] (https://www.freesound.org/people/Adam_N/sounds/324891/), [4] (https://www.freesound.org/people/Adam_N/sounds/346684/)
+* Sound FX are CC0 and acquired from [freesound.org] (https://www.freesound.org/): [1] (https://www.freesound.org/people/claudiooliveira2/sounds/155599/), [2] (https://www.freesound.org/people/RutgerMuller/sounds/364860/), [3] (https://www.freesound.org/people/Adam_N/sounds/324891/), [4] (https://www.freesound.org/people/Adam_N/sounds/346684/)
 
 ## About
 
@@ -27,6 +27,7 @@ A popular real-life hack is the repurposing of office building lights to simulat
 * **Gameplay Design** - Cira Centre, Philadelpha, [2014] (http://drexel.edu/now/archive/2014/June/Cira-Tetris-Guinness/)
   * The idea of having two competing buildings whose lines cleared affected each other came from this event.
 * The idea of a crowd watching gathering, reacting, and then leaving came from videos of both events.
+
 ## Building
 
 Install the latest gulp-cli if not already installed. This project was built with CLI version 1.2.2. 
