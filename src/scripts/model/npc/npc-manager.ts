@@ -1,5 +1,6 @@
 /// <reference path='../../../../node_modules/typescript/lib/lib.es6.d.ts'/>
 
+import {GameStateType, gameState} from '../../game-state';
 import {Npc} from './npc'
 import {NpcLocation, FocusPoint} from './npc-location';
 import {eventBus, EventType} from '../../event/event-bus';
@@ -45,7 +46,10 @@ class NpcManager {
 
     step(elapsed: number) {
         let expectedInPlay = releaseTimer.step(elapsed);
-        this.ensureInPlayNpcCount(expectedInPlay);
+        
+        if (gameState.getCurrent() === GameStateType.Intro || gameState.getCurrent() === GameStateType.Playing) {
+            this.ensureInPlayNpcCount(expectedInPlay);
+        }
 
         this.npcsInPlay.forEach((npc: Npc) => {
             npc.step(elapsed);

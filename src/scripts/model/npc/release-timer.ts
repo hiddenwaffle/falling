@@ -5,21 +5,22 @@ import {TIME_UNTIL_EVERYONE_ON_SCREEN} from '../../domain/constants';
 export const TOTAL_NPCS = 40;
 
 const NPCS_PER_SECOND = TIME_UNTIL_EVERYONE_ON_SCREEN / TOTAL_NPCS;
+const TIME_TO_REACT_TO_LEAVE_MS = 5 * 1000;
 const INTRO_STARTING_COUNT = 5;
 
 class ReleaseTimer {
 
     private introTimeElapsed: number;
     private playTimeElapsed: number;
+    private endTimeElapsed: number;
 
     constructor() {
         this.introTimeElapsed = 0;
         this.playTimeElapsed = 0;
+        this.endTimeElapsed = 0;
     }
 
     start() {
-        this.introTimeElapsed = 0;
-        this.playTimeElapsed = 0;
     }
 
     step(elapsed: number): number {
@@ -31,6 +32,9 @@ class ReleaseTimer {
                 break;
             case GameStateType.Playing:
                 expectedInPlay = this.stepPlaying(elapsed);
+                break;
+            case GameStateType.Ended:
+                expectedInPlay = this.stepEnded(elapsed);
                 break;
             default:
                 console.log('should not get here');
@@ -47,12 +51,16 @@ class ReleaseTimer {
     stepPlaying(elapsed: number): number {
         this.playTimeElapsed += elapsed;
 
-        let expectedInPlay = Math.floor(this.playTimeElapsed / NPCS_PER_SECOND);
+        let expectedInPlay = INTRO_STARTING_COUNT + Math.floor(this.playTimeElapsed / NPCS_PER_SECOND);
         if (expectedInPlay > TOTAL_NPCS) {
             expectedInPlay = TOTAL_NPCS;
         }
 
         return expectedInPlay;
+    }
+
+    stepEnded(elapsed: number): number {
+        return 0; // Just don't add more
     }
 }
 export const releaseTimer = new ReleaseTimer();

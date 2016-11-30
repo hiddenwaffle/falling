@@ -8,6 +8,7 @@ import {NpcLocation, FocusPoint} from './npc-location';
 
 export class Npc {
     readonly id: number;
+    ended: boolean;
 
     private state: NpcState;
     private standingTtl: number;
@@ -22,6 +23,7 @@ export class Npc {
 
     constructor(readyForCommandCallback: () => void) {
         this.id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        this.ended = false;
 
         this.state = NpcState.WaitingForCommand;
         this.standingTtl = 0;

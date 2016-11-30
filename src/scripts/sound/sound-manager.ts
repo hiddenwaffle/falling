@@ -28,6 +28,7 @@ class SoundManager {
     private howls: Map<string, any>; // any = Howl
 
     private crowdNoiseElapsed: number;
+    private crowdVolume: number;
 
     constructor() {
         this.soundToggleSection = <HTMLDivElement> document.getElementById('sound-toggle-section');
@@ -40,6 +41,7 @@ class SoundManager {
         this.howls = new Map<string, any>();
 
         this.crowdNoiseElapsed = 0;
+        this.crowdVolume = 0;
     }
 
     /**
@@ -58,6 +60,9 @@ class SoundManager {
                 case GameStateType.Playing:
                     this.cuePlayingSounds();
                     break;
+                case GameStateType.Ended:
+                    this.fadeOutSounds();
+                    break;
             }
         });
 
@@ -69,16 +74,18 @@ class SoundManager {
     }
 
     step(elapsed: number) {
-        // Increase the crowd volume based on how long it has been playing, up to a little less than halfway.
-        let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
-        if (studentsTalkingHowl != null) {
-            if (studentsTalkingHowl.playing()) {
-                this.crowdNoiseElapsed += elapsed;
-                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.4;
-                if (volume > 0.4) {
-                    volume = 0.4;
+        if (gameState.getCurrent() === GameStateType.Playing) {
+            // Increase the crowd volume based on how long it has been playing, up to a little less than halfway.
+            let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
+            if (studentsTalkingHowl != null) {
+                if (studentsTalkingHowl.playing()) {
+                    this.crowdNoiseElapsed += elapsed;
+                    this.crowdVolume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.4;
+                    if (this.crowdVolume > 0.4) {
+                        this.crowdVolume = 0.4;
+                    }
+                    studentsTalkingHowl.volume(this.crowdVolume); // Seems... ok... to call this repeatedly...
                 }
-                studentsTalkingHowl.volume(volume); // Seems... ok... to call this repeatedly...
             }
         }
     }
@@ -174,15 +181,19 @@ class SoundManager {
     }
 
     private chainMusicMain() {
-        let musicMainHowl = this.howls.get(MUSIC_MAIN);
-        musicMainHowl.play();
-        musicMainHowl.once('end', () => this.chainMusicMainVox());
+        if (gameState.getCurrent() === GameStateType.Playing) {
+            let musicMainHowl = this.howls.get(MUSIC_MAIN);
+            musicMainHowl.play();
+            musicMainHowl.once('end', () => this.chainMusicMainVox());
+        }
     }
 
     private chainMusicMainVox() {
-        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
-        musicMainHowlVox.play();
-        musicMainHowlVox.once('end', () => this.chainMusicMain());
+        if (gameState.getCurrent() === GameStateType.Playing) {
+            let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+            musicMainHowlVox.play();
+            musicMainHowlVox.once('end', () => this.chainMusicMain());
+        }
     }
 
     private playBoardFilledReaction(playerType: PlayerType) {
@@ -212,6 +223,26 @@ class SoundManager {
                 clappingHowl.volume(volume);
                 clappingHowl.play();
             }
+        }
+    }
+
+    /**
+     * Quick hack just to get it done.
+     */
+    private fadeOutSounds() {
+        let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
+        if (studentsTalkingHowl != null) {
+            studentsTalkingHowl.fade(this.crowdVolume, 0.0, 30 * 1000);
+        }
+
+        let musicMainHowl = this.howls.get(MUSIC_MAIN);
+        if (musicMainHowl.playing()) {
+            musicMainHowl.fade(0.7, 0.0, 15 * 1000);
+        }
+
+        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+        if (musicMainHowlVox.playing()) {
+            musicMainHowlVox.fade(0.7, 0.0, 15 * 1000);
         }
     }
 }

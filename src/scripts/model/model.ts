@@ -1,12 +1,14 @@
 import {GameStateType, gameState} from '../game-state';
 import {introActivity} from './intro-activity';
 import {playingActivity} from './playing-activity';
+import {endedActivity} from './ended-activity';
 
 class Model {
 
     start() {
         introActivity.start();
         playingActivity.start();
+        endedActivity.start();
     }
 
     /**
@@ -23,6 +25,9 @@ class Model {
                 break;
             case GameStateType.Playing:
                 newState = playingActivity.step(elapsed);
+                break;
+            case GameStateType.Ended:
+                newState = endedActivity.step(elapsed);
                 break;
             default:
                 console.log('should not get here');

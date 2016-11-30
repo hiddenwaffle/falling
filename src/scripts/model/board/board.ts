@@ -65,10 +65,13 @@ export class Board {
         this.junkRowColorIdx = 0;
     }
 
-    resetAndPlay() {
+    resetAndPlay(play=true) {
         this.clear();
-        this.boardState = BoardState.InPlay;
-        this.startShape(true);
+        
+        if (play) {
+            this.boardState = BoardState.InPlay;
+            this.startShape(true);
+        }
     }
 
     /**

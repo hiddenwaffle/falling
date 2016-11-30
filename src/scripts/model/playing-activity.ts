@@ -1,4 +1,4 @@
-import {GameStateType} from '../game-state';
+import {GameStateType, gameState} from '../game-state';
 import {Board} from './board/board';
 import {Ai} from './ai/ai';
 import {npcManager} from './npc/npc-manager';
@@ -97,6 +97,11 @@ class PlayingActivity {
         return (result1 || result2)
     }
 
+    clearBoards() {
+        this.aiBoard.resetAndPlay(false);
+        this.humanBoard.resetAndPlay(false);
+    }
+
     private handlePlayerMovement(event: PlayerMovementEvent) {
         let board = this.determineBoardFor(event.playerType);
 
@@ -179,7 +184,7 @@ class PlayingActivity {
 
         eventBus.fire(new FallingSequencerEvent(event.playerType));
         fallingSequencer.resetAndPlay(() => {
-            // TODO: I don't know, maybe nothing.
+            this.checkForEndOfGame();
         });
     }
 
@@ -188,6 +193,12 @@ class PlayingActivity {
             this.ai.strategize();
         } else {
             // Nothing currently for the human's board to be doing at this time.
+        }
+    }
+
+    private checkForEndOfGame() {
+        if (vitals.aiHitPoints <= 0 || vitals.humanHitPoints <= 0) {
+            gameState.setCurrent(GameStateType.Ended);
         }
     }
 }

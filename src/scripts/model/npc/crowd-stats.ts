@@ -23,6 +23,9 @@ class CrowdStats {
             case GameStateType.Intro:
                 this.introTeleportOntoWalkway(npc);
                 break;
+            case GameStateType.Ended:
+                this.stayOffStage(npc);
+                break;
             default:
                 console.log('should not get here');
         }
@@ -98,6 +101,9 @@ class CrowdStats {
                 break;
             case GameStateType.Playing:
                 this.giveDirectionPlaying(npc);
+                break;
+            case GameStateType.Ended:
+                this.giveDirectionEnded(npc);
                 break;
             default:
                 console.log('should not get here');
@@ -192,6 +198,28 @@ class CrowdStats {
                 break;
             default:
                 console.log('should not get here');
+        }
+    }
+
+    /**
+     * Just don't go anywhere
+     */
+    private stayOffStage(npc: Npc) {
+        npc.teleportTo(NpcLocation.OffLeft);
+    }
+
+    private giveDirectionEnded(npc: Npc) {
+        if (npc.ended === false) {
+            npc.ended = true;
+
+            let offscreen = Math.floor(Math.random() * 2);
+            if (offscreen == 0) {
+                npc.addWaypoint(NpcLocation.OffLeft);
+            } else {
+                npc.addWaypoint(NpcLocation.OffRight);
+            }
+        } else {
+            npc.standFacing(FocusPoint.BuildingLeft, 20000);
         }
     }
 }
