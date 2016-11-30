@@ -64,7 +64,7 @@ class IntroActivity {
     private removeWhiteCell() {
         let cellsLeft = playingActivity.clearWhiteCell();
         if (cellsLeft) {
-            setTimeout(() => this.removeWhiteCell(), 100);
+            setTimeout(() => this.removeWhiteCell(), 250);
         } else {
             this.introIsComplete = true;
         }
