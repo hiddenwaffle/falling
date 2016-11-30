@@ -10,6 +10,7 @@ import {RowsFilledEvent} from '../../event/rows-filled-event';
 import {ActiveShapeChangedEvent} from '../../event/active-shape-changed-event';
 import {ActiveShapeEndedEvent} from '../../event/active-shape-ended-event';
 import {BoardFilledEvent} from '../../event/board-filled-event';
+import {win} from './win';
 
 const MAX_ROWS = 19; // Top 2 rows are obstructed from view. Also, see lighting-grid.ts.
 const MAX_COLS = PANEL_COUNT_PER_FLOOR;
@@ -234,6 +235,17 @@ export class Board {
         }
 
         return false;
+    }
+
+    displayWin() {
+        for (let rowIdx = 0; rowIdx < this.matrix.length; rowIdx++) {
+            let row = this.matrix[rowIdx];
+            for (let colIdx = 0; colIdx < row.length; colIdx++) {
+                if (win.hasCell(rowIdx, colIdx)) {
+                    this.changeCellColor(rowIdx, colIdx, Color.White);
+                }
+            }
+        }
     }
 
     /**

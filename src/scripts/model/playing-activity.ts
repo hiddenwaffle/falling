@@ -102,6 +102,14 @@ class PlayingActivity {
         this.humanBoard.resetAndPlay(false);
     }
 
+    displayEnding() {
+        if (vitals.aiHitPoints <= 0) {
+            this.humanBoard.displayWin();
+        } else if (vitals.humanHitPoints <= 0) {
+            this.aiBoard.displayWin();
+        }
+    }
+
     private handlePlayerMovement(event: PlayerMovementEvent) {
         let board = this.determineBoardFor(event.playerType);
 

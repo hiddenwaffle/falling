@@ -2,6 +2,10 @@ import {GameStateType} from '../game-state';
 
 import {npcManager} from './npc/npc-manager';
 import {playingActivity} from './playing-activity';
+import {eventBus, EventType} from '../event/event-bus';
+import {FallingSequencerEvent} from '../event/falling-sequencer-event';
+import {PlayerType} from '../domain/player-type';
+import {vitals} from './vitals';
 
 const enum EndingState {
     ClearingBoards,
@@ -24,11 +28,20 @@ class EndedActivity {
             this.endedStarted = true;
 
             playingActivity.clearBoards();
-            // TODO: Delay for 1 second (HP is blinking at this time)
-            // TODO: Scroll up 'WINNER' on winning building
+            eventBus.fire(new FallingSequencerEvent(PlayerType.Ai));    // Quick hack to clear the lights
+            eventBus.fire(new FallingSequencerEvent(PlayerType.Human)); // Quick hack to clear the lights
+
+            // Delay for 1 second (HP is blinking at this time)
+            setTimeout(() => {
+                this.displayWinner();
+            }, 1000)
         }
 
         return GameStateType.Ended;
+    }
+
+    private displayWinner() {
+        playingActivity.displayEnding();
     }
 }
 export const endedActivity = new EndedActivity();
