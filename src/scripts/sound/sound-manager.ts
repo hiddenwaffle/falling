@@ -188,13 +188,15 @@ class SoundManager {
     private playBoardFilledReaction(playerType: PlayerType) {
         // Note: Scaling volume here to number of NPCs in play.
 
+        const maxVolume = 0.75;
+
         if (playerType === PlayerType.Ai) {
             // Cheering for AI's board falling.
             let cheeringHowl = this.howls.get(CHEERING);
             if (cheeringHowl != null) {
-                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.65;
-                if (volume > 0.4) {
-                    volume = 0.4;
+                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * maxVolume;
+                if (volume > maxVolume) {
+                    volume = maxVolume;
                 }
                 cheeringHowl.volume(volume);
                 cheeringHowl.play();
@@ -203,9 +205,9 @@ class SoundManager {
             // Clapping for Human's board falling.
             let clappingHowl = this.howls.get(CLAPPING);
             if (clappingHowl != null) {
-                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.65;
-                if (volume > 0.4) {
-                    volume = 0.4;
+                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * maxVolume;
+                if (volume > maxVolume) {
+                    volume = maxVolume;
                 }
                 clappingHowl.volume(volume);
                 clappingHowl.play();
