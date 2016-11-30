@@ -64,7 +64,7 @@ class SoundManager {
         if (studentsTalkingHowl != null) {
             if (studentsTalkingHowl.playing()) {
                 this.crowdNoiseElapsed += elapsed;
-                let volume = (this.crowdNoiseElapsed / TIME_UNTIL_EVERYONE_ON_SCREEN) * 0.4;
+                let volume = (this.crowdNoiseElapsed / (TIME_UNTIL_EVERYONE_ON_SCREEN/2)) * 0.4;
                 if (volume > 0.4) {
                     volume = 0.4;
                 }

@@ -6,6 +6,7 @@ import {npcManager} from './npc/npc-manager';
 import {playingActivity} from './playing-activity';
 import {PlayerType} from '../domain/player-type';
 import {HpChangedEvent} from '../event/hp-changed-event';
+import {PANEL_COUNT_PER_FLOOR} from '../domain/constants';
 
 /**
  * Wraps playing activity to be able to show the initial office lights. 
@@ -14,11 +15,13 @@ class IntroActivity {
     
     private timeInIntro: number;
     private playerHasHitAKey: boolean;
+    private hpBarsFilledCount: number;
     private introIsComplete: boolean;
 
     start() {
         this.timeInIntro = 0;
         this.playerHasHitAKey = false;
+        this.hpBarsFilledCount = 0;
         this.introIsComplete = false;
 
         eventBus.register(EventType.GameStateChangedType, (event: GameStateChangedEvent) => {
@@ -52,19 +55,31 @@ class IntroActivity {
      */
     private handleGameStateChangedEventIntro() {
         playingActivity.generateRandomWhiteCells();
-        eventBus.fire(new HpChangedEvent(0, PlayerType.Human, false));
-        eventBus.fire(new HpChangedEvent(0, PlayerType.Ai, false));
+        eventBus.fire(new HpChangedEvent(0, PlayerType.Human));
+        eventBus.fire(new HpChangedEvent(0, PlayerType.Ai));
     }
 
     private transitionIntroToPlaying() {
-        this.removeWhiteCell();
-        // TODO: Light up the HP bars.
+        this.removeWhiteCell(() => {
+            this.lightUpHpBars();
+        });
     }
 
-    private removeWhiteCell() {
+    private removeWhiteCell(callback: () => void) {
         let cellsLeft = playingActivity.clearWhiteCell();
         if (cellsLeft) {
-            setTimeout(() => this.removeWhiteCell(), 250);
+            setTimeout(() => this.removeWhiteCell(callback), 250);
+        } else {
+            callback();
+        }
+    }
+
+    private lightUpHpBars() {
+        this.hpBarsFilledCount += 1;
+        eventBus.fire(new HpChangedEvent(this.hpBarsFilledCount, PlayerType.Human));
+        eventBus.fire(new HpChangedEvent(this.hpBarsFilledCount, PlayerType.Ai));
+        if (this.hpBarsFilledCount < PANEL_COUNT_PER_FLOOR) {
+            setTimeout(() => this.lightUpHpBars(), 250);
         } else {
             this.introIsComplete = true;
         }

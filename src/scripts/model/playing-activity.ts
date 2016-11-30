@@ -92,7 +92,6 @@ class PlayingActivity {
      * Called by IntroActivity.
      */
     clearWhiteCell(): boolean {
-        console.log('here');
         let result1 = this.humanBoard.clearOneWhiteCell();
         let result2 = this.aiBoard.clearOneWhiteCell();
         return (result1 || result2)
