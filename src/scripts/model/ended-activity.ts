@@ -46,8 +46,13 @@ class EndedActivity {
         eventBus.fire(new FallingSequencerEvent(PlayerType.Human)); // Quick hack to clear the lights
 
         setTimeout(() => {
-            // TODO: Force all NPCs to stop what they're doing and get a command?
-        }, 1000);
+            this.displayThanks();
+        }, 2500);
+    }
+
+    private displayThanks() {
+        let message = <HTMLDivElement> document.getElementById('message');
+        message.textContent = 'THE END - Thanks for playing all the way through our GitHub Game Off 2016 entry.';
     }
 }
 export const endedActivity = new EndedActivity();
