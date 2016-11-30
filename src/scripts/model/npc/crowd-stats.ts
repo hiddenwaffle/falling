@@ -32,8 +32,10 @@ class CrowdStats {
         let offscreen = Math.floor(Math.random() * 2);
         if (offscreen == 0) {
             npc.teleportTo(NpcLocation.OffLeft);
+            npc.addWaypoint(NpcLocation.BuildingLeft);
         } else {
             npc.teleportTo(NpcLocation.OffRight);
+            npc.addWaypoint(NpcLocation.BuildingRight);
         }
     }
 
