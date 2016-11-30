@@ -44,3 +44,9 @@ The dist directory can be removed with the clean task
 <pre>
 gulp clean
 </pre>
+
+## Dependencies
+
+* [three.js] (https://threejs.org/) - This is my first 3D game.
+* [tween.js] (https://github.com/tweenjs/tween.js) - Easing functions for camera, NPC travel, light strobing, etc...
+* [howler.js] (https://howlerjs.com/) - I had a good experience using this with [mazing] (https://github.com/hiddenwaffle/mazing) so I used it again.
