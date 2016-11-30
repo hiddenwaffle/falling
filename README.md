@@ -12,7 +12,7 @@
 * Alex Sengsoury - Building Model
 * Alisa Tana - Sprites
 * Anthony Villena - Design and Programming
-* AI is based on Yiyuan Lee's research on [algorithm and weights] (https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/)
+* AI is based on Yiyuan Lee's GA [research] (https://codemyroad.wordpress.com/2013/04/14/tetris-ai-the-near-perfect-player/)
 * Sound FX are CC0 and acquired from [freesound.org] (https://www.freesound.org/): [1] (https://www.freesound.org/people/claudiooliveira2/sounds/155599/), [2] (https://www.freesound.org/people/RutgerMuller/sounds/364860/), [3] (https://www.freesound.org/people/Adam_N/sounds/324891/), [4] (https://www.freesound.org/people/Adam_N/sounds/346684/)
 
 ## About
