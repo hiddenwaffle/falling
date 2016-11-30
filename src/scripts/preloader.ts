@@ -1,5 +1,6 @@
 import {standeeAnimationTextureBase} from './view/standee/standee-animation-texture-base';
 import {buildingPreloader} from './view/lighting/building-preloader';
+import {ground} from './view/world/ground';
 import {soundLoader} from './sound/sound-loader';
 
 class Preloader {
@@ -40,6 +41,10 @@ class Preloader {
         });
 
         total += buildingPreloader.preload((success: boolean) => {
+            callWhenFinished(success);
+        });
+
+        total += ground.preload((success: boolean) => {
             callWhenFinished(success);
         });
 
