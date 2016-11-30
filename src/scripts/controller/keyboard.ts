@@ -31,6 +31,7 @@ class Keyboard {
     private keyHeldInitial: boolean;
 
     constructor() {
+        // See onblur handler below for more comments.
         this.keyState = new Map<Key,State>();
         this.previousKeyCode = -1;
         this.currentKeyCode = -1;
@@ -45,6 +46,15 @@ class Keyboard {
         window.addEventListener('keyup', (event) => {
             this.eventToState(event, State.Up);
         });
+        // Prevent "stuck" key if held down and window loses focus.
+        window.onblur = () => {
+            // Just re-initailize everything like the constructor
+            this.keyState = new Map<Key,State>();
+            this.previousKeyCode = -1;
+            this.currentKeyCode = -1;
+            this.keyHeldElapsed = 0;
+            this.keyHeldInitial = false;
+        };
     }
 
     /**
