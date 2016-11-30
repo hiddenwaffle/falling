@@ -8,7 +8,7 @@ class Vitals {
 
     constructor() {
         this.humanHitPoints = MAX_HP;
-        this.aiHitPoints = 2; // FIXME: Make 10 again
+        this.aiHitPoints = MAX_HP;
     }
 }
 export const vitals = new Vitals();
