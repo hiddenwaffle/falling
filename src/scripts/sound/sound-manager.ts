@@ -20,6 +20,8 @@ import {PlayerType} from '../domain/player-type';
 
 const SOUND_KEY = '129083190-falling-sound';
 
+const MUSIC_FADE_OUT_TIME_MS = 15 * 1000;
+
 class SoundManager {
 
     private soundToggleSection: HTMLDivElement;
@@ -29,6 +31,9 @@ class SoundManager {
 
     private crowdNoiseElapsed: number;
     private crowdVolume: number;
+
+    private musicEndingTtl: number;
+    private musicVolume: number;
 
     constructor() {
         this.soundToggleSection = <HTMLDivElement> document.getElementById('sound-toggle-section');
@@ -42,6 +47,9 @@ class SoundManager {
 
         this.crowdNoiseElapsed = 0;
         this.crowdVolume = 0;
+
+        this.musicEndingTtl = MUSIC_FADE_OUT_TIME_MS;
+        this.musicVolume = 0;
     }
 
     /**
@@ -86,6 +94,26 @@ class SoundManager {
                     }
                     studentsTalkingHowl.volume(this.crowdVolume); // Seems... ok... to call this repeatedly...
                 }
+            }
+
+            // Main music volume is constant
+            this.musicVolume = 0.7;
+
+        } else if (gameState.getCurrent() === GameStateType.Ended) {
+            this.musicEndingTtl -= elapsed;
+            if (this.musicEndingTtl < 0) {
+                this.musicEndingTtl = 0;
+            }
+            this.musicVolume = (this.musicEndingTtl / MUSIC_FADE_OUT_TIME_MS) * 0.7; // 0.7 is from constant seen above
+            
+            let musicMainHowl = this.howls.get(MUSIC_MAIN);
+            if (musicMainHowl != null) {
+                musicMainHowl.volume(this.musicVolume);
+            }
+            
+            let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+            if (musicMainHowlVox != null) {
+                musicMainHowlVox.volume(this.musicVolume);
             }
         }
     }
@@ -181,19 +209,21 @@ class SoundManager {
     }
 
     private chainMusicMain() {
-        if (gameState.getCurrent() === GameStateType.Playing) {
-            let musicMainHowl = this.howls.get(MUSIC_MAIN);
-            musicMainHowl.play();
-            musicMainHowl.once('end', () => this.chainMusicMainVox());
-        }
+        let musicMainHowl = this.howls.get(MUSIC_MAIN);
+        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+
+        musicMainHowl.volume(this.musicVolume);
+        musicMainHowl.play();
+        musicMainHowl.once('end', () => this.chainMusicMainVox());
     }
 
     private chainMusicMainVox() {
-        if (gameState.getCurrent() === GameStateType.Playing) {
-            let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
-            musicMainHowlVox.play();
-            musicMainHowlVox.once('end', () => this.chainMusicMain());
-        }
+        let musicMainHowl = this.howls.get(MUSIC_MAIN);
+        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
+
+        musicMainHowlVox.volume(this.musicVolume);
+        musicMainHowlVox.play();
+        musicMainHowlVox.once('end', () => this.chainMusicMain());
     }
 
     private playBoardFilledReaction(playerType: PlayerType) {
@@ -233,16 +263,6 @@ class SoundManager {
         let studentsTalkingHowl = this.howls.get(STUDENTS_TALKING);
         if (studentsTalkingHowl != null) {
             studentsTalkingHowl.fade(this.crowdVolume, 0.0, 30 * 1000);
-        }
-
-        let musicMainHowl = this.howls.get(MUSIC_MAIN);
-        if (musicMainHowl.playing()) {
-            musicMainHowl.fade(0.7, 0.0, 15 * 1000);
-        }
-
-        let musicMainHowlVox = this.howls.get(MUSIC_MAIN_VOX);
-        if (musicMainHowlVox.playing()) {
-            musicMainHowlVox.fade(0.7, 0.0, 15 * 1000);
         }
     }
 }
