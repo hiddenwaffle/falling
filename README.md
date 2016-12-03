@@ -8,7 +8,7 @@
 
 ## Credits
 
-* Megan McDuffee - Music
+* [Megan McDuffee] (http://meganmcduffee.com) - Music
 * Alex Sengsoury - Building Model
 * Alisa Tana - Sprites
 * Anthony Villena - Design and Programming
