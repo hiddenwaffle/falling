@@ -51,3 +51,8 @@ gulp clean
 * [three.js] (https://threejs.org/) - This is my first 3D game.
 * [tween.js] (https://github.com/tweenjs/tween.js) - Easing functions for camera, NPC travel, light strobing, etc...
 * [howler.js] (https://howlerjs.com/) - I had a good experience using this with [mazing] (https://github.com/hiddenwaffle/mazing) so I used it again.
+
+## Original Plan
+
+The original plan was to have random office lights on. As you cleared the rows they were on, the lights would go out and people would exit the building and gather together to see what was going on.
+Unfortunately, during playtesting it became apparent that having random lights scattered throughout the board was **really** difficult to fit shapes around. That's when I changed the gameplay to what they did at the Cira Centre.
