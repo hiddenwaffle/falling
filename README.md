@@ -50,7 +50,7 @@ gulp clean
 * [gulp](http://gulpjs.com/) - Trying something new after having using grunt with my previous project.
 * [three.js](https://threejs.org/) - This is my first 3D game.
 * [tween.js](https://github.com/tweenjs/tween.js) - Easing functions for camera, NPC travel, light strobing, etc...
-* [howler.js](https://howlerjs.com/) - I had a good experience using this with [mazing] (https://github.com/hiddenwaffle/mazing) so I used it again.
+* [howler.js](https://howlerjs.com/) - I had a good experience using this with [mazing](https://github.com/hiddenwaffle/mazing) so I used it again.
 
 ## Original Plan
 
