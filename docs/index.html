@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>lighting</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #222;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #aaa;
+            text-align: center;
+            user-select: none;
+        }
+        #canvas {
+            opacity: 0;
+            text-align: center;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        #loading {
+            height: 25%;
+            text-align: center;
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+        #loading-message {
+            margin-bottom: 6px;
+        }
+        #loading-error {
+            margin-bottom: 6px;
+            color: #f00;
+        }
+        #source {
+            position: fixed;
+            bottom: 8px;
+            right: 12px;
+        }
+        #text {
+            position: fixed;
+            bottom: 8px;
+            left: 12px;
+            text-align: left;
+        }
+        #sound-toggle-section {
+            margin-bottom: 8px;
+        }
+        #message {
+            position: fixed;
+            bottom: 8px;
+            right: 96px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="loading">
+    <div id="loading-message">Loading...</div>
+    <div id="loading-error"></div>
+    <progress id="loading-bar"></div>
+</div>
+
+<div id="source">
+    <a href="https://github.com/hiddenwaffle/falling" target="_blank">
+        <img src="GitHub-Mark-64px.png" title="View Source (in a new window)"/>
+    </a>
+</div>
+
+<div id="text">
+    <div id="sound-toggle-section">
+        <label><input type="checkbox" id="sound-toggle" disabled></input>Sound</label>
+    </div>
+    <div>Controls: WASD / Arrow Keys / Space</div>
+</div>
+
+<div id="message"></div>
+
+<script src="Tween.js"></script>
+<script src="three.js"></script>
+<script src="MTLLoader.js"></script>
+<script src="OBJLoader.js"></script>
+<script src="howler.js"></script>
+<script src="bundle.js"></script>
+</body>
+</html>
