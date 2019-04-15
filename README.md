@@ -6,6 +6,11 @@
 * Untested on Safari.
 * Edge lags too much to be playable. 
 
+## Mentions
+
+* https://twitter.com/github/status/808698454192984064
+* https://github.blog/2016-12-13-game-off-iv-highlights/
+
 ## Credits
 
 * [Megan McDuffee](http://meganmcduffee.com) - Music
