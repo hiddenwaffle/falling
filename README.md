@@ -1,6 +1,6 @@
 # Lighting
 
-**Play Here: [https://unremarkable.app/lighting](https://umremarkable.app/lighting)**
+**Play Here: [https://hiddenwaffle.github.io/lighting](https://hiddenwaffle.github.io/lighting)**
 * Chrome desktop browser works best.
 * Firefox works OK.
 * Untested on Safari.
